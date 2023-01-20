@@ -11,6 +11,7 @@ actions:
   ## This file is created by create_project_actions.R 
   ## Edit and run create_project_actions.R to update the project.yaml 
   ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+  ## Generate study definitions 
 
   generate_study_population_winter2019:
     run: cohortextractor:latest generate_cohort --study-definition study_definition_winter2019
@@ -26,13 +27,15 @@ actions:
       highly_sensitive:
         cohort: output/input_winter2021.csv.gz
 
+  ## Data preprocess and cleaning 
+
   data_preprocess_cleaning_winter2019:
     run: r:latest analysis/cleaning/data-cleaning.R winter2019
     needs:
     - generate_study_population_winter2019
     outputs:
       moderately_sensitive:
-        describe: output/not-for-review/describe_input_prevax_*.txt
+        describe: output/describe_input_prevax_*.txt
       highly_sensitive:
         cohort: output/input_winter2019.csv.gz
 
@@ -42,7 +45,7 @@ actions:
     - agenerate_study_population_winter2021
     outputs:
       moderately_sensitive:
-        describe: output/not-for-review/describe_input_prevax_*.txt
+        describe: output/describe_input_prevax_*.txt
       highly_sensitive:
         cohort: output/input_winter2021.csv.gz
 
