@@ -27,7 +27,7 @@ actions:
         cohort: output/input_winter2021.csv.gz
 
   data_preprocess_cleaning_winter2019:
-    run: r:latest analysis/cleaning/data-pre-process-cleaning.R winter2019
+    run: r:latest analysis/cleaning/data-cleaning.R winter2019
     needs:
     - generate_study_population_winter2019
     outputs:
@@ -37,7 +37,7 @@ actions:
         cohort: output/input_winter2019.csv.gz
 
   data_preprocess_cleaning_winter2021:
-    run: r:latest analysis/cleaning/data-pre-process-cleaning.R winter2021
+    run: r:latest analysis/cleaning/data-cleaning.R winter2021
     needs:
     - agenerate_study_population_winter2021
     outputs:

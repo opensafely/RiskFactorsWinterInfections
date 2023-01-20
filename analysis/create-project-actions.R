@@ -168,7 +168,7 @@ actions_list <- splice(
   #comment("Preprocess and data cleaning - winter 2019"),
   action(
     name = "data_preprocess_cleaning_winter2019",
-    run = "r:latest analysis/cleaning/data-pre-process-cleaning.R winter2019",
+    run = "r:latest analysis/cleaning/data-cleaning.R winter2019",
     needs = list("generate_study_population_winter2019"),
     moderately_sensitive = list(
       describe = glue("output/not-for-review/describe_input_prevax_*.txt")
@@ -181,7 +181,7 @@ actions_list <- splice(
   #comment("Preprocess and data cleaning - winter 2021"),
   action(
     name = "data_preprocess_cleaning_winter2021",
-    run = "r:latest analysis/cleaning/data-pre-process-cleaning.R winter2021",
+    run = "r:latest analysis/cleaning/data-cleaning.R winter2021",
     needs = list("agenerate_study_population_winter2021"),
     moderately_sensitive = list(
       describe = glue("output/not-for-review/describe_input_prevax_*.txt")
