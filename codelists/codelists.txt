@@ -1,0 +1,14 @@
+opensafely/smoking-unclear/2020-04-29
+opensafely/smoking-clear/2020-04-29
+opensafely/ethnicity/2020-04-27
+primis-covid19-vacc-uptake/eth2001/v1
+bristol/influenza_icd10/71a06879
+bristol/rsv_icd10/5890f544
+bristol/pneumonia_icd10/7453286f
+opensafely/covid-identification/2020-06-03
+opensafely/asthma-diagnosis/2020-04-15
+opensafely/asthma-inhaler-salbutamol-medication/2020-04-15
+opensafely/asthma-inhaler-steroid-medication/2020-04-15
+opensafely/asthma-oral-prednisolone-medication/2020-04-27
+opensafely/chronic-respiratory-disease/2020-04-10
+opensafely/chronic-cardiac-disease/2020-04-08
