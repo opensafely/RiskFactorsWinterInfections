@@ -24,10 +24,10 @@ from datetime import date
 import study_definition_helper_functions as helpers
 
 ## Import common variables function
-#from common_variables import generate_common_variables
-#(
-#    dynamic_variables
-#) = generate_common_variables(index_date_variable="2019-12-01", index_date_variable_covariates = "2019-11-30" )
+from common_variables import generate_common_variables
+(
+    dynamic_variables
+) = generate_common_variables(index_date_variable="2019-12-01", index_date_variable_covariates = "2019-11-30" )
 
 
 study = StudyDefinition(
@@ -274,6 +274,7 @@ study = StudyDefinition(
         ),
     ),
 
+    ## Other chronic respiratory conditions
     # https://github.com/ebmdatalab/tpp-sql-notebook/issues/21
     exp_bin_chronicresp=patients.with_these_clinical_events(
         chronic_respiratory_disease_codes,
@@ -282,12 +283,30 @@ study = StudyDefinition(
         return_expectations = {"incidence": 0.05},
     ),
 
+    ## Chronic heart disease
     exp_bin_chd=patients.with_these_clinical_events(
         chronic_cardiac_disease_codes,
         on_or_before = ["index_date - 1 day"],
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     )
+
+    exp_bin_diabetes=patients.with_these_clinical_events(
+        diabetes_codes,
+        on_or_before = ["index_date - 1 day"],
+        returning = "binary_flag",
+        return_expectations = {"incidence": 0.05},
+    ),
+
+
+    exp_bin_chronicliv=patients.with_these_clinical_events(
+        diabetes_codes,
+        on_or_before = ["index_date - 1 day"],
+        returning = "binary_flag",
+        return_expectations = {"incidence": 0.05},
+    ),
+    
+
  #   **dynamic_variables
 
 )
