@@ -87,3 +87,21 @@ chronic_cardiac_disease_codes = codelist_from_csv(
     system="ctv3",
     column="CTV3ID"
 )
+
+chronic_liver_disease_codes = codelist_from_csv(
+    "codelists/opensafely-chronic-liver-disease.csv",
+    system="ctv3",
+    column="CTV3ID"
+)
+
+diabetes_codes = codelist_from_csv(
+    "codelists/opensafely-diabetes.csv",
+    system="ctv3",
+    column="CTV3ID"
+)
+
+other_neuro = codelist_from_csv(
+    "codelists/opensafely-other-neurological-conditions.csv",
+    system="ctv3",
+    column="CTV3ID",
+)

@@ -49,15 +49,11 @@ study = StudyDefinition(
         registered=patients.registered_as_of("index_date"),
     ),
         
+    ### Covariates and inclusion/exclusion variables
+    ## Patient alive at index date
     has_died = patients.died_from_any_cause(
         on_or_before = "index_date",
         returning = "binary_flag",
-    ),
-        
-    has_follow_up_previous_365days = patients.registered_with_one_practice_between(
-        start_date = "index_date - 365 days",
-        end_date = "index_date",
-        return_expectations = {"incidence": 0.95},
     ),
 
     ## Region
@@ -90,7 +86,7 @@ study = StudyDefinition(
     #),
 
     ## Registered at same practice from 365 days prior to study period up to end of study period
-    registered_same_practice = patients.registered_with_one_practice_between(
+    inex_bin_registered = patients.registered_with_one_practice_between(
         start_date = "index_date - 366 days",
         end_date = "index_date + 89 days",
         return_expectations = {"incidence": 0.9},
@@ -180,6 +176,7 @@ study = StudyDefinition(
             "incidence": 0.7,
         },
     ),
+
      ### Categorising BMI
     cov_cat_bmi_groups = patients.categorised_as(
         {
@@ -289,8 +286,9 @@ study = StudyDefinition(
         on_or_before = ["index_date - 1 day"],
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
-    )
+    ),
 
+    ## Diabetes
     exp_bin_diabetes=patients.with_these_clinical_events(
         diabetes_codes,
         on_or_before = ["index_date - 1 day"],
@@ -298,14 +296,21 @@ study = StudyDefinition(
         return_expectations = {"incidence": 0.05},
     ),
 
-
-    exp_bin_chronicliv=patients.with_these_clinical_events(
-        diabetes_codes,
+    ## Chronic liver disease
+    exp_bin_chronicliver=patients.with_these_clinical_events(
+        chronic_liver_disease_codes,
         on_or_before = ["index_date - 1 day"],
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
-    
+
+    ## Chronic neurological diseases
+    exp_bin_chronicneuro=patients.with_these_clinical_events(
+        other_neuro,
+        on_or_before = ["index_date - 1 day"],
+        returning = "binary_flag",
+        return_expectations = {"incidence": 0.05},
+    ),
 
  #   **dynamic_variables
 
