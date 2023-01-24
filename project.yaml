@@ -15,14 +15,14 @@ actions:
 
   generate_study_population_winter2019:
     run: cohortextractor:latest generate_cohort --study-definition study_definition_winter2019
-      --output-format feather
+      --output-format csv.gz
     outputs:
       highly_sensitive:
         cohort: output/input_winter2019.csv.gz
 
   generate_study_population_winter2021:
     run: cohortextractor:latest generate_cohort --study-definition study_definition_winter2021
-      --output-format feather
+      --output-format csv.gz
     outputs:
       highly_sensitive:
         cohort: output/input_winter2021.csv.gz

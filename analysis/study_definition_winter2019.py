@@ -32,6 +32,12 @@ from common_variables import generate_common_variables
 
 study = StudyDefinition(
 
+    default_expectations={
+      "date": {"earliest": "1900-01-01", "latest": "today"},
+      "rate": "uniform",
+      "incidence": 0.5,
+    },
+
     # Specify index date for study
     index_date = "2019-12-01",
 

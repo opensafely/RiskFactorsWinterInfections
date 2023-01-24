@@ -27,61 +27,6 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
     dynamic_variables = dict(
 
 
-
-### Define covariates
-     ## Region
-    cov_cat_region=patients.registered_practice_as_of(
-        "index_date",
-        returning="nuts1_region_name",
-        return_expectations={
-            "rate": "universal",
-            "category": {
-                "ratios": {
-                    "North East": 0.1,
-                    "North West": 0.1,
-                    "Yorkshire and The Humber": 0.1,
-                    "East Midlands": 0.1,
-                    "West Midlands": 0.1,
-                    "East": 0.1,
-                    "London": 0.2,
-                    "South East": 0.1,
-                    "South West": 0.1,
-                },
-            },
-        },
-    ),
-
-    ## Hospital admission in 30 days prior to study date
-    #adm_last_30days = patients.admitted_to_hospital(
-    #    returning = "binary flag",
-    #    between = ["index_date - 30 days", "index_date - 1 day"],
-    #    return_expectations = {"incidence": 0.1},
-    #),
-
-    ## Registered at same practice from 365 days prior to study period up to end of study period
-    inex_bin_registered = patients.registered_with_one_practice_between(
-        start_date = "index_date - 366 days",
-        end_date = "index_date + 89 days",
-        return_expectations = {"incidence": 0.9},
-    ),
-
-    ## Sex
-    sex = patients.sex(
-        return_expectations = {
-        "rate": "universal",
-        "category": {"ratios": {"M": 0.49, "F": 0.51}},
-        },
-    ),
-
-    cov_bin_male = patients.satisfying(
-        """
-        sex = "M"
-        """,
-        return_expectations = {
-            "category":{"ratios":{"0": 0.51, "1": 0.49}}
-        },
-    ),
-
     ## Age
     cov_num_age = patients.age_as_of(
         "index_date",
@@ -248,7 +193,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
     # https://github.com/ebmdatalab/tpp-sql-notebook/issues/21
     exp_bin_chronicresp=patients.with_these_clinical_events(
         chronic_respiratory_disease_codes,
-        on_or_before = ["index_date - 1 day"],
+        on_or_before = "index_date - 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
@@ -256,7 +201,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
     ## Chronic heart disease
     exp_bin_chd=patients.with_these_clinical_events(
         chronic_cardiac_disease_codes,
-        on_or_before = ["index_date - 1 day"],
+        on_or_before = "index_date - 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
@@ -264,7 +209,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
     ## Diabetes
     exp_bin_diabetes=patients.with_these_clinical_events(
         diabetes_codes,
-        on_or_before = ["index_date - 1 day"],
+        on_or_before = "index_date - 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
@@ -272,7 +217,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
     ## Chronic liver disease
     exp_bin_chronicliver=patients.with_these_clinical_events(
         chronic_liver_disease_codes,
-        on_or_before = ["index_date - 1 day"],
+        on_or_before = "index_date - 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
@@ -280,7 +225,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
     ## Chronic neurological diseases
     exp_bin_chronicneuro=patients.with_these_clinical_events(
         other_neuro,
-        on_or_before = ["index_date - 1 day"],
+        on_or_before = "index_date - 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
