@@ -27,25 +27,3 @@ actions:
       highly_sensitive:
         cohort: output/input_winter2021.csv.gz
 
-  ## Data cleaning 
-
-  data_cleaning_winter2019:
-    run: r:latest analysis/data_cleaning/data_cleaning.R winter2019
-    needs:
-    - generate_study_population_winter2019
-    outputs:
-      moderately_sensitive:
-        describe: output/data_cleaning/describe_input_winter2019.txt
-      highly_sensitive:
-        cohort: output/input_winter2019_clean.csv.gz
-
-  data_cleaning_winter2021:
-    run: r:latest analysis/data_cleaning/data_cleaning.R winter2021
-    needs:
-    - generate_study_population_winter2021
-    outputs:
-      moderately_sensitive:
-        describe: output/data_cleaning/describe_input_winter2021.txt
-      highly_sensitive:
-        cohort: output/input_winter2021_clean.csv.gz
-
