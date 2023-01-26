@@ -42,6 +42,12 @@
       "downloaded_at": "2023-01-23 20:51:19.507138Z",
       "sha": "724991c3ec7f79df7c071ee67eb42e29b43c801a"
     },
+    "opensafely-pneumonia-secondary-care.csv": {
+      "id": "opensafely/pneumonia-secondary-care/2020-10-05",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/pneumonia-secondary-care/2020-10-05/",
+      "downloaded_at": "2023-01-25 08:30:19.282709Z",
+      "sha": "866ab4f0ff144330c1a0ea28116c9d2073cf379a"
+    },
     "opensafely-covid-identification.csv": {
       "id": "opensafely/covid-identification/2020-06-03",
       "url": "https://codelists.opensafely.org/codelist/opensafely/covid-identification/2020-06-03/",
@@ -101,6 +107,108 @@
       "url": "https://codelists.opensafely.org/codelist/opensafely/other-neurological-conditions/2020-06-02/",
       "downloaded_at": "2023-01-23 20:51:21.563657Z",
       "sha": "855e7e09a0500401ae2429c6a401978e8c9075ec"
+    },
+    "opensafely-asplenia.csv": {
+      "id": "opensafely/asplenia/2020-06-02",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/asplenia/2020-06-02/",
+      "downloaded_at": "2023-01-25 07:40:09.325810Z",
+      "sha": "7599ea87a8f3d9d92389a728966d3077b00ac828"
+    },
+    "opensafely-solid-organ-transplantation.csv": {
+      "id": "opensafely/solid-organ-transplantation/2020-04-10",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/solid-organ-transplantation/2020-04-10/",
+      "downloaded_at": "2023-01-25 07:40:09.463998Z",
+      "sha": "94178a9e19770b9c43c08fe42df6ab5ed0d9ec49"
+    },
+    "opensafely-hypertension.csv": {
+      "id": "opensafely/hypertension/2020-04-28",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/hypertension/2020-04-28/",
+      "downloaded_at": "2023-01-25 07:40:09.597098Z",
+      "sha": "b0d7bbf6ea767366db458bc6f6d37955ae331cc7"
+    },
+    "user-RochelleKnight-prostate_cancer_snomed.csv": {
+      "id": "user/RochelleKnight/prostate_cancer_snomed/0437497e",
+      "url": "https://codelists.opensafely.org/codelist/user/RochelleKnight/prostate_cancer_snomed/0437497e/",
+      "downloaded_at": "2023-01-26 13:24:43.789600Z",
+      "sha": "7249bb62e32d2d60600b0d1e32562f23bd92c6aa"
+    },
+    "user-RochelleKnight-prostate_cancer_icd10.csv": {
+      "id": "user/RochelleKnight/prostate_cancer_icd10/6b27d648",
+      "url": "https://codelists.opensafely.org/codelist/user/RochelleKnight/prostate_cancer_icd10/6b27d648/",
+      "downloaded_at": "2023-01-26 13:24:43.982015Z",
+      "sha": "fc1791f84b1195fc21df000d3300015b1ff7d1ec"
+    },
+    "user-RochelleKnight-pregnancy_and_birth_snomed.csv": {
+      "id": "user/RochelleKnight/pregnancy_and_birth_snomed/1d46bcb3",
+      "url": "https://codelists.opensafely.org/codelist/user/RochelleKnight/pregnancy_and_birth_snomed/1d46bcb3/",
+      "downloaded_at": "2023-01-26 13:24:44.331747Z",
+      "sha": "3dec4001ddd33ddaf16ce92ec450c2206880ec40"
+    },
+    "user-elsie_horne-cocp_dmd.csv": {
+      "id": "user/elsie_horne/cocp_dmd/1666a7a3",
+      "url": "https://codelists.opensafely.org/codelist/user/elsie_horne/cocp_dmd/1666a7a3/",
+      "downloaded_at": "2023-01-26 13:24:44.499945Z",
+      "sha": "8327c8ec4d2a3f1fcec7ffaa76a3e79cc1e5974a"
+    },
+    "user-elsie_horne-hrt_dmd.csv": {
+      "id": "user/elsie_horne/hrt_dmd/19196799",
+      "url": "https://codelists.opensafely.org/codelist/user/elsie_horne/hrt_dmd/19196799/",
+      "downloaded_at": "2023-01-26 13:24:44.736626Z",
+      "sha": "14aff592668a703f02cc68aa54c7ebab0774c62f"
+    },
+    "opensafely-ra-sle-psoriasis.csv": {
+      "id": "opensafely/ra-sle-psoriasis/2020-04-14",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/ra-sle-psoriasis/2020-04-14/",
+      "downloaded_at": "2023-01-26 14:07:50.627660Z",
+      "sha": "51e59c80348f3b45f7ce323683a1df7cdb673c0e"
+    },
+    "opensafely-haematological-cancer.csv": {
+      "id": "opensafely/haematological-cancer/2020-04-15",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/haematological-cancer/2020-04-15/",
+      "downloaded_at": "2023-01-26 14:11:51.034232Z",
+      "sha": "59d65c613a7b984ba46eca8a74eedcc6320609fe"
+    },
+    "opensafely-lung-cancer.csv": {
+      "id": "opensafely/lung-cancer/2020-04-15",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/lung-cancer/2020-04-15/",
+      "downloaded_at": "2023-01-26 14:11:51.358324Z",
+      "sha": "645584a20f81c4d76187a2c305c904e8b8c63dbb"
+    },
+    "opensafely-cancer-excluding-lung-and-haematological.csv": {
+      "id": "opensafely/cancer-excluding-lung-and-haematological/2020-04-15",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/cancer-excluding-lung-and-haematological/2020-04-15/",
+      "downloaded_at": "2023-01-26 14:11:51.639358Z",
+      "sha": "8fa1164b587028c4bd5903289e0948642d399e56"
+    },
+    "user-bangzheng-creatinine-value.csv": {
+      "id": "user/bangzheng/creatinine-value/7d319079",
+      "url": "https://codelists.opensafely.org/codelist/user/bangzheng/creatinine-value/7d319079/",
+      "downloaded_at": "2023-01-26 14:19:07.604594Z",
+      "sha": "4628fc44b49144576a578c1d2e13435aa6296af3"
+    },
+    "opensafely-hiv.csv": {
+      "id": "opensafely/hiv/2020-07-13",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/hiv/2020-07-13/",
+      "downloaded_at": "2023-01-26 14:25:49.753592Z",
+      "sha": "c36a629c306e57081f702c3f30671364e452a3ee"
+    },
+    "opensafely-permanent-immunosuppression.csv": {
+      "id": "opensafely/permanent-immunosuppression/2020-06-02",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/permanent-immunosuppression/2020-06-02/",
+      "downloaded_at": "2023-01-26 14:25:50.066919Z",
+      "sha": "15dd49a1cbc8b8e9f4a9e05bbcbeb45b4e03106e"
+    },
+    "opensafely-temporary-immunosuppression.csv": {
+      "id": "opensafely/temporary-immunosuppression/2020-04-24",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/temporary-immunosuppression/2020-04-24/",
+      "downloaded_at": "2023-01-26 14:25:50.249113Z",
+      "sha": "99f6c0787e17e16430549a4cfb5084612faba2ac"
+    },
+    "opensafely-aplastic-anaemia.csv": {
+      "id": "opensafely/aplastic-anaemia/2020-04-24",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/aplastic-anaemia/2020-04-24/",
+      "downloaded_at": "2023-01-26 14:25:50.542781Z",
+      "sha": "bd34ff54f789dce031e3581006cc0befcee0b35c"
     }
   }
 }

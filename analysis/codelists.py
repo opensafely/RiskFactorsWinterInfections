@@ -46,6 +46,12 @@ pneustrep_icd10 = codelist_from_csv(
     column="code",
 )
 
+pneu_icd10 = codelist_from_csv(
+    "codelists/opensafely-pneumonia-secondary-care.csv", 
+    system="icd10", 
+    column="ICD code",
+)
+
 covid_icd10 = codelist_from_csv(
     "codelists/opensafely-covid-identification.csv",
     system="icd10",
@@ -55,7 +61,7 @@ covid_icd10 = codelist_from_csv(
 asthma_codes = codelist_from_csv(
     "codelists/opensafely-asthma-diagnosis.csv", 
     system="ctv3", 
-    column="CTV3ID"
+    column="CTV3ID",
 )
 
 salbutamol_codes = codelist_from_csv(
@@ -102,6 +108,104 @@ diabetes_codes = codelist_from_csv(
 
 other_neuro = codelist_from_csv(
     "codelists/opensafely-other-neurological-conditions.csv",
+    system="ctv3",
+    column="CTV3ID",
+)
+
+asplenia_codes = codelist_from_csv(
+    "codelists/opensafely-asplenia.csv",
+    system="ctv3",
+    column="CTV3ID",
+)
+
+organ_transplantation = codelist_from_csv(
+    "codelists/opensafely-solid-organ-transplantation.csv",
+    system="ctv3",
+    column="CTV3ID",
+)
+
+hypertension_codes = codelist_from_csv(
+    "codelists/opensafely-hypertension.csv",
+    system="ctv3",
+    column="CTV3ID",
+)
+
+prostate_cancer_icd10 = codelist_from_csv(
+    "codelists/user-RochelleKnight-prostate_cancer_icd10.csv",
+    system="icd10",
+    column="code",
+)
+
+prostate_cancer_snomed_clinical = codelist_from_csv(
+    "codelists/user-RochelleKnight-prostate_cancer_snomed.csv",
+    system="snomed",
+    column="code",
+)
+
+pregnancy_snomed_clinical = codelist_from_csv(
+    "codelists/user-RochelleKnight-pregnancy_and_birth_snomed.csv",
+    system="snomed",
+    column="code",
+)
+
+cocp_dmd = codelist_from_csv(
+    "codelists/user-elsie_horne-cocp_dmd.csv",
+    system="snomed",
+    column="dmd_id",
+)
+
+hrt_dmd = codelist_from_csv(
+    "codelists/user-elsie_horne-hrt_dmd.csv",
+    system="snomed",
+    column="dmd_id",
+)
+
+autoimmune_codes = codelist_from_csv(
+    "codelists/opensafely-ra-sle-psoriasis.csv",
+    system="ctv3",
+    column="CTV3ID",
+)
+
+lung_cancer_codes = codelist_from_csv(
+    "codelists/opensafely-lung-cancer.csv", system="ctv3", column="CTV3ID"
+)
+
+haem_cancer_codes = codelist_from_csv(
+    "codelists/opensafely-haematological-cancer.csv", system="ctv3", column="CTV3ID"
+)
+
+other_cancer_codes = codelist_from_csv(
+    "codelists/opensafely-cancer-excluding-lung-and-haematological.csv",
+    system="ctv3",
+    column="CTV3ID",
+)
+
+creatinine_codes = codelist_from_csv(
+    "codelists/user-bangzheng-creatinine-value.csv",
+    system="snomed",
+    column="code",
+)
+
+hiv_codes = codelist_from_csv(
+    "codelists/opensafely-hiv.csv",
+    system="ctv3",
+    column="CTV3ID",
+)
+
+permanent_immunosuppression_codes = codelist_from_csv(
+    "codelists/opensafely-permanent-immunosuppression.csv",
+    system="ctv3",
+    column="CTV3ID",
+)
+
+temporary_immunosuppression_codes = codelist_from_csv(
+    "codelists/opensafely-temporary-immunosuppression.csv",
+    system="ctv3",
+    column="CTV3ID",
+)
+
+aplastic_anaemia_codes = codelist_from_csv(
+    "codelists/opensafely-aplastic-anaemia.csv",
     system="ctv3",
     column="CTV3ID",
 )
