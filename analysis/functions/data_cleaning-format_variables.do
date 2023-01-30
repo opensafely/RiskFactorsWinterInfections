@@ -34,28 +34,32 @@ foreach var of varlist out_date* {
 *	rename `var'_tmp `var'
 *}
 
+* binary indicator for males
+gen cov_bin_male=0
+replace cov_bin_male=1 if sex=="M"
+
+
 * Format _num_ variables as numeric --------------------------------------------
 
 // TBC
 
 * Format _cat_ variables as categoricals ---------------------------------------
 
-// TBC, please include a missing category when needed and set reference categories
-
 * Ethnicity (5 category)
-replace cov_cat_ethnicity = 6 if cov_cat_ethnicity==.
-label define ethnicity_lab 	0 "Missing"						///
-							1 "White"  						///
+replace cov_cat_ethnicity = 6 if cov_cat_ethnicity==.|cov_cat_ethnicity==0
+label define ethnicity_lab 	1 "White"  						///
 							2 "Mixed" 						///
 							3 "Asian or Asian British"		///
 							4 "Black"  						///
-							5 "Other"
+							5 "Other"						///
+							6 "Missing"
 label values cov_cat_ethnicity ethnicity_lab
 
 
 * Label deprivation
 
-label def deprivation_decile 1 "1 Most deprived" 2 "2" 3 "3" 4 "4" 5 "5" 6 "6" 7 "7" 8 "8" 9 "9" 10 "10 Least deprived"
+replace cov_cat_deprivation=11 if cov_cat_deprivation==.
+label def deprivation_decile 1 "1 Most deprived" 2 "2" 3 "3" 4 "4" 5 "5" 6 "6" 7 "7" 8 "8" 9 "9" 10 "10 Least deprived" 11 "Missing"
 lab values cov_cat_deprivation deprivation_decile
 
 * Recode smoking status
@@ -88,6 +92,18 @@ label values region_tmp region_tmp
 drop cov_cat_region
 rename region_tmp cov_cat_region
 
+
+* recode obesity binary indicator
+
+gen obese_tmp=.
+replace obese_tmp=0 if cov_num_bmi<30
+replace obese_tmp=1 if cov_num_bmi>=30&cov_num_bmi<35
+replace obese_tmp=2 if cov_num_bmi>=35&cov_num_bmi<40
+replace obese_tmp=3 if cov_num_bmi>=40
+replace obese_tmp=4 if cov_num_bmi<=0|cov_num_bmi=.
+label define obese 0 "Not obese" 1 "Obese class I" 2 "Obese class II" 3 "Obese class III" 4 "Missing"
+drop cov_cat_obese
+rename obese_tmp cov_cat_obese
 
 *Summarise missingness
 
