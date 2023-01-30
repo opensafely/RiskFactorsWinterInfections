@@ -77,7 +77,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
 
     hosp_admitted_1=patients.admitted_to_hospital(
         returning="binary_flag",
-        between=[f"{index_date_variable}", f"{index_date_variable}-1 month"],
+        between=[f"{index_date_variable}- 30 days", f"{index_date_variable}"],
         with_patient_classification = ["1"],
         find_last_match_in_period=True,
         return_expectations={"incidence": 0.05},
