@@ -13,8 +13,7 @@ foreach var of varlist `r(varlist)' {
 
 * Format _date_ variables as dates ---------------------------------------------
 
-
-foreach var of varlist exposure_date outcome_date follow_up_start follow_up_end {
+foreach var of varlist out_date* {
 	split `var', gen(tmp_date) parse(-)
 	gen year = real(tmp_date1)
 	gen month = real(tmp_date2)
@@ -26,13 +25,14 @@ foreach var of varlist exposure_date outcome_date follow_up_start follow_up_end 
 }
 
 
+
 * Format _bin_ variables as logicals -------------------------------------------
 
-foreach var of varlist exp_bin* cov_bin* sub_bin* qa_bin* inex_bin_registered {
-	encode `var', gen(`var'_tmp)
-	drop `var'
-	rename `var'_tmp `var'
-}
+*foreach var of varlist exp_bin* cov_bin* sub_bin* qa_bin* inex_bin_registered {
+*	encode `var', gen(`var'_tmp)
+*	drop `var'
+*	rename `var'_tmp `var'
+*}
 
 * Format _num_ variables as numeric --------------------------------------------
 
@@ -42,44 +42,21 @@ foreach var of varlist exp_bin* cov_bin* sub_bin* qa_bin* inex_bin_registered {
 
 // TBC, please include a missing category when needed and set reference categories
 
-
-* Recode ethnicity
-
-gen ethnicity_tmp = .
-replace ethnicity_tmp = 1 if ethnicity=="White"
-replace ethnicity_tmp = 2 if ethnicity=="Mixed"
-replace ethnicity_tmp = 3 if ethnicity=="South Asian"
-replace ethnicity_tmp = 4 if ethnicity=="Black"
-replace ethnicity_tmp = 5 if ethnicity=="Other"
-replace ethnicity_tmp = 6 if ethnicity=="Missing"
-lab def ethnicity_tmp 1 "White, inc. miss" 2 "Mixed" 3 "South Asian" 4 "Black" 5 "Other" 6 "Missing"
-lab val ethnicity_tmp ethnicity_tmp
-drop ethnicity
-rename ethnicity_tmp cov_cat_ethnicity
-
-* Alternative Ethnicity (5 category)
-replace ethnicity = 6 if ethnicity==.
-label define ethnicity_lab 	1 "White"  						///
+* Ethnicity (5 category)
+replace cov_cat_ethnicity = 6 if cov_cat_ethnicity==.
+label define ethnicity_lab 	0 "Missing"						///
+							1 "White"  						///
 							2 "Mixed" 						///
 							3 "Asian or Asian British"		///
 							4 "Black"  						///
-							5 "Other"						///
-							6 "Unknown"
-label values ethnicity ethnicity_lab
+							5 "Other"
+label values cov_cat_ethnicity ethnicity_lab
 
 
-* Recode deprivation
+* Label deprivation
 
-gen cov_cat_deprivation_tmp = .
-replace cov_cat_deprivation_tmp = 1 if cov_cat_deprivation=="1-2 (most deprived)"
-replace cov_cat_deprivation_tmp = 2 if cov_cat_deprivation=="3-4"
-replace cov_cat_deprivation_tmp = 3 if cov_cat_deprivation=="5-6"
-replace cov_cat_deprivation_tmp = 4 if cov_cat_deprivation=="7-8"
-replace cov_cat_deprivation_tmp = 5 if cov_cat_deprivation=="9-10 (least deprived)"
-lab def cov_cat_deprivation_tmp 1 "1-2 (most deprived)" 2 "3-4" 3 "5-6" 4 "7-8" 5 "9-10 (least deprived)"
-lab val cov_cat_deprivation_tmp cov_cat_deprivation_tmp
-drop cov_cat_deprivation
-rename cov_cat_deprivation_tmp cov_cat_deprivation
+label def deprivation_decile 1 "1 Most deprived" 2 "2" 3 "3" 4 "4" 5 "5" 6 "6" 7 "7" 8 "8" 9 "9" 10 "10 Least deprived"
+lab values cov_cat_deprivation deprivation_decile
 
 * Recode smoking status
 
@@ -92,6 +69,24 @@ lab def cov_cat_smoking_status_tmp 1 "Never smoker" 2 "Ever smoker" 3 "Current s
 lab val cov_cat_smoking_status_tmp cov_cat_smoking_status_tmp
 drop cov_cat_smoking_status
 rename cov_cat_smoking_status_tmp cov_cat_smoking_status 
+
+
+* Recode region
+
+gen region_tmp = .
+replace region_tmp = 1 if cov_cat_region=="East"
+replace region_tmp = 2 if cov_cat_region=="East Midlands"
+replace region_tmp = 3 if cov_cat_region=="London"
+replace region_tmp = 4 if cov_cat_region=="North East"
+replace region_tmp = 5 if cov_cat_region=="North West"
+replace region_tmp = 6 if cov_cat_region=="South East"
+replace region_tmp = 7 if cov_cat_region=="South West"
+replace region_tmp = 8 if cov_cat_region=="West Midlands"
+replace region_tmp = 9 if cov_cat_region=="Yorkshire and The Humber"
+label define region_tmp 1 "East" 2 "East Midlands" 3 "London" 4 "North East" 5 "North West" 6 "South East" 7 "South West" 8 "West Midlands" 9 "Yorkshire and The Humber"
+label values region_tmp region_tmp
+drop cov_cat_region
+rename region_tmp cov_cat_region
 
 
 *Summarise missingness
