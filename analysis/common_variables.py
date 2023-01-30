@@ -22,7 +22,7 @@ import study_definition_helper_functions as helpers
 
 # Define common variables function
 
-def generate_common_variables(index_date_variable, index_date_variable_covariates):
+def generate_common_variables(index_date_variable):
 
     dynamic_variables = dict(
 
@@ -44,7 +44,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
     cov_cat_deprivation=patients.categorised_as(
         helpers.generate_deprivation_ntile_dictionary(10),
         index_of_multiple_deprivation=patients.address_as_of(
-            f"{index_date_variable_covariates}",
+            f"{index_date_variable}- 1 day",
             returning="index_of_multiple_deprivation",
             round_to_nearest=100,
         ),
@@ -122,7 +122,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
         },
         return_expectations={"category": {"ratios": {"0": 0.8, "1": 0.2}},},
         recent_asthma_code=patients.with_these_clinical_events(
-            asthma_codes, between=[f"{index_date_variable}- 365 days", f"{index_date_variable_covariates}"],
+            asthma_codes, between=[f"{index_date_variable}- 365 days", f"{index_date_variable}- 1 day"],
         ),
         asthma_code_ever=patients.with_these_clinical_events(asthma_codes),
         copd_code_ever=patients.with_these_clinical_events(
@@ -130,7 +130,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
         ),
         prednisolone_last_year=patients.with_these_medications(
             pred_codes,
-            between=[f"{index_date_variable}- 365 days", f"{index_date_variable_covariates}"],
+            between=[f"{index_date_variable}- 365 days", f"{index_date_variable}- 1 day"],
             returning="number_of_matches_in_period",
         ),
     ),
@@ -139,7 +139,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
     # https://github.com/ebmdatalab/tpp-sql-notebook/issues/21
     exp_bin_chronicresp=patients.with_these_clinical_events(
         chronic_respiratory_disease_codes,
-        on_or_before = f"{index_date_variable_covariates}",
+        on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
@@ -147,7 +147,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
     ## Chronic heart disease
     exp_bin_chd=patients.with_these_clinical_events(
         chronic_cardiac_disease_codes,
-        on_or_before = f"{index_date_variable_covariates}",
+        on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
@@ -155,7 +155,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
     ## Diabetes
     exp_bin_diabetes=patients.with_these_clinical_events(
         diabetes_codes,
-        on_or_before = f"{index_date_variable_covariates}",
+        on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
@@ -163,7 +163,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
     ## Chronic liver disease
     exp_bin_chronicliver=patients.with_these_clinical_events(
         chronic_liver_disease_codes,
-        on_or_before = f"{index_date_variable_covariates}",
+        on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
@@ -171,7 +171,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
     ## Chronic neurological diseases
     exp_bin_chronicneuro=patients.with_these_clinical_events(
         other_neuro,
-        on_or_before = f"{index_date_variable_covariates}",
+        on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
@@ -179,7 +179,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
     ## Common autoimmune diseases 
     exp_bin_autoimmune=patients.with_these_clinical_events(
         autoimmune_codes,
-        on_or_before = f"{index_date_variable_covariates}",
+        on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
@@ -187,7 +187,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
     ## Solid organ transplant
     exp_bin_solid_organ_transplantation=patients.with_these_clinical_events(
         asplenia_codes,
-        on_or_before = f"{index_date_variable_covariates}",
+        on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
@@ -195,7 +195,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
     ## Asplenia 
     exp_bin_asplenia=patients.with_these_clinical_events(
         asplenia_codes,
-        on_or_before = f"{index_date_variable_covariates}",
+        on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
@@ -206,28 +206,28 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
     
     tmp_exp_bin_hiv=patients.with_these_clinical_events(
         hiv_codes,
-        on_or_before = f"{index_date_variable_covariates}",
+        on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
 
     tmp_exp_bin_perm_immuno=patients.with_these_clinical_events(
         permanent_immunosuppression_codes,
-        on_or_before = f"{index_date_variable_covariates}",
+        on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
 
     tmp_exp_bin_temp_immuno=patients.with_these_clinical_events(
         temporary_immunosuppression_codes,
-        between=[f"{index_date_variable}- 1 year", f"{index_date_variable_covariates}"],
+        between=[f"{index_date_variable}- 1 year", f"{index_date_variable}- 1 day"],
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
 
     tmp_exp_bin_aplastic_anaemia=patients.with_these_clinical_events(
         aplastic_anaemia_codes,
-        between=[f"{index_date_variable}- 1 year", f"{index_date_variable_covariates}"],
+        between=[f"{index_date_variable}- 1 year", f"{index_date_variable}- 1 day"],
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
@@ -242,21 +242,21 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
 
     exp_bin_lung_cancer=patients.with_these_clinical_events(
         lung_cancer_codes,
-        on_or_before = f"{index_date_variable_covariates}",
+        on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
 
     exp_bin_haem_cancer=patients.with_these_clinical_events(
         haem_cancer_codes, 
-        on_or_before = f"{index_date_variable_covariates}",
+        on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
 
     exp_bin_other_cancer=patients.with_these_clinical_events(
         other_cancer_codes, 
-        on_or_before = f"{index_date_variable_covariates}",
+        on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
@@ -272,7 +272,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
     baseline_creatinine=patients.mean_recorded_value(
         creatinine_codes,
         on_most_recent_day_of_measurement=True,
-        on_or_before = f"{index_date_variable_covariates}",
+        on_or_before = f"{index_date_variable}- 1 day",
         return_expectations={
             "float": {"distribution": "normal", "mean": 80, "stddev": 40},
             "incidence": 0.60,
@@ -283,7 +283,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
 
     exp_bin_hypertension=patients.with_these_clinical_events(
         hypertension_codes,
-        on_or_before = f"{index_date_variable_covariates}",
+        on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
@@ -300,7 +300,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
 
 	out_date_flu_adm = patients.admitted_to_hospital(
 		with_these_diagnoses = flu_icd10,
-		on_or_after = f"{index_date_variable}",
+		between=[f"{index_date_variable}", f"{index_date_variable} + 89 days"],
 		returning="date_admitted",
 		date_format = "YYYY-MM-DD",
 		return_expectations={
@@ -314,7 +314,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
 
 	out_date_rsv_adm = patients.admitted_to_hospital(
 		with_these_diagnoses = rsv_icd10,
-		on_or_after = f"{index_date_variable}",
+		between=[f"{index_date_variable}", f"{index_date_variable} + 89 days"],
 		returning="date_admitted",
 		date_format = "YYYY-MM-DD",
 		return_expectations={
@@ -328,7 +328,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
 
 	out_date_pneustrep_adm = patients.admitted_to_hospital(
 		with_these_diagnoses = pneustrep_icd10,
-		on_or_after = f"{index_date_variable}",
+		between=[f"{index_date_variable}", f"{index_date_variable} + 89 days"],
 		returning="date_admitted",
 		date_format = "YYYY-MM-DD",
 		return_expectations={
@@ -342,7 +342,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
 
 	out_date_pneu_adm = patients.admitted_to_hospital(
 		with_these_diagnoses = pneu_icd10,
-		on_or_after = f"{index_date_variable}",
+		between=[f"{index_date_variable}", f"{index_date_variable} + 89 days"],
 		returning="date_admitted",
 		date_format = "YYYY-MM-DD",
 		return_expectations={
@@ -356,7 +356,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
 
 	out_date_covid_adm = patients.admitted_to_hospital(
 		with_these_diagnoses = covid_icd10,
-		on_or_after = f"{index_date_variable}",
+		between=[f"{index_date_variable}", f"{index_date_variable} + 89 days"],
 		returning="date_admitted",
 		date_format = "YYYY-MM-DD",
 		return_expectations={
@@ -569,25 +569,25 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
         ),
         cov_ethnicity_gp_opensafely=patients.with_these_clinical_events(
             opensafely_ethnicity_codes_6,
-            on_or_before=f"{index_date_variable_covariates}",
+            on_or_before=f"{index_date_variable}- 1 day",
             returning="category",
             find_last_match_in_period=True,
         ),
         cov_ethnicity_gp_primis=patients.with_these_clinical_events(
             primis_covid19_vacc_update_ethnicity,
-            on_or_before=f"{index_date_variable_covariates}",
+            on_or_before=f"{index_date_variable}- 1 day",
             returning="category",
             find_last_match_in_period=True,
         ),
         cov_ethnicity_gp_opensafely_date=patients.with_these_clinical_events(
             opensafely_ethnicity_codes_6,
-            on_or_before=f"{index_date_variable_covariates}",
+            on_or_before=f"{index_date_variable}- 1 day",
             returning="category",
             find_last_match_in_period=True,
         ),
         cov_ethnicity_gp_primis_date=patients.with_these_clinical_events(
             primis_covid19_vacc_update_ethnicity,
-            on_or_before=f"{index_date_variable_covariates}",
+            on_or_before=f"{index_date_variable}- 1 day",
             returning="category",
             find_last_match_in_period=True,
         ),
@@ -597,7 +597,7 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
     ## BMI
     # taken from: https://github.com/opensafely/BMI-and-Metabolic-Markers/blob/main/analysis/common_variables.py 
     cov_num_bmi=patients.most_recent_bmi(
-        on_or_before=f"{index_date_variable_covariates}",
+        on_or_before=f"{index_date_variable}- 1 day",
         minimum_age_at_measurement=18,
         include_measurement_date=True,
         date_format="YYYY-MM",
@@ -644,12 +644,12 @@ def generate_common_variables(index_date_variable, index_date_variable_covariate
         most_recent_smoking_code=patients.with_these_clinical_events(
             smoking_clear,
             find_last_match_in_period=True,
-            on_or_before=f"{index_date_variable_covariates}",
+            on_or_before=f"{index_date_variable}- 1 day",
             returning="category",
         ),
         ever_smoked=patients.with_these_clinical_events(
             filter_codes_by_category(smoking_clear, include=["S", "E"]),
-            on_or_before=f"{index_date_variable_covariates}",
+            on_or_before=f"{index_date_variable}- 1 day",
         ),
     ),
 
