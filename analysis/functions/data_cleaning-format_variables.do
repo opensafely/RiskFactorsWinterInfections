@@ -25,7 +25,6 @@ foreach var of varlist out_date* {
 }
 
 
-
 * Format _bin_ variables as logicals -------------------------------------------
 
 *foreach var of varlist exp_bin* cov_bin* sub_bin* qa_bin* inex_bin_registered {
@@ -62,17 +61,18 @@ replace cov_cat_deprivation=11 if cov_cat_deprivation==.
 label def deprivation_decile 1 "1 Most deprived" 2 "2" 3 "3" 4 "4" 5 "5" 6 "6" 7 "7" 8 "8" 9 "9" 10 "10 Least deprived" 11 "Missing"
 lab values cov_cat_deprivation deprivation_decile
 
+
 * Recode smoking status
 
-gen cov_cat_smoking_status_tmp = .
-replace cov_cat_smoking_status_tmp = 1 if cov_cat_smoking_status=="Never smoker"
-replace cov_cat_smoking_status_tmp = 2 if cov_cat_smoking_status=="Ever smoker"
-replace cov_cat_smoking_status_tmp = 3 if cov_cat_smoking_status=="Current smoker"
-replace cov_cat_smoking_status_tmp = 4 if cov_cat_smoking_status=="Missing"
-lab def cov_cat_smoking_status_tmp 1 "Never smoker" 2 "Ever smoker" 3 "Current smoker" 4 "Missing"
-lab val cov_cat_smoking_status_tmp cov_cat_smoking_status_tmp
-drop cov_cat_smoking_status
-rename cov_cat_smoking_status_tmp cov_cat_smoking_status 
+gen cov_cat_smoking_tmp = .
+replace cov_cat_smoking_tmp = 1 if cov_cat_smoking=="N"
+replace cov_cat_smoking_tmp = 2 if cov_cat_smoking=="E"
+replace cov_cat_smoking_tmp = 3 if cov_cat_smoking=="S"
+replace cov_cat_smoking_tmp = 4 if cov_cat_smoking=="M"|cov_cat_smoking==""
+lab def cov_cat_smoking_tmp 1 "Never smoker" 2 "Ever smoker" 3 "Current smoker" 4 "Missing"
+lab val cov_cat_smoking_tmp cov_cat_smoking_tmp
+drop cov_cat_smoking
+rename cov_cat_smoking_tmp cov_cat_smoking 
 
 
 * Recode region
@@ -100,10 +100,56 @@ replace obese_tmp=0 if cov_num_bmi<30
 replace obese_tmp=1 if cov_num_bmi>=30&cov_num_bmi<35
 replace obese_tmp=2 if cov_num_bmi>=35&cov_num_bmi<40
 replace obese_tmp=3 if cov_num_bmi>=40
-replace obese_tmp=4 if cov_num_bmi<=0|cov_num_bmi=.
+replace obese_tmp=4 if cov_num_bmi<=0|cov_num_bmi==.
 label define obese 0 "Not obese" 1 "Obese class I" 2 "Obese class II" 3 "Obese class III" 4 "Missing"
+label values obese_tmp obese
 drop cov_cat_obese
 rename obese_tmp cov_cat_obese
+
+* Reduced kidney function
+
+  * Set implausible creatinine values to missing (Note: zero changed to missing)
+replace creatinine = . if !inrange(creatinine, 20, 3000) 
+	
+  * Divide by 88.4 (to convert umol/l to mg/dl)
+gen SCr_adj = creatinine/88.4
+
+gen min=.
+replace min = SCr_adj/0.7 if male==0
+replace min = SCr_adj/0.9 if male==1
+replace min = min^-0.329  if male==0
+replace min = min^-0.411  if male==1
+replace min = 1 if min<1
+
+gen max=.
+replace max=SCr_adj/0.7 if male==0
+replace max=SCr_adj/0.9 if male==1
+replace max=max^-1.209
+replace max=1 if max>1
+
+gen egfr=min*max*141
+replace egfr=egfr*(0.993^age)
+replace egfr=egfr*1.018 if male==0
+label var egfr "egfr calculated using CKD-EPI formula with no eth"
+
+  * Categorise into ckd stages
+egen egfr_cat = cut(egfr), at(0, 15, 30, 45, 60, 5000)
+recode egfr_cat 0=5 15=4 30=3 45=2 60=0, generate(ckd)
+* 0 = "No CKD" 	2 "stage 3a" 3 "stage 3b" 4 "stage 4" 5 "stage 5"
+label define ckd 0 "No CKD" 1 "CKD"
+label values ckd ckd
+label var ckd "CKD stage calc without eth"
+
+  * Convert into CKD group
+*recode ckd 2/5=1, gen(chronic_kidney_disease)
+*replace chronic_kidney_disease = 0 if creatinine==. 
+	
+recode ckd 0=1 2/3=2 4/5=3, gen(reduced_kidney_function_cat)
+replace reduced_kidney_function_cat = 1 if creatinine==. 
+label define reduced_kidney_function_catlab ///
+	1 "None" 2 "Stage 3a/3b egfr 30-60	" 3 "Stage 4/5 egfr<30"
+label values reduced_kidney_function_cat reduced_kidney_function_catlab 
+ 
 
 *Summarise missingness
 

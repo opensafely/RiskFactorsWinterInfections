@@ -15,11 +15,13 @@ format_variables
 
 ** Length of hospital stay -----------------------------------------------------
 
-// TBC
+gen out_num_flu_stay=0
+replace out_num_flu_stay = tmp_out_date_flu_dis - out_date_flu_adm if tmp_out_date_flu_dis!=. & out_date_flu_adm !=.
+
 
 ** Readmission within 30 days --------------------------------------------------
 
-// TBC
+
 
 * Apply quality assurance measures ---------------------------------------------
 
@@ -34,6 +36,8 @@ inclusion_exclusion
 * Restrict dataset to relevant variables ---------------------------------------
 
 // TBC, please remove QA and other variables that are not used downstream
+
+drop has_died registered_previous_365days sex tmp* inex qa*
 
 * Compress data ----------------------------------------------------------------
 
