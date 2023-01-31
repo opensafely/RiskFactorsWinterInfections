@@ -186,7 +186,7 @@ def generate_common_variables(index_date_variable):
 
     ## Solid organ transplant
     exp_bin_solid_organ_transplantation=patients.with_these_clinical_events(
-        asplenia_codes,
+        organ_transplantation,
         on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
@@ -301,6 +301,7 @@ def generate_common_variables(index_date_variable):
 	out_date_flu_adm = patients.admitted_to_hospital(
 		with_these_diagnoses = flu_icd10,
 		between=[f"{index_date_variable}", f"{index_date_variable} + 89 days"],
+        find_first_match_in_period=True,
 		returning="date_admitted",
 		date_format = "YYYY-MM-DD",
 		return_expectations={
@@ -315,6 +316,7 @@ def generate_common_variables(index_date_variable):
 	out_date_rsv_adm = patients.admitted_to_hospital(
 		with_these_diagnoses = rsv_icd10,
 		between=[f"{index_date_variable}", f"{index_date_variable} + 89 days"],
+        find_first_match_in_period=True,
 		returning="date_admitted",
 		date_format = "YYYY-MM-DD",
 		return_expectations={
@@ -329,6 +331,7 @@ def generate_common_variables(index_date_variable):
 	out_date_pneustrep_adm = patients.admitted_to_hospital(
 		with_these_diagnoses = pneustrep_icd10,
 		between=[f"{index_date_variable}", f"{index_date_variable} + 89 days"],
+        find_first_match_in_period=True,
 		returning="date_admitted",
 		date_format = "YYYY-MM-DD",
 		return_expectations={
@@ -343,6 +346,7 @@ def generate_common_variables(index_date_variable):
 	out_date_pneu_adm = patients.admitted_to_hospital(
 		with_these_diagnoses = pneu_icd10,
 		between=[f"{index_date_variable}", f"{index_date_variable} + 89 days"],
+        find_first_match_in_period=True,
 		returning="date_admitted",
 		date_format = "YYYY-MM-DD",
 		return_expectations={
@@ -357,6 +361,7 @@ def generate_common_variables(index_date_variable):
 	out_date_covid_adm = patients.admitted_to_hospital(
 		with_these_diagnoses = covid_icd10,
 		between=[f"{index_date_variable}", f"{index_date_variable} + 89 days"],
+        find_first_match_in_period=True,
 		returning="date_admitted",
 		date_format = "YYYY-MM-DD",
 		return_expectations={
@@ -453,7 +458,7 @@ def generate_common_variables(index_date_variable):
 
 	out_date_flu_readm = patients.admitted_to_hospital(
 		with_these_diagnoses = flu_icd10,
-		on_or_before = "tmp_out_date_flu_dis + 30 days",
+        between=["tmp_out_date_flu_dis", "tmp_out_date_flu_dis + 30 days"],
 		returning="date_admitted",
 		date_format = "YYYY-MM-DD",
 		return_expectations={
@@ -467,7 +472,7 @@ def generate_common_variables(index_date_variable):
 
 	out_date_rsv_readm = patients.admitted_to_hospital(
 		with_these_diagnoses = rsv_icd10,
-		on_or_before = "tmp_out_date_rsv_dis + 30 days",
+		between=["tmp_out_date_rsv_dis", "tmp_out_date_rsv_dis + 30 days"],
 		returning="date_admitted",
 		date_format = "YYYY-MM-DD",
 		return_expectations={
@@ -481,7 +486,7 @@ def generate_common_variables(index_date_variable):
 
 	out_date_pneustrep_readm = patients.admitted_to_hospital(
 		with_these_diagnoses = pneustrep_icd10,
-		on_or_before = "tmp_out_date_pneustrep_dis + 30 days",
+		between=["tmp_out_date_pneustrep_dis", "tmp_out_date_pneustrep_dis + 30 days"],
 		returning="date_admitted",
 		date_format = "YYYY-MM-DD",
 		return_expectations={
@@ -495,7 +500,7 @@ def generate_common_variables(index_date_variable):
 
 	out_date_pneu_readm = patients.admitted_to_hospital(
 		with_these_diagnoses = pneu_icd10,
-		on_or_before = "tmp_out_date_pneu_dis + 30 days",
+		between=["tmp_out_date_pneu_dis", "tmp_out_date_pneu_dis + 30 days"],
 		returning="date_admitted",
 		date_format = "YYYY-MM-DD",
 		return_expectations={
@@ -509,7 +514,7 @@ def generate_common_variables(index_date_variable):
 
 	out_date_covid_readm = patients.admitted_to_hospital(
 		with_these_diagnoses = covid_icd10,
-		on_or_before = "tmp_out_date_covid_dis + 30 days",
+		between=["tmp_out_date_covid_dis", "tmp_out_date_covid_dis + 30 days"],
 		returning="date_admitted",
 		date_format = "YYYY-MM-DD",
 		return_expectations={
