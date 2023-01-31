@@ -87,7 +87,7 @@ def generate_common_variables(index_date_variable):
 
     registered_previous_365days=patients.registered_with_one_practice_between(
         start_date=f"{index_date_variable}- 365 days",
-        end_date=f"{index_date_variable}",
+        end_date=f"{index_date_variable} + 89 days",
         return_expectations={"incidence": 0.95},
     ),
 
