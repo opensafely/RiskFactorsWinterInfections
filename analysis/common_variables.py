@@ -608,23 +608,23 @@ def generate_common_variables(index_date_variable):
         },
     ),
 
-     ### Categorising BMI
-    cov_cat_obese = patients.categorised_as(
-        {
-            "No": "cov_num_bmi < 30", 
-            "Yes": "cov_num_bmi >=30", 
-            "Missing": "DEFAULT", 
-        }, 
-        return_expectations = {
-            "rate": "universal", 
-            "category": {
-                "ratios": {
-                    "No": 0.7, 
-                    "Yes": 0.3, 
-                },
-            },
-        },
-    ),
+     ### Categorising BMI - done in data cleaning ?
+    # cov_cat_obese = patients.categorised_as(
+    #     {
+    #         "No": "cov_num_bmi < 30", 
+    #         "Yes": "cov_num_bmi >=30", 
+    #         "Missing": "DEFAULT", 
+    #     }, 
+    #     return_expectations = {
+    #         "rate": "universal", 
+    #         "category": {
+    #             "ratios": {
+    #                 "No": 0.7, 
+    #                 "Yes": 0.3, 
+    #             },
+    #         },
+    #     },
+    # ),
 
     ## Smoking status
     cov_cat_smoking=patients.categorised_as(
