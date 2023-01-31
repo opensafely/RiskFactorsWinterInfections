@@ -539,11 +539,63 @@ def generate_common_variables(index_date_variable):
 
 # RSV
 
+    out_date_rsv_death=patients.with_these_codes_on_death_certificate(
+        rsv_icd10,
+        returning="date_of_death",
+        on_or_after=f"{index_date_variable}",
+        match_only_underlying_cause=True,
+        date_format="YYYY-MM-DD",
+        return_expectations={
+            "date": {"earliest": f"{index_date_variable}", "latest" : "today"},
+            "rate": "uniform",
+            "incidence": 0.05,
+        },
+    ),
+
 # Pneumonia strep
+
+    out_date_pneustrep_death=patients.with_these_codes_on_death_certificate(
+        pneustrep_icd10,
+        returning="date_of_death",
+        on_or_after=f"{index_date_variable}",
+        match_only_underlying_cause=True,
+        date_format="YYYY-MM-DD",
+        return_expectations={
+            "date": {"earliest": f"{index_date_variable}", "latest" : "today"},
+            "rate": "uniform",
+            "incidence": 0.05,
+        },
+    ),
 
 # Pmeumonia
 
+    out_date_pneu_death=patients.with_these_codes_on_death_certificate(
+        pneu_icd10,
+        returning="date_of_death",
+        on_or_after=f"{index_date_variable}",
+        match_only_underlying_cause=True,
+        date_format="YYYY-MM-DD",
+        return_expectations={
+            "date": {"earliest": f"{index_date_variable}", "latest" : "today"},
+            "rate": "uniform",
+            "incidence": 0.05,
+        },
+    ),
+
 # COVID-19
+
+    out_date_covid_death=patients.with_these_codes_on_death_certificate(
+        covid_icd10,
+        returning="date_of_death",
+        on_or_after=f"{index_date_variable}",
+        match_only_underlying_cause=True,
+        date_format="YYYY-MM-DD",
+        return_expectations={
+            "date": {"earliest": f"{index_date_variable}", "latest" : "today"},
+            "rate": "uniform",
+            "incidence": 0.05,
+        },
+    ),
 
 #----------------------------------------------- COVARIATES #----------------------------------------------- #
 
