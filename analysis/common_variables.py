@@ -30,6 +30,33 @@ def generate_common_variables(index_date_variable):
 # "ALIVE" and "REGISTERED" defined in study definitions
 # Variables only defined here - study population to be defined in data cleaning script
 
+# Define death date
+
+    ## Primary care
+    primary_care_death_date=patients.with_death_recorded_in_primary_care(
+            on_or_after="index_date",
+            returning="date_of_death",
+            date_format="YYYY-MM-DD",
+            return_expectations={
+                "date": {"earliest": "index_date", "latest" : "today"},
+                "rate": "exponential_increase",
+            },
+    ),
+    ## ONS
+    ons_died_from_any_cause_date=patients.died_from_any_cause(
+            on_or_after="index_date",
+            returning="date_of_death",
+            date_format="YYYY-MM-DD",
+            return_expectations={
+                "date": {"earliest": "index_date", "latest" : "today"},
+                "rate": "exponential_increase",
+            },
+    ),
+    ## Combined
+    death_date=patients.minimum_of(
+        "primary_care_death_date", "ons_died_from_any_cause_date"
+    ),
+
     ## Age
     cov_num_age = patients.age_as_of(
         f"{index_date_variable}",
@@ -168,8 +195,16 @@ def generate_common_variables(index_date_variable):
         return_expectations = {"incidence": 0.05},
     ),
 
-    ## Chronic neurological diseases
-    exp_bin_chronicneuro=patients.with_these_clinical_events(
+    ## Stroke and dementia
+    exp_bin_stroke_dementia=patients.with_these_clinical_events(
+        other_neuro,
+        on_or_before = f"{index_date_variable}- 1 day",
+        returning = "binary_flag",
+        return_expectations = {"incidence": 0.05},
+    ),
+
+    ## Other neurological diseases
+    exp_bin_otherneuro=patients.with_these_clinical_events(
         other_neuro,
         on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
