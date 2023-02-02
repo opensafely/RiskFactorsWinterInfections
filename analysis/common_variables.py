@@ -197,7 +197,7 @@ def generate_common_variables(index_date_variable):
 
     ## Stroke and dementia
     exp_bin_stroke_dementia=patients.with_these_clinical_events(
-        other_neuro,
+        stroke_codes,
         on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},

@@ -102,12 +102,6 @@
       "downloaded_at": "2023-01-23 20:51:21.366475Z",
       "sha": "f2781f0c9a0617b30996d681a798eedd152a09af"
     },
-    "opensafely-other-neurological-conditions.csv": {
-      "id": "opensafely/other-neurological-conditions/2020-06-02",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/other-neurological-conditions/2020-06-02/",
-      "downloaded_at": "2023-01-23 20:51:21.563657Z",
-      "sha": "855e7e09a0500401ae2429c6a401978e8c9075ec"
-    },
     "opensafely-asplenia.csv": {
       "id": "opensafely/asplenia/2020-06-02",
       "url": "https://codelists.opensafely.org/codelist/opensafely/asplenia/2020-06-02/",
@@ -209,6 +203,18 @@
       "url": "https://codelists.opensafely.org/codelist/opensafely/aplastic-anaemia/2020-04-24/",
       "downloaded_at": "2023-01-26 14:25:50.542781Z",
       "sha": "bd34ff54f789dce031e3581006cc0befcee0b35c"
+    },
+    "opensafely-stroke-updated.csv": {
+      "id": "opensafely/stroke-updated/2020-06-02",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/stroke-updated/2020-06-02/",
+      "downloaded_at": "2023-02-02 13:43:52.258457Z",
+      "sha": "e62a8af49698022220de1e1e438d6b6c611e666e"
+    },
+    "opensafely-other-neurological-conditions.csv": {
+      "id": "opensafely/other-neurological-conditions/2020-06-02",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/other-neurological-conditions/2020-06-02/",
+      "downloaded_at": "2023-01-23 20:51:21.563657Z",
+      "sha": "855e7e09a0500401ae2429c6a401978e8c9075ec"
     }
   }
 }
