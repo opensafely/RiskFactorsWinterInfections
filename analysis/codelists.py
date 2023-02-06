@@ -211,7 +211,7 @@ aplastic_anaemia_codes = codelist_from_csv(
 )
 
 stroke_codes = codelist_from_csv(
-    "codelists/opensafely-aplastic-anaemia.csv",
+    "codelists/opensafely-stroke-updated.csv",
     system="ctv3",
     column="CTV3ID",
 )
