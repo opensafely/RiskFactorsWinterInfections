@@ -47,13 +47,6 @@ study = StudyDefinition(
         "registered",
         registered=patients.registered_as_of("index_date"),
     ),
-        
-    ### Covariates and inclusion/exclusion variables
-    ## Patient alive at index date
-    has_died = patients.died_from_any_cause(
-        on_or_before = "index_date",
-        returning = "binary_flag",
-    ),
    
         **dynamic_variables
 )
