@@ -6,8 +6,10 @@ args // TBC
 
 * Remove individuals whose year of birth is after their year of death ----------  
 
+gen death_year=year(death_date)
+
 gen qa_birth_after_dth=0
-replace qa_birth_after_dth=1 if qa_num_birth_year>
+replace qa_birth_after_dth=1 if qa_num_birth_year>death_year
 
 quietly: table () (qa_birth_after_dth), statistic(frequency) name(consort) append
 
@@ -25,6 +27,7 @@ replace qa_birth_after_today=1 if qa_num_birth_year > year_extract
 quietly: table () (qa_birth_after_today), statistic(frequency) name(consort) append
 
 drop if qa_birth_after_today=1
+
 
 * Remove individuals whose date of death is after date of data extract ---------
 
@@ -69,7 +72,7 @@ drop if qa_prostate_women=1
 
 * combine counts of excluded records and export
 
-collect layout () (inex qa_birth_after_dth qa_birth_after_today qa_dth_after_today qa_preg_men qa_hrt_cocp_men qa_prostate_women)
+collect layout () (exclude qa_birth_after_dth qa_birth_after_today qa_dth_after_today qa_preg_men qa_hrt_cocp_men qa_prostate_women)
 
 collect export "./output/consort.xlsx", xlsx
 

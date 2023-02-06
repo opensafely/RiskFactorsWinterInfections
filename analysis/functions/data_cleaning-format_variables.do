@@ -2,7 +2,7 @@
 
 cap prog drop format_variables
 prog def format_variables
-args // TBC, please include study start and end date
+
 
 * Replace NA with missing value that Stata recognises --------------------------
 
@@ -13,7 +13,7 @@ foreach var of varlist `r(varlist)' {
 
 * Format _date_ variables as dates ---------------------------------------------
 
-foreach var of varlist out_date* {
+foreach var of varlist out_date* tmp_out_date* death_date study_start_date study_end_date{
 	split `var', gen(tmp_date) parse(-)
 	gen year = real(tmp_date1)
 	gen month = real(tmp_date2)
@@ -37,10 +37,6 @@ foreach var of varlist out_date* {
 gen cov_bin_male=0
 replace cov_bin_male=1 if sex=="M"
 
-
-* Format _num_ variables as numeric --------------------------------------------
-
-// TBC
 
 * Format _cat_ variables as categoricals ---------------------------------------
 
@@ -93,7 +89,7 @@ drop cov_cat_region
 rename region_tmp cov_cat_region
 
 
-* recode obesity binary indicator
+* recode obesity using WHO categories
 
 gen obese_tmp=.
 replace obese_tmp=0 if cov_num_bmi<30
@@ -103,33 +99,33 @@ replace obese_tmp=3 if cov_num_bmi>=40
 replace obese_tmp=4 if cov_num_bmi<=0|cov_num_bmi==.
 label define obese 0 "Not obese" 1 "Obese class I" 2 "Obese class II" 3 "Obese class III" 4 "Missing"
 label values obese_tmp obese
-drop cov_cat_obese
 rename obese_tmp cov_cat_obese
 
-* Reduced kidney function
+
+* Reduced kidney function categories
 
   * Set implausible creatinine values to missing (Note: zero changed to missing)
-replace creatinine = . if !inrange(creatinine, 20, 3000) 
+replace baseline_creatinine = . if !inrange(baseline_creatinine, 20, 3000) 
 	
   * Divide by 88.4 (to convert umol/l to mg/dl)
-gen SCr_adj = creatinine/88.4
+gen SCr_adj = baseline_creatinine/88.4
 
 gen min=.
-replace min = SCr_adj/0.7 if male==0
-replace min = SCr_adj/0.9 if male==1
-replace min = min^-0.329  if male==0
-replace min = min^-0.411  if male==1
+replace min = SCr_adj/0.7 if cov_bin_male==0
+replace min = SCr_adj/0.9 if cov_bin_male==1
+replace min = min^-0.329  if cov_bin_male==0
+replace min = min^-0.411  if cov_bin_male==1
 replace min = 1 if min<1
 
 gen max=.
-replace max=SCr_adj/0.7 if male==0
-replace max=SCr_adj/0.9 if male==1
+replace max=SCr_adj/0.7 if cov_bin_male==0
+replace max=SCr_adj/0.9 if cov_bin_male==1
 replace max=max^-1.209
 replace max=1 if max>1
 
 gen egfr=min*max*141
-replace egfr=egfr*(0.993^age)
-replace egfr=egfr*1.018 if male==0
+replace egfr=egfr*(0.993^cov_num_age)
+replace egfr=egfr*1.018 if cov_bin_male==0
 label var egfr "egfr calculated using CKD-EPI formula with no eth"
 
   * Categorise into ckd stages
@@ -144,11 +140,11 @@ label var ckd "CKD stage calc without eth"
 *recode ckd 2/5=1, gen(chronic_kidney_disease)
 *replace chronic_kidney_disease = 0 if creatinine==. 
 	
-recode ckd 0=1 2/3=2 4/5=3, gen(reduced_kidney_function_cat)
-replace reduced_kidney_function_cat = 1 if creatinine==. 
+recode ckd 0=1 2/3=2 4/5=3, gen(exp_cat_kidneyfunc)
+replace exp_cat_kidneyfunc = 1 if baseline_creatinine==. 
 label define reduced_kidney_function_catlab ///
 	1 "None" 2 "Stage 3a/3b egfr 30-60	" 3 "Stage 4/5 egfr<30"
-label values reduced_kidney_function_cat reduced_kidney_function_catlab 
+label values exp_cat_kidneyfunc reduced_kidney_function_catlab 
  
 
 *Summarise missingness
