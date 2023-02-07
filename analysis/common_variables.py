@@ -67,6 +67,29 @@ def generate_common_variables(index_date_variable):
         },
     ),
 
+    # Age categories 
+    sub_cat_age=patients.categorised_as(
+        {
+            "18-39": "cov_num_age >= 0 AND cov_num_age < 5",
+            "40-45": "cov_num_age >= 5 AND cov_num_age < 10",
+            "60-79": "cov_num_age >= 10 AND cov_num_age < 15",
+            "80-110": "cov_num_age >= 15 AND cov_num_age < 20",
+            "missing": "DEFAULT",
+        },
+        return_expectations={
+            "rate": "universal",
+            "category": {
+                "ratios": {
+                    "18-39": 0.25,
+                    "40-45": 0.25,
+                    "60-79": 0.25,
+                    "80-110": 0.1,
+                    "missing": 0.15,
+                }
+            },
+        },
+    ),
+
     ## Deprivation
     cov_cat_deprivation=patients.categorised_as(
         helpers.generate_deprivation_ntile_dictionary(10),
@@ -810,6 +833,29 @@ def generate_common_variables(index_date_variable):
         returning='binary_flag',
         on_or_before=f"{index_date_variable}",
         return_expectations={"incidence": 0.1},
+    ),
+
+    # care home 
+    sub_bin_carehome=patients.care_home_status_as_of(
+        f"{index_date_variable}",
+        categorised_as={
+            "Yes": """
+              IsPotentialCareHome
+              AND LocationDoesNotRequireNursing='Y'
+              AND LocationRequiresNursing='N'
+            """,
+            "Yes": """
+              IsPotentialCareHome
+              AND LocationDoesNotRequireNursing='N'
+              AND LocationRequiresNursing='Y'
+            """,
+            "Yes": "IsPotentialCareHome",
+            "No": "DEFAULT",
+        },
+        return_expectations={
+            "rate": "universal",
+            "category": {"ratios": {"Yes": 0.30, "No": 0.70},},
+        },
     ),
 
     )
