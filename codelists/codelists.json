@@ -215,6 +215,12 @@
       "url": "https://codelists.opensafely.org/codelist/opensafely/other-neurological-conditions/2020-06-02/",
       "downloaded_at": "2023-01-23 20:51:21.563657Z",
       "sha": "855e7e09a0500401ae2429c6a401978e8c9075ec"
+    },
+    "opensafely-glycated-haemoglobin-hba1c-tests-numerical-value.csv": {
+      "id": "opensafely/glycated-haemoglobin-hba1c-tests-numerical-value/5134e926",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/glycated-haemoglobin-hba1c-tests-numerical-value/5134e926/",
+      "downloaded_at": "2023-02-07 15:09:00.901549Z",
+      "sha": "bc7e48efd370be65686755f0a843058f1ec767e0"
     }
   }
 }

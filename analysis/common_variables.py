@@ -92,13 +92,13 @@ def generate_common_variables(index_date_variable):
 
     ## Deprivation
     cov_cat_deprivation=patients.categorised_as(
-        helpers.generate_deprivation_ntile_dictionary(10),
+        helpers.generate_deprivation_ntile_dictionary(5),
         index_of_multiple_deprivation=patients.address_as_of(
             f"{index_date_variable}- 1 day",
             returning="index_of_multiple_deprivation",
             round_to_nearest=100,
         ),
-        return_expectations=helpers.generate_universal_expectations(10,False),
+        return_expectations=helpers.generate_universal_expectations(5,False),
     ),
 
     ## Region
@@ -125,7 +125,7 @@ def generate_common_variables(index_date_variable):
 
     ## Record of hospitalisation in the 30 days prior to study start date
 
-    hosp_admitted_1=patients.admitted_to_hospital(
+    hospitalised_previous_30days=patients.admitted_to_hospital(
         returning="binary_flag",
         between=[f"{index_date_variable}- 30 days", f"{index_date_variable}"],
         with_patient_classification = ["1"],
@@ -145,7 +145,7 @@ def generate_common_variables(index_date_variable):
 
     ## Asthma
     # https://github.com/ebmdatalab/tpp-sql-notebook/issues/55
-    exp_bin_asthma=patients.categorised_as(
+    exp_cat_asthma=patients.categorised_as(
         {
             "0": "DEFAULT",
             "1": """
@@ -203,12 +203,26 @@ def generate_common_variables(index_date_variable):
     ),
 
     ## Diabetes
-    exp_bin_diabetes=patients.with_these_clinical_events(
+    tmp_exp_bin_diabetes=patients.with_these_clinical_events(
         diabetes_codes,
         on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
         return_expectations = {"incidence": 0.05},
     ),
+
+    ### Maximum latest HbA1c measure
+    tmp_out_num_max_hba1c_mmol_mol=patients.max_recorded_value(
+        hba1c_new_codes,
+        on_most_recent_day_of_measurement=True, 
+        between=["1990-01-01", "today"],
+        date_format="YYYY-MM-DD",
+        return_expectations={
+            "float": {"distribution": "normal", "mean": 30.0, "stddev": 15},
+            "date": {"earliest": "1980-02-01", "latest": "2021-05-31"},
+            "incidence": 0.95,
+        },
+    ),
+    tmp_out_num_max_hba1c_date=patients.date_of("tmp_out_num_max_hba1c_mmol_mol", date_format="YYYY-MM-DD"),
 
     ## Chronic liver disease
     exp_bin_chronicliver=patients.with_these_clinical_events(
@@ -235,7 +249,7 @@ def generate_common_variables(index_date_variable):
     ),
 
     ## Common autoimmune diseases 
-    exp_bin_autoimmune=patients.with_these_clinical_events(
+    exp_bin_autoimm=patients.with_these_clinical_events(
         autoimmune_codes,
         on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
@@ -671,6 +685,23 @@ def generate_common_variables(index_date_variable):
       "rate": "universal",
       "category": {"ratios": {"M": 0.49, "F": 0.51}},
       },
+    ),
+
+    cov_bin_male=patients.categorised_as(
+        {
+            "Yes": "sex = 'M'",
+            "No": "sex = 'F'",
+            "Missing": "DEFAULT", 
+        },
+         return_expectations = {
+             "rate": "universal", 
+             "category": {
+                 "ratios": {
+                     "Yes": 0.5, 
+                     "No": 0.5, 
+                }
+            },
+        },
     ),
 
     ## Deprivation - defined above in study population variables

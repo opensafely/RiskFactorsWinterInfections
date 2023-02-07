@@ -216,3 +216,8 @@ stroke_codes = codelist_from_csv(
     column="CTV3ID",
 )
 
+# HbA1c
+hba1c_new_codes = codelist(
+    ["XaPbt", "Xaeze", "Xaezd"], system="ctv3"
+)
+
