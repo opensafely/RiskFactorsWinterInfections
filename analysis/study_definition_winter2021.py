@@ -27,12 +27,11 @@ import study_definition_helper_functions as helpers
 from common_variables import generate_common_variables
 (
     dynamic_variables
-) = generate_common_variables(study_start_variable="index_date", study_end_variable="2022-02-28")
+) = generate_common_variables(index_date_variable="index_date" )
 
 
 study = StudyDefinition(
 
-    # Set default expectations
     default_expectations={
       "date": {"earliest": "1900-01-01", "latest": "today"},
       "rate": "uniform",
@@ -40,12 +39,14 @@ study = StudyDefinition(
     },
 
     # Specify index date for study
-    index_date = "2021-12-01",
+    index_date = "2020-12-01",
 
-    # Extract all patients
-    population = patients.all(),
+    # Define the study population 
+    # NB: not all inclusions and exclusions are written into study definition
+    population = patients.satisfying(
+        "registered",
+        registered=patients.registered_as_of("index_date"),
+    ),
    
-    # Add common variables
-    **dynamic_variables
-    
+        **dynamic_variables
 )
