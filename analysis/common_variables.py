@@ -153,8 +153,8 @@ def generate_common_variables(study_start_variable,study_end_variable):
             return_expectations = {"incidence": 0.05},
         ),
 
-    ## Stroke
-    exp_bin_stroke=patients.with_these_clinical_events(
+    ## Stroke and dementia
+    exp_bin_stroke_dementia=patients.with_these_clinical_events(
         stroke_codes,
         on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
