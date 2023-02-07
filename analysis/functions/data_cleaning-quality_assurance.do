@@ -2,7 +2,6 @@
 
 cap prog drop quality_assurance
 prog def quality_assurance
-args // TBC
 
 * Remove individuals whose year of birth is after their year of death ----------  
 
@@ -59,8 +58,6 @@ drop if qa_hrt_cocp_men=1
 
 
 * Remove women whose records contain prostate cancer codes ---------------------
-
-// TBC, please record number removed for CONSORT diagram
 
 gen qa_prostate_women=0
 replace qa_prostate_women=1 if qa_bin_prostate_cancer==1 & sex=="F" 

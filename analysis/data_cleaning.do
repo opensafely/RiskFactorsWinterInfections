@@ -1,16 +1,20 @@
 * Create locals for arguments --------------------------------------------------
 
-local cohort "`1'"
+local cohortyear "`1'" /* assuming first argument in YAML is the cohort year, e.g. 2019 */
+
+
 
 * Load data --------------------------------------------------------------------
 
-import delim using "./output/input_`cohort'.csv.gz", clear
+import delim using "./output/input_winter`cohortyear'.csv.gz", clear
 
 
 * Format variables -------------------------------------------------------------
 
+*cd "C:\Users\dy21108\GitHub\RiskFactorsWinterInfections"
+
 run "./analysis/functions/data_cleaning-format_variables.do"
-format_variables
+format_variables `2' `3'  /* assuming `2' is the study start date and `3' is the end date in the YAML */
 
 
 * Create outcomes --------------------------------------------------------------
@@ -18,26 +22,25 @@ format_variables
 ** Length of hospital stay -----------------------------------------------------
    * patients with no admission in th study period have stay=0
 
-gen out_num_flu_stay=0
-replace out_num_flu_stay = tmp_out_date_flu_dis - out_date_flu_adm if out_date_flu_adm!=.
+gen out_num_flu_stay = tmp_out_date_flu_dis - out_date_flu_adm
+replace out_num_flu_stay=0 if out_num_flu_stay==.
 			
-gen out_num_rsv_stay=0
-replace out_num_rsv_stay = tmp_out_date_rsv_dis - out_date_rsv_adm if out_date_rsv_adm!=.
+gen out_num_rsv_stay = tmp_out_date_rsv_dis - out_date_rsv_adm
+replace out_num_rsv_stay=0 if out_num_rsv_stay==.
 
-gen out_num_pneustrep_stay=0
-replace out_num_pneustrep_stay = tmp_out_date_pneustrep_dis - out_date_pneustrep_adm if out_date_pneustrep_adm!=.
+gen out_num_pneustrep_stay = tmp_out_date_pneustrep_dis - out_date_pneustrep_adm
+replace out_num_pneustrep_stay=0 if out_num_pneustrep_stay==.
 
-gen out_num_pneu_stay=0
-replace out_num_pneu_stay = tmp_out_date_pneu_dis - out_date_pneu_adm if out_date_pneu_adm!=.
+gen out_num_pneu_stay = tmp_out_date_pneu_dis - out_date_pneu_adm
+replace out_num_pneu_stay=0 if out_num_pneu_stay==.
 
-gen out_num_covid_stay=0
-replace out_num_covid_stay = tmp_out_date_covid_dis - out_date_covid_adm if out_date_covid_adm!=.
-
+gen out_num_covid_stay = tmp_out_date_covid_dis - out_date_covid_adm
+replace out_num_covid_stay=0 if out_num_covid_stay==.
 
 
 * Apply inclusion/exclusion criteria -------------------------------------------
 
-run "./analysis/functions/data_cleaning-inclusion_exclusion.do"
+run "/analysis/functions/data_cleaning-inclusion_exclusion.do"
 inclusion_exclusion
 
 
@@ -48,8 +51,6 @@ quality_assurances
 
 
 * Restrict dataset to relevant variables ---------------------------------------
-
-// TBC, please remove QA and other variables that are not used downstream
 
 drop registered_previous_365days sex tmp* inex qa* primary_care_death_date ons_died_from_any_cause_date ///
 	 cov_num_bmi_date_measured hosp_admitted_1 baseline_creatinine ///
@@ -62,6 +63,5 @@ compress
 
 * Save clean data --------------------------------------------------------------
 
-// TBC, please use name "clean_`cohort'"
 
-save "./output/clean_`cohort'.dta"
+save "./output/clean_winter`cohort'.dta", replace

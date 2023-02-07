@@ -3,6 +3,8 @@
 cap prog drop format_variables
 prog def format_variables
 
+args studystart studyend
+
 
 * Replace NA with missing value that Stata recognises --------------------------
 
@@ -10,6 +12,13 @@ ds , has(type string)
 foreach var of varlist `r(varlist)' {
 	replace `var' = "" if `var' == "NA"
 }
+
+
+* Create study start and end dates as variables --------------------------------
+
+gen study_start_date=`studystart'
+gen study_end_date=`studyend'
+
 
 * Format _date_ variables as dates ---------------------------------------------
 

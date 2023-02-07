@@ -2,7 +2,7 @@
 
 cap prog drop inclusion_exclusion
 prog def inclusion_exclusion
-args // study end date
+args studystart studyend
 
 gen exclude=0
 
