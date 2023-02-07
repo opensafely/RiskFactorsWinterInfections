@@ -220,7 +220,7 @@ def generate_common_variables(index_date_variable):
     ),
 
     ## Solid organ transplant
-    exp_bin_solid_organ_transplantation=patients.with_these_clinical_events(
+    exp_bin_transplant=patients.with_these_clinical_events(
         organ_transplantation,
         on_or_before = f"{index_date_variable}- 1 day",
         returning = "binary_flag",
