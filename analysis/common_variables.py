@@ -247,29 +247,41 @@ def generate_common_variables(study_start_variable,study_end_variable):
 
         ## Cancer
 
-        exp_bin_lung_cancer=patients.with_these_clinical_events(
+        tmp_exp_date_lung_cancer=patients.with_these_clinical_events(
             lung_cancer_codes,
             on_or_before = f"{study_start_variable}- 1 day",
-            returning = "binary_flag",
-            return_expectations = {"incidence": 0.05},
+            returning = "date",
+            return_expectations={
+            "date": {"earliest": f"{study_start_variable}", "latest" : "today"},
+            "rate": "uniform",
+            "incidence": 0.05,
+            }
         ),
 
-        exp_bin_cancer_haem=patients.with_these_clinical_events(
+        tmp_exp_date_cancer_haem=patients.with_these_clinical_events(
             haem_cancer_codes, 
             on_or_before = f"{study_start_variable}- 1 day",
-            returning = "binary_flag",
-            return_expectations = {"incidence": 0.05},
+            returning = "date",
+            return_expectations={
+            "date": {"earliest": f"{study_start_variable}", "latest" : "today"},
+            "rate": "uniform",
+            "incidence": 0.05,
+            }
         ),
 
-        exp_bin_other_cancer=patients.with_these_clinical_events(
+        tmp_exp_date_other_cancer=patients.with_these_clinical_events(
             other_cancer_codes, 
             on_or_before = f"{study_start_variable}- 1 day",
-            returning = "binary_flag",
-            return_expectations = {"incidence": 0.05},
+            returning = "date",
+            return_expectations={
+            "date": {"earliest": f"{study_start_variable}", "latest" : "today"},
+            "rate": "uniform",
+            "incidence": 0.05,
+            },
         ),
 
-        exp_bin_cancer_exhaem=patients.maximum_of(
-            "exp_bin_lung_cancer", "exp_bin_other_cancer"
+        tmp_exp_date_cancer_exhaem=patients.maximum_of(
+            "tmp_exp_date_lung_cancer", "tmp_exp_date_other_cancer"
         ),
 
         ## Reduced kidney function (to be define in data cleaning script)
