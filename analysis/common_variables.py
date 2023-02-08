@@ -254,7 +254,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
             return_expectations = {"incidence": 0.05},
         ),
 
-        exp_bin_haem_cancer=patients.with_these_clinical_events(
+        exp_bin_cancer_haem=patients.with_these_clinical_events(
             haem_cancer_codes, 
             on_or_before = f"{study_start_variable}- 1 day",
             returning = "binary_flag",
@@ -268,8 +268,8 @@ def generate_common_variables(study_start_variable,study_end_variable):
             return_expectations = {"incidence": 0.05},
         ),
 
-        exp_bin_cancer_combined=patients.maximum_of(
-            "exp_bin_lung_cancer", "exp_bin_haem_cancer", "exp_bin_other_cancer"
+        exp_bin_cancer_exhaem=patients.maximum_of(
+            "exp_bin_lung_cancer", "exp_bin_other_cancer"
         ),
 
         ## Reduced kidney function (to be define in data cleaning script)
