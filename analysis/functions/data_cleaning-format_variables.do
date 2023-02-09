@@ -16,8 +16,8 @@ foreach var of varlist `r(varlist)' {
 
 * Create study start and end dates as variables --------------------------------
 
-gen study_start_date="2019-12-01" /* tmp for data testing */
-gen study_end_date="2020-02-28"
+*gen study_start_date="2019-12-01" /* tmp for data testing */
+*gen study_end_date="2020-02-28"
 
 gen study_start_date=`studystart'
 gen study_end_date=`studyend'
@@ -225,6 +225,11 @@ replace sub_bin_carehome_tmp=1 if sub_bin_carehome=="Yes"
 drop sub_bin_carehome
 rename sub_bin_carehome_tmp sub_bin_carehome
 label values sub_bin_carehome YesNo
+
+
+* rename
+
+rename exp_bin_other_immunosuppression=exp_bin_otherimm
 
 
 *Summarise missingness

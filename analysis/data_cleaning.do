@@ -4,12 +4,8 @@ global dir `c(pwd)'
 
 global cohort=`1' /* first argument in YAML is the cohort year, e.g. 2019 */
 
-global cohortyear=2019
-global studystart=strofreal(2019-12-01)
-di $studystart
-global studyend "2020-02-28"
-
-cd "C:/Users/dy21108/GitHub/RiskFactorsWinterInfections"
+*global cohortyear=2019
+*cd "C:/Users/dy21108/GitHub/RiskFactorsWinterInfections"
 
 
 * Load data --------------------------------------------------------------------
@@ -28,7 +24,7 @@ format_variables `2' `3'  /* assuming `2' is the study start date and `3' is the
 * Create outcomes --------------------------------------------------------------
 
 ** Length of hospital stay -----------------------------------------------------
-   * patients with no admission in th study period have stay=0
+   * patients with no admission in the study period have stay=0
 
 gen out_num_flu_stay = tmp_out_date_flu_dis - out_date_flu_adm
 replace out_num_flu_stay=0 if out_num_flu_stay==.
@@ -61,7 +57,7 @@ quality_assurances
 * Restrict dataset to relevant variables ---------------------------------------
 
 drop registered_previous_365days sex tmp* inex qa* primary_care_death_date ons_died_from_any_cause_date ///
-	 cov_num_bmi_date_measured hosp_admitted_1 baseline_creatinine ///
+	 cov_num_bmi_date_measured hospitalised_previous_30days baseline_creatinine ///
 	 prostate* cov_bin_combined_oral_contracept cov_bin_hormone_replacement_ther death_date ///
 	 egfr ckd max study_start_minus_1yr study_start_minus_5yrs today year_extract
 
