@@ -13,12 +13,20 @@ global cohort=`1' /* first argument in YAML is the cohort year, e.g. 2019 */
 import delim using "./output/input_winter$cohortyear.csv", clear
 
 
+* Create study start and end dates as variables --------------------------------
+  * `2' is the study start date and `3' is the end date in the YAML, e.g. "td(1dec2019)"
+  
+gen study_start_date=`2'
+gen study_end_date=`3'
+format study_start_date study_end_date %td
+
+
 * Format variables -------------------------------------------------------------
 
 *cd "C:\Users\dy21108\GitHub\RiskFactorsWinterInfections"
 
 run "./analysis/functions/data_cleaning-format_variables.do"
-format_variables `2' `3'  /* assuming `2' is the study start date and `3' is the end date in the YAML */
+format_variables 
 
 
 * Create outcomes --------------------------------------------------------------

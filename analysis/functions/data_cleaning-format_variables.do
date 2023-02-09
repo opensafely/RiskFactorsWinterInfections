@@ -3,8 +3,6 @@
 cap prog drop format_variables
 prog def format_variables
 
-args studystart studyend
-
 
 * Replace NA with missing value that Stata recognises --------------------------
 
@@ -14,18 +12,9 @@ foreach var of varlist `r(varlist)' {
 }
 
 
-* Create study start and end dates as variables --------------------------------
-
-*gen study_start_date="2019-12-01" /* tmp for data testing */
-*gen study_end_date="2020-02-28"
-
-gen study_start_date=`studystart'
-gen study_end_date=`studyend'
-
-
 * Format _date_ variables as dates ---------------------------------------------
 
-foreach var of varlist out_date* tmp_out_date* death_date study_start_date study_end_date tmp_out_num_max_hba1c_date tmp_exp_date* {
+foreach var of varlist out_date* tmp_out_date* death_date tmp_out_num_max_hba1c_date tmp_exp_date* {
 	split `var', gen(tmp_date) parse(-)
 	gen year = real(tmp_date1)
 	gen month = real(tmp_date2)
