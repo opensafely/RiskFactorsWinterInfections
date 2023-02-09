@@ -2,7 +2,7 @@
 
 global dir `c(pwd)'
 
-global cohort=`1' /* assuming first argument in YAML is the cohort year, e.g. 2019 */
+global cohort=`1' /* first argument in YAML is the cohort year, e.g. 2019 */
 
 global cohortyear=2019
 global studystart=strofreal(2019-12-01)
@@ -62,7 +62,8 @@ quality_assurances
 
 drop registered_previous_365days sex tmp* inex qa* primary_care_death_date ons_died_from_any_cause_date ///
 	 cov_num_bmi_date_measured hosp_admitted_1 baseline_creatinine ///
-	 prostate* cov_bin_combined_oral_contracept cov_bin_hormone_replacement_ther death_date
+	 prostate* cov_bin_combined_oral_contracept cov_bin_hormone_replacement_ther death_date ///
+	 egfr ckd max study_start_minus_1yr study_start_minus_5yrs today year_extract
 
 	 
 * Compress data ----------------------------------------------------------------

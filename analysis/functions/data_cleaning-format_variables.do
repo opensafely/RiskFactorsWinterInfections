@@ -16,13 +16,16 @@ foreach var of varlist `r(varlist)' {
 
 * Create study start and end dates as variables --------------------------------
 
+gen study_start_date="2019-12-01" /* tmp for data testing */
+gen study_end_date="2020-02-28"
+
 gen study_start_date=`studystart'
 gen study_end_date=`studyend'
 
 
 * Format _date_ variables as dates ---------------------------------------------
 
-foreach var of varlist out_date* tmp_out_date* death_date study_start_date study_end_date{
+foreach var of varlist out_date* tmp_out_date* death_date study_start_date study_end_date tmp_out_num_max_hba1c_date tmp_exp_date* {
 	split `var', gen(tmp_date) parse(-)
 	gen year = real(tmp_date1)
 	gen month = real(tmp_date2)
@@ -42,9 +45,12 @@ foreach var of varlist out_date* tmp_out_date* death_date study_start_date study
 *	rename `var'_tmp `var'
 *}
 
-* binary indicator for males
-gen cov_bin_male=0
-replace cov_bin_male=1 if sex=="M"
+gen cov_bin_male_tmp=0
+replace cov_bin_male_tmp=1 if cov_bin_male=="Yes"
+label define YesNo 0 "No" 1 "Yes"
+drop cov_bin_male
+rename cov_bin_male_tmp cov_bin_male
+label values cov_bin_male YesNo
 
 
 * Format _cat_ variables as categoricals ---------------------------------------
@@ -98,16 +104,17 @@ drop cov_cat_region
 rename region_tmp cov_cat_region
 
 
-* recode obesity using WHO categories
+* recode obesity
 
 gen obese_tmp=.
-replace obese_tmp=0 if cov_num_bmi<30
-replace obese_tmp=1 if cov_num_bmi>=30&cov_num_bmi<35
-replace obese_tmp=2 if cov_num_bmi>=35&cov_num_bmi<40
-replace obese_tmp=3 if cov_num_bmi>=40
-replace obese_tmp=4 if cov_num_bmi<=0|cov_num_bmi==.
-label define obese 0 "Not obese" 1 "Obese class I" 2 "Obese class II" 3 "Obese class III" 4 "Missing"
-label values obese_tmp obese
+replace obese_tmp=0 if cov_cat_obese=="NoEvidence"
+replace obese_tmp=1 if cov_cat_obese=="ObeseClassI"
+replace obese_tmp=2 if cov_cat_obese=="ObeseClassII"
+replace obese_tmp=3 if cov_cat_obese=="ObeseClassIII"
+replace obese_tmp=4 if cov_cat_obese==" "
+label define obese_categories 0 "Not obese" 1 "Obese class I" 2 "Obese class II" 3 "Obese class III" 4 "Missing"
+label values obese_tmp obese_categories
+drop cov_cat_obese
 rename obese_tmp cov_cat_obese
 
 
@@ -155,6 +162,70 @@ label define reduced_kidney_function_catlab ///
 	1 "None" 2 "Stage 3a/3b egfr 30-60	" 3 "Stage 4/5 egfr<30"
 label values exp_cat_kidneyfunc reduced_kidney_function_catlab 
  
+
+* Diabetes 
+ 
+gen exp_cat_diabetes=0
+replace exp_cat_diabetes=1 if tmp_exp_bin_diabetes==1&tmp_out_num_max_hba1c_mmol_mol<58&tmp_out_num_max_hba1c_mmol_mol!=.
+replace exp_cat_diabetes=2 if tmp_exp_bin_diabetes==1&(tmp_out_num_max_hba1c_mmol_mol>=58&tmp_out_num_max_hba1c_mmol_mol!=.)
+replace exp_cat_diabetes=3 if tmp_exp_bin_diabetes==1&tmp_out_num_max_hba1c_mmol_mol==.
+label define diabetes_categories ///
+		0 "No diabetes" 1 "Controlled diabetes" 2 "Uncontrolled diabetes" 3 "Unknown diabetes" 
+label values exp_cat_diabetes diabetes_categories
+ 
+
+* Non-haem cancer
+
+gen study_start_minus_1yr=study_start_date-365
+gen study_start_minus_5yrs=study_start_date-1825
+gen exp_cat_cancer_exhaem=0
+replace exp_cat_cancer_exhaem=1 if tmp_exp_date_cancer_exhaem>study_start_minus_1yr & tmp_exp_date_cancer_exhaem<study_start_date
+replace exp_cat_cancer_exhaem=2 if tmp_exp_date_cancer_exhaem<=study_start_minus_1yr & tmp_exp_date_cancer_exhaem>study_start_minus_5yrs
+replace exp_cat_cancer_exhaem=3 if tmp_exp_date_cancer_exhaem<=study_start_minus_5yrs
+label define cancer_categories ///
+		0 "Never diagnosed" 1 "Diagnosed <1 yr ago" 2 "Diagnosed 1-5 yrs ago" 3 "Diagnosed 5+ yrs ago" 
+label values exp_cat_cancer_exhaem cancer_categories
+
+
+* Haem cancer
+
+gen exp_cat_cancer_haem=0
+replace exp_cat_cancer_haem=1 if tmp_exp_date_cancer_haem>study_start_minus_1yr & tmp_exp_date_cancer_haem<study_start_date
+replace exp_cat_cancer_haem=2 if tmp_exp_date_cancer_haem<=study_start_minus_1yr & tmp_exp_date_cancer_haem>study_start_minus_5yrs
+replace exp_cat_cancer_haem=3 if tmp_exp_date_cancer_haem<=study_start_minus_5yrs
+label define cancer_categories ///
+		0 "Never diagnosed" 1 "Diagnosed <1 yr ago" 2 "Diagnosed 1-5 yrs ago" 3 "Diagnosed 5+ yrs ago" 
+label values exp_cat_cancer_haem cancer_categories
+
+
+* Asthma 
+  * needs most recent date of corticosteroid use
+
+gen exp_cat_asthma=0
+
+
+* Age subcategories
+
+gen sub_cat_age_tmp=0 /* this becomes the 18-39 category */
+replace sub_cat_age_tmp=1 if sub_cat_age=="40-59"
+replace sub_cat_age_tmp=2 if sub_cat_age=="60-79"
+replace sub_cat_age_tmp=3 if sub_cat_age=="80-110"
+replace sub_cat_age_tmp=4 if sub_cat_age==""
+label define age_subcats ///
+	  0 "18-39" 1 "40-59" 2 "60-79" 3 "80-110" 4 "Missing"
+drop sub_cat_age
+rename sub_cat_age_tmp sub_cat_age
+label values sub_cat_age age_subcats
+	  
+	  
+* Carehome status
+
+gen sub_bin_carehome_tmp=0
+replace sub_bin_carehome_tmp=1 if sub_bin_carehome=="Yes"
+drop sub_bin_carehome
+rename sub_bin_carehome_tmp sub_bin_carehome
+label values sub_bin_carehome YesNo
+
 
 *Summarise missingness
 

@@ -38,7 +38,7 @@ replace exclude=1 if cov_cat_region==.
 
 * Restrict to individuals with no record of hospitalization in the 30 days prior to the study start date 
 
-replace exclude=1 if hosp_admitted_1==1
+replace exclude=1 if hospitalised_previous_30days==1
 
 
 * record total records excluded

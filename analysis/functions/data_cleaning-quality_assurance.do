@@ -50,7 +50,7 @@ drop if qa_preg_men=1
 * Remove men whose records contain HRT or COCP medication codes ----------------
 
 gen qa_hrt_cocp_men=0
-replace qa_hrt_cocp_men=1 if (cov_bin_combined_oral_contraceptive_pill==1|cov_bin_hormone_replacement_therapy===1) & cov_bin_male==1
+replace qa_hrt_cocp_men=1 if qa_bin_hrtcocp=1 & cov_bin_male==1
 
 quietly: table () (qa_hrt_cocp_men), statistic(frequency) name(consort) append
 
