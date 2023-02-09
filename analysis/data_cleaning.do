@@ -1,12 +1,20 @@
 * Create locals for arguments --------------------------------------------------
 
-local cohortyear "`1'" /* assuming first argument in YAML is the cohort year, e.g. 2019 */
+global dir `c(pwd)'
 
+global cohort=`1' /* assuming first argument in YAML is the cohort year, e.g. 2019 */
+
+global cohortyear=2019
+global studystart=strofreal(2019-12-01)
+di $studystart
+global studyend "2020-02-28"
+
+cd "C:/Users/dy21108/GitHub/RiskFactorsWinterInfections"
 
 
 * Load data --------------------------------------------------------------------
 
-import delim using "./output/input_winter`cohortyear'.csv.gz", clear
+import delim using "./output/input_winter$cohortyear.csv", clear
 
 
 * Format variables -------------------------------------------------------------
@@ -64,4 +72,4 @@ compress
 * Save clean data --------------------------------------------------------------
 
 
-save "./output/clean_winter`cohort'.dta", replace
+save "./output/clean_winter$cohortyear.dta", replace

@@ -2,8 +2,8 @@
 
 cap prog drop inclusion_exclusion
 prog def inclusion_exclusion
-args studystart studyend
 
+* initiate count of excluded records
 gen exclude=0
 
 * Restrict to individuals alive on study start date 
