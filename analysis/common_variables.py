@@ -31,7 +31,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
         ## Death date
 
             ### Primary care
-            primary_care_death_date=patients.with_death_recorded_in_primary_care(
+            tmp_death_date_tpp=patients.with_death_recorded_in_primary_care(
                     on_or_after="index_date",
                     returning="date_of_death",
                     date_format="YYYY-MM-DD",
@@ -41,7 +41,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
                     },
             ),
             ### ONS
-            ons_died_from_any_cause_date=patients.died_from_any_cause(
+            tmp_death_date_ons=patients.died_from_any_cause(
                     on_or_after="index_date",
                     returning="date_of_death",
                     date_format="YYYY-MM-DD",
@@ -52,7 +52,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
             ),
             ### Combined
             death_date=patients.minimum_of(
-                "primary_care_death_date", "ons_died_from_any_cause_date"
+                "tmp_death_date_tpp", "tmp_death_date_ons"
             ),
 
         ## Record of hospitalisation in the 30 days prior to study start date
@@ -275,7 +275,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
 
         ## Reduced kidney function (to be define in data cleaning script)
 
-        baseline_creatinine=patients.mean_recorded_value(
+        tmp_baseline_creatinine=patients.mean_recorded_value(
             creatinine_codes,
             on_most_recent_day_of_measurement=True,
             on_or_before = f"{study_start_variable}- 1 day",
@@ -288,42 +288,38 @@ def generate_common_variables(study_start_variable,study_end_variable):
         ## Raised BP / Hypertension 
         # Indicator for previous coded diagnosis of hypertension or the most recent recording indicating systolic blood pressure ≥ 140 mm Hg or diastolic blood pressure ≥ 90 mm Hg.
 
-        tmp_exp_bin_hypertension=patients.with_these_clinical_events(
-            hypertension_codes,
-            on_or_before = f"{study_start_variable}- 1 day",
-            returning = "binary_flag",
-            return_expectations = {"incidence": 0.05},
-        ),
-
-        bp_sys=patients.mean_recorded_value(
-            systolic_blood_pressure_codes,
-            on_most_recent_day_of_measurement=True,
-            on_or_before = f"{study_start_variable}- 1 day",
-            return_expectations={
-            "incidence": 0.6,
-            "float": {"distribution": "normal", "mean": 80, "stddev": 10},
-        },
-        ),
-    
-        bp_dias=patients.mean_recorded_value(
-            diastolic_blood_pressure_codes,
-            on_most_recent_day_of_measurement=True,
-            on_or_before = f"{study_start_variable}- 1 day",
-            return_expectations={
-            "incidence": 0.6,
-            "float": {"distribution": "normal", "mean": 120, "stddev": 10},
-        },
-        ),
-        
         exp_bin_hypertension=patients.categorised_as(
             {
                 "0": "DEFAULT",
                 "1": """
-                    tmp_exp_bin_hypertension = 1 AND 
-                    (bp_sys >= 140 OR bp_dias >= 90)
+                    hypertension = 1 OR bp_sys >= 140 OR bp_dia >= 90
                 """,
             },
-            return_expectations={"category": {"ratios": {"0": 0.8, "1": 0.2}},}
+            return_expectations={"category": {"ratios": {"0": 0.8, "1": 0.2}},},
+            hypertension=patients.with_these_clinical_events(
+                hypertension_codes,
+                on_or_before = f"{study_start_variable}- 1 day",
+                returning = "binary_flag",
+                return_expectations = {"incidence": 0.05},
+            ),
+            bp_sys=patients.mean_recorded_value(
+                systolic_blood_pressure_codes,
+                on_most_recent_day_of_measurement=True,
+                on_or_before = f"{study_start_variable}- 1 day",
+                return_expectations={
+                    "incidence": 0.6,
+                    "float": {"distribution": "normal", "mean": 80, "stddev": 10},
+                },
+            ),
+            bp_dia=patients.mean_recorded_value(
+                diastolic_blood_pressure_codes,
+                on_most_recent_day_of_measurement=True,
+                on_or_before = f"{study_start_variable}- 1 day",
+                return_expectations={
+                    "incidence": 0.6,
+                    "float": {"distribution": "normal", "mean": 120, "stddev": 10},
+                },
+            ),
         ),
 
     # Outcomes ------------------------------------------------------------------------------------
@@ -696,13 +692,6 @@ def generate_common_variables(study_start_variable,study_end_variable):
 
         ## Sex
 
-        sex = patients.sex(
-            return_expectations = {
-            "rate": "universal",
-            "category": {"ratios": {"M": 0.49, "F": 0.51}},
-        },
-        ),
-
         cov_bin_male=patients.categorised_as(
             {
             "Yes": "sex = 'M'",
@@ -718,6 +707,12 @@ def generate_common_variables(study_start_variable,study_end_variable):
                     }
                 },
             },
+            sex = patients.sex(
+                return_expectations = {
+                    "rate": "universal",
+                    "category": {"ratios": {"M": 0.49, "F": 0.51}},
+                },
+            ),
         ),
 
         ## Deprivation
@@ -833,15 +828,15 @@ def generate_common_variables(study_start_variable,study_end_variable):
         ## Prostate cancer
             
             ### Primary care
-                prostate_cancer_snomed=patients.with_these_clinical_events(
+                tmp_prostate_cancer_tpp=patients.with_these_clinical_events(
                     prostate_cancer_snomed_clinical,
                     returning='binary_flag',
                     return_expectations={
                         "incidence": 0.03,
                     },
                 ),
-                ### HES APC
-                prostate_cancer_hes=patients.admitted_to_hospital(
+                ### SUS
+                tmp_prostate_cancer_sus=patients.admitted_to_hospital(
                     with_these_diagnoses=prostate_cancer_icd10,
                     returning='binary_flag',
                     return_expectations={
@@ -849,7 +844,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
                     },
                 ),
                 ### ONS
-                prostate_cancer_death=patients.with_these_codes_on_death_certificate(
+                tmp_prostate_cancer_ons=patients.with_these_codes_on_death_certificate(
                     prostate_cancer_icd10,
                     returning='binary_flag',
                     return_expectations={
@@ -858,7 +853,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
                 ),
                 ### Combined
                 qa_bin_prostate_cancer=patients.maximum_of(
-                    "prostate_cancer_snomed", "prostate_cancer_hes", "prostate_cancer_death"
+                    "tmp_prostate_cancer_tpp", "tmp_prostate_cancer_sus", "tmp_prostate_cancer_ons"
                 ),
 
         ## Pregnancy
