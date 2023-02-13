@@ -81,24 +81,21 @@ def generate_common_variables(study_start_variable,study_end_variable):
             {
                 "NoEvidence": "DEFAULT",
                 "Asthma_NoRecentOCS": """
-                    asthma_code_ever AND prednisolone_last_year = 0 
+                    asthma AND prednisolone = 0 
                 """,
                 "Asthma_RecentOCS": """
-                    asthma_code_ever AND prednisolone_last_year = 1 
+                    asthma AND prednisolone = 1 
                 """,
             },
-            return_expectations={"category": {"ratios": {"NoEvidence": 0.8, "Asthma_NoRecentOCS": 0.1, "Asthma_RecentOCS": 0.1}},},
-            
-            recent_asthma_code=patients.with_these_clinical_events(
-                asthma_codes, between=[f"{study_start_variable}- 365 days", f"{study_start_variable}- 1 day"],
-            ),
 
-            asthma_code_ever=patients.with_these_clinical_events(asthma_codes,
+            return_expectations={"category": {"ratios": {"NoEvidence": 0.8, "Asthma_NoRecentOCS": 0.1, "Asthma_RecentOCS": 0.1}},},
+
+            asthma=patients.with_these_clinical_events(asthma_codes,
             on_or_before = f"{study_start_variable}- 1 day",
             returning = "binary_flag",
             return_expectations = {"incidence": 0.05}),
 
-            prednisolone_last_year=patients.with_these_medications(
+            prednisolone=patients.with_these_medications(
                 pred_codes,
                 between=[f"{study_start_variable}- 365 days", f"{study_start_variable}- 1 day"],
                 returning="binary_flag",
@@ -125,15 +122,15 @@ def generate_common_variables(study_start_variable,study_end_variable):
         ),
 
         ## Diabetes
-        tmp_exp_bin_diabetes=patients.with_these_clinical_events(
+
+        tmp_exp_cat_diabetes_code=patients.with_these_clinical_events(
             diabetes_codes,
             on_or_before = f"{study_start_variable}- 1 day",
             returning = "binary_flag",
             return_expectations = {"incidence": 0.05},
         ),
 
-        ### Maximum latest HbA1c measure
-        tmp_out_num_max_hba1c_mmol_mol=patients.max_recorded_value(
+        tmp_exp_cat_diabetes_hba1c=patients.max_recorded_value(
             hba1c_new_codes,
             on_most_recent_day_of_measurement=True, 
             between=["1990-01-01", "today"],
@@ -144,7 +141,6 @@ def generate_common_variables(study_start_variable,study_end_variable):
             "incidence": 0.95,
             },
         ),
-        tmp_out_num_max_hba1c_date=patients.date_of("tmp_out_num_max_hba1c_mmol_mol", date_format="YYYY-MM-DD"),
 
         ## Chronic liver disease
 
@@ -209,14 +205,14 @@ def generate_common_variables(study_start_variable,study_end_variable):
             return_expectations = {"incidence": 0.05},
         ),
 
-        tmp_exp_bin_perm_immuno=patients.with_these_clinical_events(
+        tmp_exp_bin_permimm=patients.with_these_clinical_events(
             permanent_immunosuppression_codes,
             on_or_before = f"{study_start_variable}- 1 day",
             returning = "binary_flag",
             return_expectations = {"incidence": 0.05},
         ),
 
-        tmp_exp_bin_temp_immuno=patients.with_these_clinical_events(
+        tmp_exp_bin_tempimm=patients.with_these_clinical_events(
             temporary_immunosuppression_codes,
             between=[f"{study_start_variable}- 365 days", f"{study_start_variable}- 1 day"],
             returning = "binary_flag",
@@ -230,8 +226,8 @@ def generate_common_variables(study_start_variable,study_end_variable):
             return_expectations = {"incidence": 0.05},
         ),
 
-        exp_bin_other_immunosuppression=patients.maximum_of(
-        "tmp_exp_bin_hiv", "tmp_exp_bin_perm_immuno", "tmp_exp_bin_temp_immuno", "tmp_exp_bin_aplastic_anaemia"
+        exp_bin_othimm=patients.maximum_of(
+        "tmp_exp_bin_hiv", "tmp_exp_bin_permimm", "tmp_exp_bin_tempimm", "tmp_exp_bin_aplastic_anaemia"
         ),
 
         ## Cancer
@@ -275,7 +271,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
 
         ## Reduced kidney function (to be defined fully in the data cleaning script)
 
-        tmp_baseline_creatinine=patients.mean_recorded_value(
+        tmp_exp_cat_kidneyfunc_creatinine=patients.mean_recorded_value(
             creatinine_codes,
             on_most_recent_day_of_measurement=True,
             on_or_before = f"{study_start_variable}- 1 day",
@@ -827,7 +823,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
         ## Prostate cancer
             
             ### Primary care
-                tmp_prostate_cancer_tpp=patients.with_these_clinical_events(
+                tmp_prostate_tpp=patients.with_these_clinical_events(
                     prostate_cancer_snomed_clinical,
                     returning='binary_flag',
                     return_expectations={
@@ -835,7 +831,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
                     },
                 ),
                 ### SUS
-                tmp_prostate_cancer_sus=patients.admitted_to_hospital(
+                tmp_prostate_sus=patients.admitted_to_hospital(
                     with_these_diagnoses=prostate_cancer_icd10,
                     returning='binary_flag',
                     return_expectations={
@@ -843,7 +839,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
                     },
                 ),
                 ### ONS
-                tmp_prostate_cancer_ons=patients.with_these_codes_on_death_certificate(
+                tmp_prostate_ons=patients.with_these_codes_on_death_certificate(
                     prostate_cancer_icd10,
                     returning='binary_flag',
                     return_expectations={
@@ -851,8 +847,8 @@ def generate_common_variables(study_start_variable,study_end_variable):
                     },
                 ),
                 ### Combined
-                qa_bin_prostate_cancer=patients.maximum_of(
-                    "tmp_prostate_cancer_tpp", "tmp_prostate_cancer_sus", "tmp_prostate_cancer_ons"
+                qa_bin_prostate=patients.maximum_of(
+                    "tmp_prostate_tpp", "tmp_prostate_sus", "tmp_prostate_ons"
                 ),
 
         ## Pregnancy
@@ -876,7 +872,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
 
         ## Combined oral contraceptive pill
         ### dmd: dictionary of medicines and devices
-            tmp_cov_bin_combined_oral_contraceptive_pill=patients.with_these_medications(
+            tmp_cov_bin_cocp=patients.with_these_medications(
                 cocp_dmd, 
                 returning='binary_flag',
                 on_or_before=f"{study_start_variable}",
@@ -884,7 +880,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
             ),
 
         ## Hormone replacement therapy
-            tmp_cov_bin_hormone_replacement_therapy=patients.with_these_medications(
+            tmp_cov_bin_hrt=patients.with_these_medications(
                 hrt_dmd, 
                 returning='binary_flag',
                 on_or_before=f"{study_start_variable}",
@@ -894,7 +890,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
         # combined HRT and contraceptive pill
 
             qa_bin_hrtcocp=patients.maximum_of(
-            "tmp_cov_bin_combined_oral_contraceptive_pill", "tmp_cov_bin_hormone_replacement_therapy"
+            "tmp_cov_bin_cocp", "tmp_cov_bin_hrt"
             ),
 
         # care home 
