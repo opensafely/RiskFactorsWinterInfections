@@ -81,39 +81,28 @@ def generate_common_variables(study_start_variable,study_end_variable):
             {
                 "0": "DEFAULT",
                 "1": """
-                    (
-                    recent_asthma_code OR (
-                        asthma_code_ever AND NOT
-                        copd_code_ever
-                    )
-                    ) AND (
-                    prednisolone_last_year = 0 OR 
-                    prednisolone_last_year > 4
-                    )
-                    OR
-                    (
-                    recent_asthma_code OR (
-                        asthma_code_ever AND NOT
-                        copd_code_ever
-                    )
-                    ) AND
-                    prednisolone_last_year > 0 AND
-                    prednisolone_last_year < 5
-                    
+                    asthma_code_ever AND prednisolone_last_year = 0 
+                """,
+                "2": """
+                    asthma_code_ever AND prednisolone_last_year = 1 
                 """,
             },
-            return_expectations={"category": {"ratios": {"0": 0.8, "1": 0.2}},},
+            return_expectations={"category": {"ratios": {"0": 0.8, "1": 0.1, "2": 0.1}},},
+            
             recent_asthma_code=patients.with_these_clinical_events(
                 asthma_codes, between=[f"{study_start_variable}- 365 days", f"{study_start_variable}- 1 day"],
             ),
-            asthma_code_ever=patients.with_these_clinical_events(asthma_codes),
-            copd_code_ever=patients.with_these_clinical_events(
-                chronic_respiratory_disease_codes
-            ),
+
+            asthma_code_ever=patients.with_these_clinical_events(asthma_codes,
+            on_or_before = f"{study_start_variable}- 1 day",
+            returning = "binary_flag",
+            return_expectations = {"incidence": 0.05}),
+
             prednisolone_last_year=patients.with_these_medications(
                 pred_codes,
                 between=[f"{study_start_variable}- 365 days", f"{study_start_variable}- 1 day"],
-                returning="number_of_matches_in_period",
+                returning="binary_flag",
+                return_expectations = {"incidence": 0.05},
             ),
         ),
 
