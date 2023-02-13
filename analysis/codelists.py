@@ -221,3 +221,11 @@ hba1c_new_codes = codelist(
     ["XaPbt", "Xaeze", "Xaezd"], system="ctv3"
 )
 
+# systolic BP
+
+systolic_blood_pressure_codes = codelist(["2469."], system="ctv3")
+
+# diastolic BP
+        
+diastolic_blood_pressure_codes = codelist(["246A."], system="ctv3")
+

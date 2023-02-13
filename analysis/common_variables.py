@@ -286,12 +286,44 @@ def generate_common_variables(study_start_variable,study_end_variable):
         ),
 
         ## Raised BP / Hypertension 
+        # Indicator for previous coded diagnosis of hypertension or the most recent recording indicating systolic blood pressure ≥ 140 mm Hg or diastolic blood pressure ≥ 90 mm Hg.
 
-        exp_bin_hypertension=patients.with_these_clinical_events(
+        tmp_exp_bin_hypertension=patients.with_these_clinical_events(
             hypertension_codes,
             on_or_before = f"{study_start_variable}- 1 day",
             returning = "binary_flag",
             return_expectations = {"incidence": 0.05},
+        ),
+
+        bp_sys=patients.mean_recorded_value(
+            systolic_blood_pressure_codes,
+            on_most_recent_day_of_measurement=True,
+            on_or_before = f"{study_start_variable}- 1 day",
+            return_expectations={
+            "incidence": 0.6,
+            "float": {"distribution": "normal", "mean": 80, "stddev": 10},
+        },
+        ),
+    
+        bp_dias=patients.mean_recorded_value(
+            diastolic_blood_pressure_codes,
+            on_most_recent_day_of_measurement=True,
+            on_or_before = f"{study_start_variable}- 1 day",
+            return_expectations={
+            "incidence": 0.6,
+            "float": {"distribution": "normal", "mean": 120, "stddev": 10},
+        },
+        ),
+        
+        exp_bin_hypertension=patients.categorised_as(
+            {
+                "0": "DEFAULT",
+                "1": """
+                    tmp_exp_bin_hypertension = 1 AND 
+                    (bp_sys >= 140 OR bp_dias >= 90)
+                """,
+            },
+            return_expectations={"category": {"ratios": {"0": 0.8, "1": 0.2}},}
         ),
 
     # Outcomes ------------------------------------------------------------------------------------
