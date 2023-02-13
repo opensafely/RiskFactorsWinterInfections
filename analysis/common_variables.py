@@ -641,7 +641,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
             "category": {
                 "ratios": {
                     "18-39": 0.25,
-                    "40-45": 0.25,
+                    "40-59": 0.25,
                     "60-79": 0.25,
                     "80-110": 0.1,
                     "missing": 0.15,
