@@ -241,7 +241,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
             on_or_before = f"{study_start_variable}- 1 day",
             returning = "date",
             return_expectations={
-            "date": {"earliest": f"{study_start_variable}", "latest" : "today"},
+            "date": {"earliest": "1980-02-01", "latest" : "today"},
             "rate": "uniform",
             "incidence": 0.05,
             }
@@ -252,7 +252,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
             on_or_before = f"{study_start_variable}- 1 day",
             returning = "date",
             return_expectations={
-            "date": {"earliest": f"{study_start_variable}", "latest" : "today"},
+            "date": {"earliest": "1980-02-01", "latest" : "today"},
             "rate": "uniform",
             "incidence": 0.05,
             }
@@ -263,7 +263,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
             on_or_before = f"{study_start_variable}- 1 day",
             returning = "date",
             return_expectations={
-            "date": {"earliest": f"{study_start_variable}", "latest" : "today"},
+            "date": {"earliest": "1980-02-01", "latest" : "today"},
             "rate": "uniform",
             "incidence": 0.05,
             },
