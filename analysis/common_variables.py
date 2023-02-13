@@ -151,13 +151,24 @@ def generate_common_variables(study_start_variable,study_end_variable):
             return_expectations = {"incidence": 0.05},
         ),
 
-        ## Stroke
+        ## Stroke and Dementia
 
-        exp_bin_stroke=patients.with_these_clinical_events(
+        tmp_exp_bin_stroke=patients.with_these_clinical_events(
             stroke_codes,
             on_or_before = f"{study_start_variable}- 1 day",
             returning = "binary_flag",
             return_expectations = {"incidence": 0.05},
+        ),
+
+        tmp_exp_bin_dementia=patients.with_these_clinical_events(
+            dementia_codes,
+            on_or_before = f"{study_start_variable}- 1 day",
+            returning = "binary_flag",
+            return_expectations = {"incidence": 0.05},
+        ),
+
+        exp_bin_stroke_dementia=patients.maximum_of(
+        "tmp_exp_bin_stroke", "tmp_exp_bin_dementia"
         ),
 
         ## Other neurological diseases

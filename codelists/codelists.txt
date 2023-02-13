@@ -35,3 +35,4 @@ opensafely/aplastic-anaemia/2020-04-24
 opensafely/stroke-updated/2020-06-02
 opensafely/other-neurological-conditions/2020-06-02
 opensafely/glycated-haemoglobin-hba1c-tests-numerical-value/5134e926/
+opensafely/dementia/2020-04-22

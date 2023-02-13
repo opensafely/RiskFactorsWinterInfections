@@ -221,6 +221,12 @@
       "url": "https://codelists.opensafely.org/codelist/opensafely/glycated-haemoglobin-hba1c-tests-numerical-value/5134e926/",
       "downloaded_at": "2023-02-07 15:09:00.901549Z",
       "sha": "bc7e48efd370be65686755f0a843058f1ec767e0"
+    },
+    "opensafely-dementia.csv": {
+      "id": "opensafely/dementia/2020-04-22",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/dementia/2020-04-22/",
+      "downloaded_at": "2023-02-13 15:03:41.889405Z",
+      "sha": "9d40ff3a5c2428af4651c765f2c418de3a3ad4b4"
     }
   }
 }

@@ -226,6 +226,13 @@ hba1c_new_codes = codelist(
 systolic_blood_pressure_codes = codelist(["2469."], system="ctv3")
 
 # diastolic BP
-        
+
 diastolic_blood_pressure_codes = codelist(["246A."], system="ctv3")
 
+# dementia
+
+dementia_codes = codelist_from_csv(
+    "codelists/opensafely-dementia.csv",
+    system="ctv3",
+    column="CTV3ID",
+)
