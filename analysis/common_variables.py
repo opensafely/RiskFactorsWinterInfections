@@ -273,7 +273,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
             "tmp_exp_date_lung_cancer", "tmp_exp_date_other_cancer"
         ),
 
-        ## Reduced kidney function (to be define in data cleaning script)
+        ## Reduced kidney function (to be defined fully in the data cleaning script)
 
         tmp_baseline_creatinine=patients.mean_recorded_value(
             creatinine_codes,
@@ -285,14 +285,13 @@ def generate_common_variables(study_start_variable,study_end_variable):
             }
         ),
 
-        ## Raised BP / Hypertension 
-        # Indicator for previous coded diagnosis of hypertension or the most recent recording indicating systolic blood pressure ≥ 140 mm Hg or diastolic blood pressure ≥ 90 mm Hg.
+        ## Hypertension (Note: biologically plausible upper limits from UK Biobank Showcase)
 
         exp_bin_hypertension=patients.categorised_as(
             {
                 "0": "DEFAULT",
                 "1": """
-                    hypertension = 1 OR bp_sys >= 140 OR bp_dia >= 90
+                    hypertension = 1 OR (bp_sys >= 140 AND bp_sys < 270) OR (bp_dia >= 90 AND bp_dia < 150)
                 """,
             },
             return_expectations={"category": {"ratios": {"0": 0.8, "1": 0.2}},},
