@@ -79,15 +79,15 @@ def generate_common_variables(study_start_variable,study_end_variable):
 
         exp_cat_asthma=patients.categorised_as(
             {
-                "0": "DEFAULT",
-                "1": """
+                "NoEvidence": "DEFAULT",
+                "Asthma_NoRecentOCS": """
                     asthma_code_ever AND prednisolone_last_year = 0 
                 """,
-                "2": """
+                "Asthma_RecentOCS": """
                     asthma_code_ever AND prednisolone_last_year = 1 
                 """,
             },
-            return_expectations={"category": {"ratios": {"0": 0.8, "1": 0.1, "2": 0.1}},},
+            return_expectations={"category": {"ratios": {"NoEvidence": 0.8, "Asthma_NoRecentOCS": 0.1, "Asthma_RecentOCS": 0.1}},},
             
             recent_asthma_code=patients.with_these_clinical_events(
                 asthma_codes, between=[f"{study_start_variable}- 365 days", f"{study_start_variable}- 1 day"],
@@ -651,7 +651,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
             "40-59": "cov_num_age >= 40 AND cov_num_age < 59",
             "60-79": "cov_num_age >= 60 AND cov_num_age < 79",
             "80-110": "cov_num_age >= 80 AND cov_num_age < 110",
-            "missing": "DEFAULT",
+            "Missing": "DEFAULT",
             },
             return_expectations={
             "rate": "universal",
@@ -661,7 +661,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
                     "40-59": 0.25,
                     "60-79": 0.25,
                     "80-110": 0.1,
-                    "missing": 0.15,
+                    "Missing": 0.15,
                  }
                 },
             },
@@ -799,17 +799,17 @@ def generate_common_variables(study_start_variable,study_end_variable):
         
         cov_cat_smoking=patients.categorised_as(
             {
-                "S": "most_recent_smoking_code = 'S'",
-                "E": """
+                "Current": "most_recent_smoking_code = 'S'",
+                "Former": """
                     most_recent_smoking_code = 'E' OR (
                     most_recent_smoking_code = 'N' AND ever_smoked
                     )
                 """,
-                "N": "most_recent_smoking_code = 'N' AND NOT ever_smoked",
-                "M": "DEFAULT",
+                "Never": "most_recent_smoking_code = 'N' AND NOT ever_smoked",
+                "Missing": "DEFAULT",
             },
             return_expectations={
-                "category": {"ratios": {"S": 0.6, "E": 0.1, "N": 0.2, "M": 0.1}}
+                "category": {"ratios": {"Current": 0.6, "Former": 0.1, "Never": 0.2, "Missing": 0.1}}
             },
             most_recent_smoking_code=patients.with_these_clinical_events(
                 smoking_clear,
