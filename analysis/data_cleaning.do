@@ -1,5 +1,5 @@
 /*==============================================================================
-DO FILE NAME:			data_cleaning
+DO FILE NAME:			data_cleaning.do
 PROJECT:				RiskFactorsWinterPressures
 DATE: 					Feb 2020 
 AUTHOR:					S Walter, V Walker										
@@ -10,6 +10,10 @@ DESCRIPTION OF FILE:	data management for project
 						label variables 
 						apply exclusion criteria and quality assurance checks
 DATASETS USED:			data in memory (from output/input_winter*.csv.gz)
+STATA FUNCTIONS USED:	data_cleaning-format_variables
+						data_cleaning-variable_definitions
+						data_cleaning-inclusion_exclusion
+						data_cleaning-quality_assurance
 DATASETS CREATED: 		output/clean_winter*.dta.gz
 OTHER OUTPUT: 			consort*.xlsx							
 ==============================================================================*/
