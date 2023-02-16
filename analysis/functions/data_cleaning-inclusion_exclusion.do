@@ -21,9 +21,9 @@ replace exclude=1 if registered_previous_365days==0
 replace exclude=1 if cov_num_age<18|cov_num_age>110
 
 
-* Restrict to individuals with known sex 
+* Restrict to individuals with known sex
 
-replace exclude=1 if sex==""
+replace exclude=1 if cov_bin_male==.
 
 
 * Restrict to individuals with known deprivation 
@@ -45,6 +45,6 @@ replace exclude=1 if hospitalised_previous_30days==1
 
 quietly: table () (exclude), statistic(frequency) name(consort)
 
-drop if exclude=1
+drop if exclude==1
 
 end

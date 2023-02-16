@@ -247,6 +247,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
             lung_cancer_codes,
             on_or_before = f"{study_start_variable}- 1 day",
             returning = "date",
+            date_format="YYYY-MM-DD",
             return_expectations={
             "date": {"earliest": "1980-02-01", "latest" : "today"},
             "rate": "uniform",
@@ -258,6 +259,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
             haem_cancer_codes, 
             on_or_before = f"{study_start_variable}- 1 day",
             returning = "date",
+            date_format="YYYY-MM-DD",
             return_expectations={
             "date": {"earliest": "1980-02-01", "latest" : "today"},
             "rate": "uniform",
@@ -269,6 +271,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
             other_cancer_codes, 
             on_or_before = f"{study_start_variable}- 1 day",
             returning = "date",
+            date_format="YYYY-MM-DD",
             return_expectations={
             "date": {"earliest": "1980-02-01", "latest" : "today"},
             "rate": "uniform",

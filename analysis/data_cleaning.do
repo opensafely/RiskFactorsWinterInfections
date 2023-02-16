@@ -1,16 +1,34 @@
-* Create locals for arguments --------------------------------------------------
+/*==============================================================================
+DO FILE NAME:			data_cleaning
+PROJECT:				RiskFactorsWinterPressures
+DATE: 					Feb 2020 
+AUTHOR:					S Walter, V Walker										
+DESCRIPTION OF FILE:	data management for project 
+						define variables
+						reformat variables 
+						categorise variables
+						label variables 
+						apply exclusion criteria and quality assurance checks
+DATASETS USED:			data in memory (from output/input_winter*.csv.gz)
+DATASETS CREATED: 		output/clean_winter*.dta.gz
+OTHER OUTPUT: 			consort*.xlsx							
+==============================================================================*/
 
+
+* Create macros for arguments --------------------------------------------------
+
+cd ..
 global dir `c(pwd)'
 
 global cohort=`1' /* first argument in YAML is the cohort year, e.g. 2019 */
 
-*global cohortyear=2019
-*cd "C:/Users/dy21108/GitHub/RiskFactorsWinterInfections"
+adopath + "$dir/analysis/adofiles"
 
 
 * Load data --------------------------------------------------------------------
 
-import delim using "./output/input_winter$cohortyear.csv", clear
+shell gunzip ./output/input_winter$cohort.csv.gz, replace
+*import delim using "$dir/output/input_winter$cohort.csv", clear
 
 
 * Create study start and end dates as variables --------------------------------
@@ -25,8 +43,16 @@ format study_start_date study_end_date %td
 
 *cd "C:\Users\dy21108\GitHub\RiskFactorsWinterInfections"
 
-run "./analysis/functions/data_cleaning-format_variables.do"
+run "$dir/analysis/functions/data_cleaning-format_variables.do"
 format_variables 
+
+run "$dir/analysis/functions/data_cleaning-variable_definitions.do"
+variable_definitions
+
+
+*Summarise missingness
+
+misstable summarize
 
 
 * Create outcomes --------------------------------------------------------------
@@ -52,22 +78,27 @@ replace out_num_covid_stay=0 if out_num_covid_stay==.
 
 * Apply inclusion/exclusion criteria -------------------------------------------
 
-run "/analysis/functions/data_cleaning-inclusion_exclusion.do"
+run "$dir/analysis/functions/data_cleaning-inclusion_exclusion.do"
 inclusion_exclusion
 
 
 * Apply quality assurance measures ---------------------------------------------
 
-run "./analysis/functions/data_cleaning-quality_assurance.do"
-quality_assurances
+run "$dir/analysis/functions/data_cleaning-quality_assurance.do"
+quality_assurance
+
+
+* Combine counts of excluded records and export for CONSORT flow diagram
+
+quietly: collect layout () (exclude qa_birth_after_dth qa_birth_after_today qa_dth_after_today qa_preg_men qa_hrt_cocp_men qa_prostate_women)
+
+collect export "$dir/output/consort$cohort.xlsx", replace
 
 
 * Restrict dataset to relevant variables ---------------------------------------
 
-drop registered_previous_365days sex tmp* inex qa* primary_care_death_date ons_died_from_any_cause_date ///
-	 cov_num_bmi_date_measured hospitalised_previous_30days baseline_creatinine ///
-	 prostate* cov_bin_combined_oral_contracept cov_bin_hormone_replacement_ther death_date ///
-	 egfr ckd max study_start_minus_1yr study_start_minus_5yrs today year_extract
+drop registered_previous_365days tmp* exclude qa* hospitalised_previous_30days death_date ///
+	 death_year today year_extract
 
 	 
 * Compress data ----------------------------------------------------------------
@@ -76,5 +107,6 @@ compress
 
 * Save clean data --------------------------------------------------------------
 
-
-save "./output/clean_winter$cohortyear.dta", replace
+* requires gzip to be installed
+gzsave "$dir/output/clean_winter$cohort.dta.gz", replace
+*save "$dir/output/clean_winter$cohort.dta.", replace
