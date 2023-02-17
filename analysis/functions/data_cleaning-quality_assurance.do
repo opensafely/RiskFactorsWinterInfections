@@ -3,68 +3,61 @@
 cap prog drop quality_assurance
 prog def quality_assurance
 
-* Remove individuals whose year of birth is after their year of death ----------  
+	* Remove individuals whose year of birth is after their year of death ------
 
-gen death_year=year(death_date)
-
-gen qa_birth_after_dth=0
-replace qa_birth_after_dth=1 if qa_num_birth_year>death_year
-
-quietly: table () (qa_birth_after_dth), statistic(frequency) name(consort) append
-
-drop if qa_birth_after_dth==1
+	gen death_year=year(death_date)
+	drop if qa_num_birth_year>death_year
+	local N = _N
+	frame change consort
+	replace total = `N' if criteria=="qa_birth_after_dth"
+	frame change default
 
 
-* Remove individuals whose year of birth is after date of data extract ---------
+	* Remove individuals whose year of birth is after date of data extract -----
 
-gen today= date("`c(current_date)'", "DMY")
-gen year_extract=year(today)
+	gen today= date("`c(current_date)'", "DMY")
+	gen year_extract=year(today)
+	drop if qa_num_birth_year > year_extract
+	local N = _N
+	frame change consort
+	replace total = `N' if criteria=="qa_birth_after_today"
+	frame change default
 
-gen qa_birth_after_today=0
-replace qa_birth_after_today=1 if qa_num_birth_year > year_extract
+	* Remove individuals whose date of death is after date of data extract -----
 
-quietly: table () (qa_birth_after_today), statistic(frequency) name(consort) append
+	drop if death_year > year_extract
+	local N = _N
+	frame change consort
+	replace total = `N' if criteria=="qa_dth_after_today"
+	frame change default
 
-drop if qa_birth_after_today==1
+	* Remove men whose records contain pregnancy and/or birth codes ------------
 
+	drop if qa_bin_pregnancy==1&cov_bin_male==1
+	local N = _N
+	frame change consort
+	replace total = `N' if criteria=="qa_preg_men"
+	frame change default
 
-* Remove individuals whose date of death is after date of data extract ---------
+	* Remove men whose records contain HRT or COCP medication codes ------------
 
-gen qa_dth_after_today=0
-replace qa_dth_after_today=1 if death_year > year_extract
-
-quietly: table () (qa_dth_after_today), statistic(frequency) name(consort) append
-
-drop if qa_dth_after_today==1
-
-* Remove men whose records contain pregnancy and/or birth codes ----------------
-
-gen qa_preg_men=0
-replace qa_preg_men=1 if qa_bin_pregnancy==1&cov_bin_male==1
-
-quietly: table () (qa_preg_men), statistic(frequency) name(consort) append
-
-drop if qa_preg_men==1
-
-
-* Remove men whose records contain HRT or COCP medication codes ----------------
-
-gen qa_hrt_cocp_men=0
-replace qa_hrt_cocp_men=1 if qa_bin_hrtcocp==1 & cov_bin_male==1
-
-quietly: table () (qa_hrt_cocp_men), statistic(frequency) name(consort) append
-
-drop if qa_hrt_cocp_men==1
+	drop if qa_bin_hrtcocp==1 & cov_bin_male==1
+	local N = _N
+	frame change consort
+	replace total = `N' if criteria=="qa_hrt_cocp_men"
+	frame change default
 
 
-* Remove women whose records contain prostate cancer codes ---------------------
+	* Remove women whose records contain prostate cancer codes -----------------
 
-gen qa_prostate_women=0
-replace qa_prostate_women=1 if qa_bin_prostate==1 & cov_bin_male==0 
+	drop if qa_bin_prostate==1 & cov_bin_male==0 
+	local N = _N
+	frame change consort
+	replace total = `N' if criteria=="qa_prostate_women"
+	frame change default
 
-quietly: table () (qa_prostate_women), statistic(frequency) name(consort) append
-
-drop if qa_prostate_women==1
-
+	* Drop variables created to apply quality assurance measures ---------------
+	
+	drop death_year today year_extract
 
 end

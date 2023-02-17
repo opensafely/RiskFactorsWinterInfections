@@ -18,55 +18,63 @@ DATASETS CREATED: 		output/clean_winter*.dta.gz
 OTHER OUTPUT: 			consort*.xlsx							
 ==============================================================================*/
 
+* Specify redaction_threshold --------------------------------------------------
+
+local redaction_threshold 6
 
 * Create macros for arguments --------------------------------------------------
 
-cd ..
-global dir `c(pwd)'
+local cohort "winter2019"
+local study_start_date "td(1dec2019)"
+local study_end_date "td(28feb2020)"
 
-global cohort=`1' /* first argument in YAML is the cohort year, e.g. 2019 */
+/*
+local cohort "`1'"
+local study_start_date "`2'"
+local study_end_date "`3'"
+*/
 
-adopath + "$dir/analysis/adofiles"
+di "Arguments: (1) `cohort', (2) `study_start_date', and (3) `study_end_date'"
 
+adopath + "analysis/adofiles"
+
+* Specify consort frame --------------------------------------------------------
+
+frame create consort
+frame change consort
+import delimited using lib/consort.csv
+frame change default
 
 * Load data --------------------------------------------------------------------
 
-shell gunzip ./output/input_winter$cohort.csv.gz, replace
-*import delim using "$dir/output/input_winter$cohort.csv", clear
-
-
-* Create study start and end dates as variables --------------------------------
-  * `2' is the study start date and `3' is the end date in the YAML, e.g. "td(1dec2019)"
-  
-gen study_start_date=`2'
-gen study_end_date=`3'
-format study_start_date study_end_date %td
-
+!gunzip output/input_`cohort'.csv.gz
+import delimited using output/input_`cohort'.csv
 
 * Format variables -------------------------------------------------------------
 
-*cd "C:\Users\dy21108\GitHub\RiskFactorsWinterInfections"
-
-run "$dir/analysis/functions/data_cleaning-format_variables.do"
+run "analysis/functions/data_cleaning-format_variables.do"
 format_variables 
 
-run "$dir/analysis/functions/data_cleaning-variable_definitions.do"
+* Create study start and end dates as variables --------------------------------
+
+gen study_start_date=`study_start_date'
+gen study_end_date=`study_end_date'
+format study_start_date study_end_date %td
+
+* Define variables not in study definition -------------------------------------
+
+run "analysis/functions/data_cleaning-variable_definitions.do"
 variable_definitions
 
-
-*Summarise missingness
+* Summarise missingness --------------------------------------------------------
 
 misstable summarize
 
-
-* Create outcomes --------------------------------------------------------------
-
-** Length of hospital stay -----------------------------------------------------
-   * patients with no admission in the study period have stay=0
+* Create length of hospital stay outcome with 0 for no admission ---------------
 
 gen out_num_flu_stay = tmp_out_date_flu_dis - out_date_flu_adm
 replace out_num_flu_stay=0 if out_num_flu_stay==.
-			
+
 gen out_num_rsv_stay = tmp_out_date_rsv_dis - out_date_rsv_adm
 replace out_num_rsv_stay=0 if out_num_rsv_stay==.
 
@@ -79,38 +87,37 @@ replace out_num_pneu_stay=0 if out_num_pneu_stay==.
 gen out_num_covid_stay = tmp_out_date_covid_dis - out_date_covid_adm
 replace out_num_covid_stay=0 if out_num_covid_stay==.
 
-
 * Apply inclusion/exclusion criteria -------------------------------------------
 
-run "$dir/analysis/functions/data_cleaning-inclusion_exclusion.do"
+run "analysis/functions/data_cleaning-inclusion_exclusion.do"
 inclusion_exclusion
-
 
 * Apply quality assurance measures ---------------------------------------------
 
-run "$dir/analysis/functions/data_cleaning-quality_assurance.do"
+run "analysis/functions/data_cleaning-quality_assurance.do"
 quality_assurance
-
-
-* Combine counts of excluded records and export for CONSORT flow diagram
-
-quietly: collect layout () (exclude qa_birth_after_dth qa_birth_after_today qa_dth_after_today qa_preg_men qa_hrt_cocp_men qa_prostate_women)
-
-collect export "$dir/output/consort$cohort.xlsx", replace
-
 
 * Restrict dataset to relevant variables ---------------------------------------
 
-drop registered_previous_365days tmp* exclude qa* hospitalised_previous_30days death_date ///
-	 death_year today year_extract
+drop registered_previous_365days tmp* qa* hospitalised_previous_30days death_date
 
-	 
 * Compress data ----------------------------------------------------------------
 
 compress
 
 * Save clean data --------------------------------------------------------------
 
-* requires gzip to be installed
-gzsave "$dir/output/clean_winter$cohort.dta.gz", replace
-*save "$dir/output/clean_winter$cohort.dta.", replace
+gzsave "output/clean_`cohort'.dta.gz", replace
+
+* Save consort information -----------------------------------------------------
+
+frame change consort
+
+gen remove = total[_n-1] - total
+gen total_rounded = ceil(total/`redaction_threshold')*`redaction_threshold' - (floor(`redaction_threshold'/2)*(total!=0)*(total!=.))
+gen remove_rounded = total_rounded[_n-1] - total_rounded
+
+export delimited using "output/consort_`cohort'.csv", replace
+
+drop total remove
+export delimited using "output/rounded_consort_`cohort'.csv", replace

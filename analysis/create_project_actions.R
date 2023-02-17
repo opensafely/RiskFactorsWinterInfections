@@ -105,7 +105,8 @@ actions_list <- splice(
     run = "stata-mp:latest analysis/data_cleaning.do winter2019 td(1dec2019) td(28feb2020)",
     needs = list("generate_study_population_winter2019"),
     moderately_sensitive = list(
-      describe = glue("output/consort_winter2019.xlsx")
+      consort = glue("output/consort_winter2019.csv"),
+      rounded_consort = glue("output/rounded_consort_winter2019.csv")
     ),
     highly_sensitive = list(
       cohort = glue("output/clean_winter2019.csv.gz")
@@ -117,7 +118,8 @@ actions_list <- splice(
     run = "stata-mp:latest analysis/data_cleaning/data_cleaning.do winter2021 td(1dec2021) td(28feb2022)",
     needs = list("generate_study_population_winter2021"),
     moderately_sensitive = list(
-      describe = glue("output/consort_winter2021.xlsx")
+      consort = glue("output/consort_winter2021.csv"),
+      rounded_consort = glue("output/rounded_consort_winter2021.csv")
     ),
     highly_sensitive = list(
       cohort = glue("output/clean_winter2021.csv.gz")
