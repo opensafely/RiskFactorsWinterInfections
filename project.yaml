@@ -27,3 +27,26 @@ actions:
       highly_sensitive:
         cohort: output/input_winter2021.csv.gz
 
+  ## Data cleaning 
+
+  data_cleaning_winter2019:
+    run: stata-mp:latest analysis/data_cleaning.do winter2019 td(1dec2019) td(28feb2020)
+    needs:
+    - generate_study_population_winter2019
+    outputs:
+      moderately_sensitive:
+        describe: output/consort_winter2019.xlsx
+      highly_sensitive:
+        cohort: output/clean_winter2019.csv.gz
+
+  data_cleaning_winter2021:
+    run: stata-mp:latest analysis/data_cleaning/data_cleaning.do winter2021 td(1dec2021)
+      td(28feb2022)
+    needs:
+    - generate_study_population_winter2021
+    outputs:
+      moderately_sensitive:
+        describe: output/consort_winter2021.xlsx
+      highly_sensitive:
+        cohort: output/clean_winter2021.csv.gz
+

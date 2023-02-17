@@ -96,33 +96,33 @@ actions_list <- splice(
     highly_sensitive = list(
       cohort = glue("output/input_winter2021.csv.gz")
     )
-  )
+  ),
   
-  # comment("Data cleaning"),
-  # 
-  # action(
-  #   name = "data_cleaning_winter2019",
-  #   run = "r:latest analysis/data_cleaning/data_cleaning.R winter2019",
-  #   needs = list("generate_study_population_winter2019"),
-  #   moderately_sensitive = list(
-  #     describe = glue("output/data_cleaning/describe_input_winter2019.txt")
-  #   ),
-  #   highly_sensitive = list(
-  #     cohort = glue("output/input_winter2019.csv.gz")
-  #   )
-  # ), 
-  # 
-  # action(
-  #   name = "data_cleaning_winter2021",
-  #   run = "r:latest analysis/data_cleaning/data_cleaning.R winter2021",
-  #   needs = list("agenerate_study_population_winter2021"),
-  #   moderately_sensitive = list(
-  #     describe = glue("output/data_cleaning/describe_input_winter2021.txt")
-  #   ),
-  #   highly_sensitive = list(
-  #     cohort = glue("output/input_winter2021.csv.gz")
-  #   )
-  # )
+  comment("Data cleaning"),
+
+  action(
+    name = "data_cleaning_winter2019",
+    run = "stata-mp:latest analysis/data_cleaning.do winter2019 td(1dec2019) td(28feb2020)",
+    needs = list("generate_study_population_winter2019"),
+    moderately_sensitive = list(
+      describe = glue("output/consort_winter2019.xlsx")
+    ),
+    highly_sensitive = list(
+      cohort = glue("output/clean_winter2019.csv.gz")
+    )
+  ),
+
+  action(
+    name = "data_cleaning_winter2021",
+    run = "stata-mp:latest analysis/data_cleaning/data_cleaning.do winter2021 td(1dec2021) td(28feb2022)",
+    needs = list("generate_study_population_winter2021"),
+    moderately_sensitive = list(
+      describe = glue("output/consort_winter2021.xlsx")
+    ),
+    highly_sensitive = list(
+      cohort = glue("output/clean_winter2021.csv.gz")
+    )
+  )
   
 )
 
