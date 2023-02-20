@@ -21,7 +21,7 @@ prog def variable_definitions
 	* Define exp_cat_kidneyfunc ------------------------------------------------
 
 	* Set implausible creatinine values to missing
-	replace tmp_exp_cat_kidneyfunc_creatinin = . if !inrange(tmp_exp_cat_kidneyfunc_creatinin, 20, 3000) 
+	replace tmp_exp_cat_kidneyfunc_creatinin = . if !inrange(tmp_exp_cat_kidneyfunc_creatinin, 10, 1500) 
 
 	* Divide by 88.4 (to convert umol/l to mg/dl)
 	gen SCr_adj = tmp_exp_cat_kidneyfunc_creatinin/88.4

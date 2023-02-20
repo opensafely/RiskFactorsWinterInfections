@@ -9,13 +9,15 @@ DESCRIPTION OF FILE:	data management for project
 						categorise variables
 						label variables 
 						apply exclusion criteria and quality assurance checks
+						record record counts for consort diagram
 DATASETS USED:			data in memory (from output/input_winter*.csv.gz)
 STATA FUNCTIONS USED:	data_cleaning-format_variables
 						data_cleaning-variable_definitions
 						data_cleaning-inclusion_exclusion
 						data_cleaning-quality_assurance
 DATASETS CREATED: 		output/clean_winter*.dta.gz
-OTHER OUTPUT: 			consort*.xlsx							
+OTHER OUTPUT: 			output/consort_*.csv	
+						output/rouded_consort_*.csv
 ==============================================================================*/
 
 * Specify redaction_threshold --------------------------------------------------
