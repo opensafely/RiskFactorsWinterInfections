@@ -47,7 +47,7 @@ frame change default
 
 * Load data --------------------------------------------------------------------
 
-//!gunzip output/input_`cohort'.csv.gz
+!gunzip output/input_`cohort'.csv.gz
 import delimited using output/input_`cohort'.csv
 
 * Format variables -------------------------------------------------------------
