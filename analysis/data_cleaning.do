@@ -24,15 +24,15 @@ local redaction_threshold 6
 
 * Create macros for arguments --------------------------------------------------
 
+/*
 local cohort "winter2019"
 local study_start_date "td(1dec2019)"
 local study_end_date "td(28feb2020)"
+*/
 
-/*
 local cohort "`1'"
 local study_start_date "`2'"
 local study_end_date "`3'"
-*/
 
 di "Arguments: (1) `cohort', (2) `study_start_date', and (3) `study_end_date'"
 
@@ -47,7 +47,7 @@ frame change default
 
 * Load data --------------------------------------------------------------------
 
-!gunzip output/input_`cohort'.csv.gz
+//!gunzip output/input_`cohort'.csv.gz
 import delimited using output/input_`cohort'.csv
 
 * Format variables -------------------------------------------------------------
