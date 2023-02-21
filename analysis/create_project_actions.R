@@ -124,8 +124,16 @@ actions_list <- splice(
     highly_sensitive = list(
       cohort = glue("output/clean_winter2021.dta.gz")
     )
-  )
+  ),
   
+  action(
+    name = "table1_winter2019",
+    run = "stata-mp:latest analysis/table1.do winter2019",
+    needs = list("generate_study_population_winter2019"),
+    moderately_sensitive = list(
+      table1 = glue("output/table1_winter2019.csv")
+    )
+  )
 )
 
 # Combine all actions in a list ------------------------------------------------
