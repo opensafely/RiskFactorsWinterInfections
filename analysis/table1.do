@@ -8,8 +8,8 @@ DESCRIPTION OF FILE:	generate a table of counts and percentages
 						each outcome condition
 DATASETS USED:			output/clean_winter*.dta.gz
 STATA FUNCTIONS USED:	table1-label_variables
-DATASETS CREATED: 		output/table1.csv
-OTHER OUTPUT: 			output/table1.dta
+DATASETS CREATED: 		output/table1_winter*_rounded.csv
+OTHER OUTPUT: 			output/table1_winter*.csv
 ==============================================================================*/
 
 
