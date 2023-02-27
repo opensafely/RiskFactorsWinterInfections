@@ -105,7 +105,7 @@ rename percent_all_tmp percent_all
 
 
 * Create rounded version of counts
-gen rnd_count_all = ceil(rnd_count_all_tmp/`redaction_threshold')*`redaction_threshold' - (floor(`redaction_threshold'/2)*(rnd_count_all_tmp!=0)*(rnd_count_all_tmp!=.))
+gen rnd_count_all = ceil(count_all/`redaction_threshold')*`redaction_threshold' - (floor(`redaction_threshold'/2)*(count_all!=0)*(count_all!=.))
 *gen rnd_count_all = ceil(count_all/6)*6 - (floor(6/2)*(count_all!=0)*(count_all!=.))
 
 replace count_all=N if _n==1
@@ -198,7 +198,7 @@ rename percent_covid_tmp percent_covid
 
 
 * Create rounded version of counts
-gen rnd_count_covid = ceil(rnd_count_covid_tmp/`redaction_threshold')*`redaction_threshold' - (floor(`redaction_threshold'/2)*(rnd_count_covid_tmp!=0)*(rnd_count_covid_tmp!=.))
+gen rnd_count_covid = ceil(count_covid/`redaction_threshold')*`redaction_threshold' - (floor(`redaction_threshold'/2)*(count_covid!=0)*(count_covid!=.))
 *gen rnd_count_covid = ceil(count_covid/6)*6 - (floor(6/2)*(count_covid!=0)*(count_covid!=.))
 
 replace count_covid=N if _n==1
@@ -296,7 +296,7 @@ rename percent_pneu_tmp percent_pneu
 
 
 * Create rounded version of counts
-gen rnd_count_pneu = ceil(rnd_count_pneu_tmp/`redaction_threshold')*`redaction_threshold' - (floor(`redaction_threshold'/2)*(rnd_count_pneu_tmp!=0)*(rnd_count_pneu_tmp!=.))
+gen rnd_count_pneu = ceil(count_pneu/`redaction_threshold')*`redaction_threshold' - (floor(`redaction_threshold'/2)*(count_pneu!=0)*(count_pneu!=.))
 *gen rnd_count_pneu = ceil(count_pneu/6)*6 - (floor(6/2)*(count_pneu!=0)*(count_pneu!=.))
 
 replace count_pneu=N if _n==1
@@ -394,7 +394,7 @@ rename percent_pneustrep_tmp percent_pneustrep
 
 
 * Create rounded version of counts
-gen rnd_count_pneustrep = ceil(rnd_count_pneustrep_tmp/`redaction_threshold')*`redaction_threshold' - (floor(`redaction_threshold'/2)*(rnd_count_pneustrep_tmp!=0)*(rnd_count_pneustrep_tmp!=.))
+gen rnd_count_pneustrep = ceil(count_pneustrep/`redaction_threshold')*`redaction_threshold' - (floor(`redaction_threshold'/2)*(count_pneustrep!=0)*(count_pneustrep!=.))
 *gen rnd_count_pneustrep = ceil(count_pneustrep/6)*6 - (floor(6/2)*(count_pneustrep!=0)*(count_pneustrep!=.))
 
 replace count_pneustrep=N if _n==1
@@ -493,7 +493,7 @@ rename percent_rsv_tmp percent_rsv
 
 
 * Create rounded version of counts
-gen rnd_count_rsv = ceil(rnd_count_rsv_tmp/`redaction_threshold')*`redaction_threshold' - (floor(`redaction_threshold'/2)*(rnd_count_rsv_tmp!=0)*(rnd_count_rsv_tmp!=.))
+gen rnd_count_rsv = ceil(count_rsv/`redaction_threshold')*`redaction_threshold' - (floor(`redaction_threshold'/2)*(count_rsv!=0)*(count_rsv!=.))
 *gen rnd_count_rsv = ceil(count_rsv/6)*6 - (floor(6/2)*(count_rsv!=0)*(count_rsv!=.))
 
 replace count_rsv=N if _n==1
@@ -592,7 +592,7 @@ rename percent_flu_tmp percent_flu
 
 
 * Create rounded version of counts
-gen rnd_count_flu = ceil(rnd_count_flu_tmp/`redaction_threshold')*`redaction_threshold' - (floor(`redaction_threshold'/2)*(rnd_count_flu_tmp!=0)*(rnd_count_flu_tmp!=.))
+gen rnd_count_flu = ceil(count_flu/`redaction_threshold')*`redaction_threshold' - (floor(`redaction_threshold'/2)*(count_flu!=0)*(count_flu!=.))
 *gen rnd_count_flu = ceil(count_flu/6)*6 - (floor(6/2)*(count_flu!=0)*(count_flu!=.))
 
 replace count_flu=N if _n==1
