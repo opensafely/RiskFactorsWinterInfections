@@ -4,7 +4,7 @@ cap prog drop label_variables
 prog def label_variables
 
 label variable sub_cat_age "Age"
-label variable cov_bin_male "Sex"
+label variable cov_bin_male "Male"
 label variable cov_cat_obese "Obesity"
 label variable cov_cat_smoking "Smoking"
 label variable cov_cat_ethnicity "Ethnicity"
