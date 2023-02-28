@@ -124,6 +124,28 @@ actions_list <- splice(
     highly_sensitive = list(
       cohort = glue("output/clean_winter2021.dta.gz")
     )
+  ),
+  
+  comment("Table 1"),
+  
+  action(
+    name = "table1_winter2019",
+    run = "stata-mp:latest analysis/table1.do winter2019",
+    needs = list("data_cleaning_winter2019"),
+    moderately_sensitive = list(
+      table1 = glue("output/table1_winter2019.csv"),
+      rounded_table1 = glue("output/rounded_table1_winter2019.csv")
+    )
+  ),
+  
+  action(
+    name = "table1_winter2021",
+    run = "stata-mp:latest analysis/table1.do winter2021",
+    needs = list("data_cleaning_winter2021"),
+    moderately_sensitive = list(
+      table1 = glue("output/table1_winter2021.csv"),
+      rounded_table1 = glue("output/rounded_table1_winter2021.csv")
+    )
   )
   
 )

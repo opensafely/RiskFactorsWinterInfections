@@ -51,3 +51,23 @@ actions:
       highly_sensitive:
         cohort: output/clean_winter2021.dta.gz
 
+  ## Table 1 
+
+  table1_winter2019:
+    run: stata-mp:latest analysis/table1.do winter2019
+    needs:
+    - data_cleaning_winter2019
+    outputs:
+      moderately_sensitive:
+        table1: output/table1_winter2019.csv
+        rounded_table1: output/rounded_table1_winter2019.csv
+
+  table1_winter2021:
+    run: stata-mp:latest analysis/table1.do winter2021
+    needs:
+    - data_cleaning_winter2021
+    outputs:
+      moderately_sensitive:
+        table1: output/table1_winter2021.csv
+        rounded_table1: output/rounded_table1_winter2021.csv
+

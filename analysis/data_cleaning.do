@@ -24,6 +24,10 @@ OTHER OUTPUT: 			output/consort_*.csv
 
 local redaction_threshold 6
 
+* Source utility functions -----------------------------------------------------
+
+run "analysis/functions/utility.do"
+
 * Create macros for arguments --------------------------------------------------
 
 /*
@@ -116,7 +120,7 @@ gzsave "output/clean_`cohort'.dta.gz", replace
 frame change consort
 
 gen remove = total[_n-1] - total
-gen total_rounded = ceil(total/`redaction_threshold')*`redaction_threshold' - (floor(`redaction_threshold'/2)*(total!=0)*(total!=.))
+roundmid_any "total" 6
 gen remove_rounded = total_rounded[_n-1] - total_rounded
 
 export delimited using "output/consort_`cohort'.csv", replace

@@ -96,7 +96,7 @@ prog def format_variables
 	gen exp_cat_asthma_tmp=0
 	replace exp_cat_asthma_tmp=1 if exp_cat_asthma=="Asthma_NoRecentOCS"
 	replace exp_cat_asthma_tmp=2 if exp_cat_asthma=="Asthma_RecentOCS"
-	label define asthma_cats 0 "NoEvidence" 1 " Asthma_NoRecentOCS" 2 "Asthma_RecentOCS"
+	label define asthma_cats 0 "NoEvidence" 1 "Asthma_NoRecentOCS" 2 "Asthma_RecentOCS"
 	drop exp_cat_asthma
 	rename exp_cat_asthma_tmp exp_cat_asthma
 	label values exp_cat_asthma asthma_cats
