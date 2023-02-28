@@ -105,7 +105,8 @@ quality_assurance
 
 * Restrict dataset to relevant variables ---------------------------------------
 
-drop registered_previous_365days tmp* qa* hospitalised_previous_30days death_date
+drop registered_previous_365days qa* hospitalised_previous_30days ///
+     tmp_death* tmp_exp* tmp_prostate* tmp_cov*
 
 * Compress data ----------------------------------------------------------------
 

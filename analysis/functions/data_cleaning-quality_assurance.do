@@ -6,7 +6,7 @@ prog def quality_assurance
 	* Remove individuals whose year of birth is after their year of death ------
 
 	gen death_year=year(death_date)
-	drop if qa_num_birth_year>death_year
+	drop if qa_num_birth_year>death_year & qa_num_birth_year!=.
 	local N = _N
 	frame change consort
 	replace total = `N' if criteria=="qa_birth_after_dth"
@@ -17,7 +17,7 @@ prog def quality_assurance
 
 	gen today= date("`c(current_date)'", "DMY")
 	gen year_extract=year(today)
-	drop if qa_num_birth_year > year_extract
+	drop if qa_num_birth_year > year_extract & qa_num_birth_year!=.
 	local N = _N
 	frame change consort
 	replace total = `N' if criteria=="qa_birth_after_today"
@@ -25,7 +25,7 @@ prog def quality_assurance
 
 	* Remove individuals whose date of death is after date of data extract -----
 
-	drop if death_year > year_extract
+	drop if death_year > year_extract & death_year!=.
 	local N = _N
 	frame change consort
 	replace total = `N' if criteria=="qa_dth_after_today"
@@ -33,7 +33,7 @@ prog def quality_assurance
 
 	* Remove men whose records contain pregnancy and/or birth codes ------------
 
-	drop if qa_bin_pregnancy==1&cov_bin_male==1
+	drop if qa_bin_pregnancy==1 & cov_bin_male==1
 	local N = _N
 	frame change consort
 	replace total = `N' if criteria=="qa_preg_men"
