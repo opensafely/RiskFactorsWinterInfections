@@ -146,6 +146,26 @@ actions_list <- splice(
       table1 = glue("output/table1_winter2021.csv"),
       rounded_table1 = glue("output/rounded_table1_winter2021.csv")
     )
+  ),
+  
+  comment("Cox models"),
+  
+  action(
+    name = "cox_model_winter2019",
+    run = "stata-mp:latest analysis/cox_model.do winter2019",
+    needs = list("data_cleaning_winter2019"),
+    moderately_sensitive = list(
+      results = glue("output/results_winter2019.csv")
+    )
+  ),
+  
+  action(
+    name = "cox_model_winter2021",
+    run = "stata-mp:latest analysis/cox_model.do winter2021",
+    needs = list("data_cleaning_winter2021"),
+    moderately_sensitive = list(
+      results = glue("output/results_winter2021.csv")
+    )
   )
   
 )

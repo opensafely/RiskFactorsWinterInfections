@@ -71,3 +71,21 @@ actions:
         table1: output/table1_winter2021.csv
         rounded_table1: output/rounded_table1_winter2021.csv
 
+  ## Cox models 
+
+  cox_model_winter2019:
+    run: stata-mp:latest analysis/cox_model.do winter2019
+    needs:
+    - data_cleaning_winter2019
+    outputs:
+      moderately_sensitive:
+        results: output/results_winter2019.csv
+
+  cox_model_winter2021:
+    run: stata-mp:latest analysis/cox_model.do winter2021
+    needs:
+    - data_cleaning_winter2021
+    outputs:
+      moderately_sensitive:
+        results: output/results_winter2021.csv
+
