@@ -1,48 +1,66 @@
+/*==============================================================================
+DO FILE NAME:			table2.do
+PROJECT:				RiskFactorsWinterPressures
+DATE: 					March 2020 
+AUTHOR:					S Walter, V Walker										
+DESCRIPTION OF FILE:	generate a table of summaru statistics for each
+						infection type and each outcome 
+DATASETS USED:			output/clean_winter*.dta.gz
+STATA FUNCTIONS USED:	table1-label_variables
+DATASETS CREATED: 		output/table2_winter*_rounded.csv
+OTHER OUTPUT: 			output/table2_winter*.csv
+==============================================================================*/
 
 
+* Specify redaction_threshold --------------------------------------------------
 
+local redaction_threshold 6
+
+* Source functions -------------------------------------------------------------
+
+run "analysis/functions/utility.do"
+
+* Create macros for arguments --------------------------------------------------
+
+local cohort "`1'"
+
+di "Arguments: (1) `cohort'"
+
+adopath + "analysis/adofiles"
+
+
+gzuse output/clean_`cohort'.dta.gz, clear
 use "C:\Users\dy21108\GitHub\RiskFactorsWinterInfections\output/clean_winter2019.dta", clear
 
-*** Change data_clearning to keep variables: tmp_out_date_*_dis death_date 
+* Influenza --------------------------------------------------------------------
 
-*** Possibly make a function that can be run for each infection type.
+make_table2 "`cohort'" "flu"
 
+* RSV --------------------------------------------------------------------------
 
-/*** Create flags and patient level intervals ***/
+make_table2 "`cohort'" "rsv"
 
-* Admissions
+* Pneumonia due to strep -------------------------------------------------------
 
-gen count_flu_adm=0
-replace count_flu_adm=1 if out_date_flu_adm!=. & (date_death>=out_date_flu_adm | date_death==.)
+make_table2 "`cohort'" "pneustrep"
 
-gen risktime_flu_adm=out_date_flu_adm - study_start_date if count_flu_adm==1 & date_death>=out_date_flu_adm
-replace risktime_flu_adm=date_death - study_start_date if date_death<out_date_flu_adm  /* CHECK THIS */
-replace risktime_flu_adm=study_end_date - study_start_date if count_flu_adm==0 & date_death==.
+* Penumonia --------------------------------------------------------------------
 
-				
-* Length of stay
+make_table2 "`cohort'" "pneu"
 
-if out_date_flu_adm!=. & date_death>=out_date_flu_adm
+* Covid ------------------------------------------------------------------------
 
+make_table2 "`cohort'" "covid"
 
-* Readmission within 30 days of discharge - keep tmp_out_date_*_dis variables from data cleaning
-*   Only applies to those who were admitted in the first place.
+* Combine summary stats into one table
 
-gen count_flu_readm=0 if count_flu_adm==1
-replace count_flu_readm=1 if out_date_flu_readm!=. & count_flu_adm==1 /* what about deaths?? */
-
-gen risktime_flu_readm=out_date_flu_readm - tmp_out_date_flu_dis if count_flu_readm==1
-replace risktime_flu_readm=
-
-* Death
-
-gen count_flu_death=0
-replace count_flu_dth=1 if out_date_flu_death!=.
-
-gen risktime_flu_death=out_date_flu_death - study_start_date
+append 
 
 
-/*** Collapse into one row per infection using preserve/restore ***/
+* Save Table 2 -----------------------------------------------------------------
 
+export delimited output/table2_`cohort'.csv, replace
 
-/*** Combine rows into one dataset ***/
+* Save rounded Table 2 ---------------------------------------------------------
+
+export delimited output/rounded_table2_`cohort'.csv, replace
