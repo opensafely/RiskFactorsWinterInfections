@@ -77,7 +77,7 @@ def generate_common_variables(study_start_variable,study_end_variable):
 
             registered_previous_365days=patients.registered_with_one_practice_between(
                 start_date=f"{study_start_variable}- 365 days",
-                end_date=f"{study_end_variable}",
+                end_date=f"{study_start_variable}",
                 return_expectations={"incidence": 0.95},
             ),
 
