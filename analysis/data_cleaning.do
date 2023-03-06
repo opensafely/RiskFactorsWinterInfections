@@ -78,21 +78,20 @@ misstable summarize
 
 * Create length of hospital stay outcome with 0 for no admission ---------------
 
-gen out_num_flu_stay = tmp_out_date_flu_dis - out_date_flu_adm
-replace out_num_flu_stay=0 if out_num_flu_stay==.
+foreach outcome in  flu rsv pneustrep pneu covid {
+	gen out_num_`outcome'_stay = tmp_out_date_`outcome'_dis - out_date_`outcome'_adm
+	replace out_num_`outcome'_stay=0 if out_num_`outcome'_stay==.
 
-gen out_num_rsv_stay = tmp_out_date_rsv_dis - out_date_rsv_adm
-replace out_num_rsv_stay=0 if out_num_rsv_stay==.
+* Definie patient-specific end of follow-up time for admissions, readmissions and death
 
-gen out_num_pneustrep_stay = tmp_out_date_pneustrep_dis - out_date_pneustrep_adm
-replace out_num_pneustrep_stay=0 if out_num_pneustrep_stay==.
-
-gen out_num_pneu_stay = tmp_out_date_pneu_dis - out_date_pneu_adm
-replace out_num_pneu_stay=0 if out_num_pneu_stay==.
-
-gen out_num_covid_stay = tmp_out_date_covid_dis - out_date_covid_adm
-replace out_num_covid_stay=0 if out_num_covid_stay==.
-
+	egen followupend_date_`outcome'_adm=rowmin(out_date_`outcome'_adm death_date study_end_date deregistration_date)
+	egen followupend_date_`outcome'_readm=rowmin(out_date_`outcome'_readm death_date study_end_date deregistration_date)
+	format followupend_date_`outcome'_adm followupend_date_`outcome'_readm %td
+}
+  
+egen followupend_date_death=rowmin(death_date study_end_date deregistration_date)
+format followupend_date_death %td
+  
 * Apply inclusion/exclusion criteria -------------------------------------------
 
 run "analysis/functions/data_cleaning-inclusion_exclusion.do"
@@ -114,7 +113,7 @@ compress
 
 * Save clean data --------------------------------------------------------------
 
-gzsave "output/clean_`cohort'.dta.gz", replace
+save "output/clean_`cohort'.dta", replace
 
 * Save consort information -----------------------------------------------------
 

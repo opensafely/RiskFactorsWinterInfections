@@ -38,7 +38,7 @@ actions:
         consort: output/consort_winter2019.csv
         rounded_consort: output/rounded_consort_winter2019.csv
       highly_sensitive:
-        cohort: output/clean_winter2019.dta.gz
+        cohort: output/clean_winter2019.dta
 
   data_cleaning_winter2021:
     run: stata-mp:latest analysis/data_cleaning.do winter2021 td(1dec2021) td(28feb2022)
