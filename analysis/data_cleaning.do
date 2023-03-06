@@ -113,7 +113,7 @@ compress
 
 * Save clean data --------------------------------------------------------------
 
-save "output/clean_`cohort'.dta", replace
+gzsave "output/clean_`cohort'.dta.gz", replace
 
 * Save consort information -----------------------------------------------------
 
