@@ -32,21 +32,19 @@ def generate_common_variables(study_start_variable,study_end_variable):
 
             ### Primary care
             tmp_death_date_tpp=patients.with_death_recorded_in_primary_care(
-                    on_or_after="index_date",
                     returning="date_of_death",
                     date_format="YYYY-MM-DD",
                     return_expectations={
-                        "date": {"earliest": "index_date", "latest" : "today"},
+                        "date": {"earliest": "1980-02-01", "latest" : "today"},
                         "rate": "exponential_increase",
                     },
             ),
             ### ONS
             tmp_death_date_ons=patients.died_from_any_cause(
-                    on_or_after="index_date",
                     returning="date_of_death",
                     date_format="YYYY-MM-DD",
                     return_expectations={
-                        "date": {"earliest": "index_date", "latest" : "today"},
+                        "date": {"earliest": "1980-02-01", "latest" : "today"},
                         "rate": "exponential_increase",
                     },
             ),
@@ -54,6 +52,16 @@ def generate_common_variables(study_start_variable,study_end_variable):
             death_date=patients.minimum_of(
                 "tmp_death_date_tpp", "tmp_death_date_ons"
             ),
+
+        ## Date of deregistration following study start date
+        deregistration_date=patients.date_deregistered_from_all_supported_practices(
+                on_or_after=f"{study_start_variable}",
+                date_format="YYYY-MM-DD",
+                return_expectations={
+                    "date": {"earliest": f"{study_start_variable}", "latest" : "today"},
+                    "rate": "exponential_increase",
+                },
+        ),
 
         ## Record of hospitalisation in the 30 days prior to study start date
 
