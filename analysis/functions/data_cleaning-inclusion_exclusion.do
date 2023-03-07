@@ -18,7 +18,7 @@ prog def inclusion_exclusion
 	replace total = `N' if criteria=="alive"
 	frame change default
 	
-	* Restrict to individuals registered at the same TPP practice from 365 days prior to the study start date to the end of follow-up for that cohort   
+	* Restrict to individuals registered at the same TPP practice from 365 days prior to the study start date to the start of follow-up for that cohort   
 
 	drop if registered_previous_365days==0
 	local N = _N

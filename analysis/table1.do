@@ -81,7 +81,7 @@ make_table1 "`cohort'" "flu"
 use output/table1_`cohort'_all.dta, clear
 
 foreach outcome in covid flu pneu pneustrep rsv {	
-	merge 1:m factor level using output/table1_`cohort'_`outcome'.dta, nogen
+	merge 1:1 factor level using output/table1_`cohort'_`outcome'.dta, nogen
 }
 
 * Sort and rename variables ----------------------------------------------------
