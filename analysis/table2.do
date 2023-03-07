@@ -6,7 +6,7 @@ AUTHOR:					S Walter, V Walker
 DESCRIPTION OF FILE:	generate a table of summaru statistics for each
 						infection type and each outcome 
 DATASETS USED:			output/clean_winter*.dta.gz
-STATA FUNCTIONS USED:	table2-make-table2
+STATA FUNCTIONS USED:	table2-make_table2
 DATASETS CREATED: 		output/table2_winter*_rounded.csv
 OTHER OUTPUT: 			output/table2_winter*.csv
 ==============================================================================*/
@@ -19,6 +19,7 @@ local redaction_threshold 6
 * Source functions -------------------------------------------------------------
 
 run "analysis/functions/utility.do"
+run "analysis/functions/table2-make_table2.do"
 
 * Create macros for arguments --------------------------------------------------
 
@@ -28,6 +29,7 @@ di "Arguments: (1) `cohort'"
 
 adopath + "analysis/adofiles"
 
+* Import cleaned data ----------------------------------------------------------
 
 gzuse output/clean_`cohort'.dta.gz, clear
 *use "C:\Users\dy21108\GitHub\RiskFactorsWinterInfections\output/clean_winter2019.dta", clear
@@ -52,7 +54,7 @@ make_table2 "pneu"
 
 make_table2 "covid"
 
-* Combine summary stats into one table
+* Combine summary stats into one table -----------------------------------------
 
 use output/table2_flu.dta, clear
 
