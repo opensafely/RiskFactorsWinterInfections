@@ -52,11 +52,11 @@ prog def format_variables
 	* Format cov_cat_smoking ---------------------------------------------------
 
 	gen cov_cat_smoking_tmp = .
-	replace cov_cat_smoking_tmp = 1 if cov_cat_smoking=="N"
-	replace cov_cat_smoking_tmp = 2 if cov_cat_smoking=="E"
-	replace cov_cat_smoking_tmp = 3 if cov_cat_smoking=="S"
-	replace cov_cat_smoking_tmp = 4 if cov_cat_smoking=="M"|cov_cat_smoking==""
-	lab def cov_cat_smoking_tmp 1 "Never smoker" 2 "Ever smoker" 3 "Current smoker" 4 "Missing"
+	replace cov_cat_smoking_tmp = 1 if cov_cat_smoking=="Never"
+	replace cov_cat_smoking_tmp = 2 if cov_cat_smoking=="Former"
+	replace cov_cat_smoking_tmp = 3 if cov_cat_smoking=="Current"
+	replace cov_cat_smoking_tmp = 4 if cov_cat_smoking=="Missing"|cov_cat_smoking==""
+	lab def cov_cat_smoking_tmp 1 "Never smoker" 2 "Former smoker" 3 "Current smoker" 4 "Missing"
 	lab val cov_cat_smoking_tmp cov_cat_smoking_tmp
 	drop cov_cat_smoking
 	rename cov_cat_smoking_tmp cov_cat_smoking 
