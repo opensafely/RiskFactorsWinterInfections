@@ -6,7 +6,7 @@ AUTHOR:					S Walter, V Walker
 DESCRIPTION OF FILE:	generate a table of summaru statistics for each
 						infection type and each outcome 
 DATASETS USED:			output/clean_winter*.dta.gz
-STATA FUNCTIONS USED:	table1-label_variables
+STATA FUNCTIONS USED:	table2-make-table2
 DATASETS CREATED: 		output/table2_winter*_rounded.csv
 OTHER OUTPUT: 			output/table2_winter*.csv
 ==============================================================================*/
@@ -30,37 +30,50 @@ adopath + "analysis/adofiles"
 
 
 gzuse output/clean_`cohort'.dta.gz, clear
-use "C:\Users\dy21108\GitHub\RiskFactorsWinterInfections\output/clean_winter2019.dta", clear
+*use "C:\Users\dy21108\GitHub\RiskFactorsWinterInfections\output/clean_winter2019.dta", clear
 
 * Influenza --------------------------------------------------------------------
 
-make_table2 "`cohort'" "flu"
+make_table2 "flu"
 
 * RSV --------------------------------------------------------------------------
 
-make_table2 "`cohort'" "rsv"
+make_table2 "rsv"
 
 * Pneumonia due to strep -------------------------------------------------------
 
-make_table2 "`cohort'" "pneustrep"
+make_table2 "pneustrep"
 
 * Penumonia --------------------------------------------------------------------
 
-make_table2 "`cohort'" "pneu"
+make_table2 "pneu"
 
 * Covid ------------------------------------------------------------------------
 
-make_table2 "`cohort'" "covid"
+make_table2 "covid"
 
 * Combine summary stats into one table
 
-append 
+use output/table2_flu.dta, clear
+
+append using output/table2_rsv.dta
+append using output/table2_pneustrep.dta
+append using output/table2_pneu.dta
+append using output/table2_covid.dta
 
 
 * Save Table 2 -----------------------------------------------------------------
 
+preserve
+
+drop *_r
+
 export delimited output/table2_`cohort'.csv, replace
 
+restore
+
 * Save rounded Table 2 ---------------------------------------------------------
+
+keep infection *_r
 
 export delimited output/rounded_table2_`cohort'.csv, replace
