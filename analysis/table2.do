@@ -11,6 +11,18 @@ DATASETS CREATED: 		output/table2_winter*_rounded.csv
 OTHER OUTPUT: 			output/table2_winter*.csv
 ==============================================================================*/
 
+* Create macros for arguments --------------------------------------------------
+
+/*
+clear all
+local cohort "winter2019"
+*/
+
+local cohort "`1'"
+
+di "Arguments: (1) `cohort'"
+
+adopath + "analysis/adofiles"
 
 * Specify redaction_threshold --------------------------------------------------
 
@@ -21,18 +33,13 @@ local redaction_threshold 6
 run "analysis/functions/utility.do"
 run "analysis/functions/table2-make_table2.do"
 
-* Create macros for arguments --------------------------------------------------
-
-local cohort "`1'"
-
-di "Arguments: (1) `cohort'"
-
-adopath + "analysis/adofiles"
-
 * Import cleaned data ----------------------------------------------------------
 
 gzuse output/clean_`cohort'.dta.gz, clear
-*use "C:\Users\dy21108\GitHub\RiskFactorsWinterInfections\output/clean_winter2019.dta", clear
+
+* Restrict variables -----------------------------------------------------------
+
+keep patient_id pat_start_date *out*
 
 * Influenza --------------------------------------------------------------------
 
@@ -62,7 +69,6 @@ append using output/table2_rsv.dta
 append using output/table2_pneustrep.dta
 append using output/table2_pneu.dta
 append using output/table2_covid.dta
-
 
 * Save Table 2 -----------------------------------------------------------------
 
