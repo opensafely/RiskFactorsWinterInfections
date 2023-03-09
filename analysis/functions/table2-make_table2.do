@@ -62,7 +62,7 @@ prog def make_table2
 	egen eventcount_risktime_death_r=concat(evnt_`outcome'_death_rounded rt_`outcome'_death_rounded), punct("/")
 	gen incidence_death_r=100000*evnt_`outcome'_death_rounded/rt_`outcome'_death_rounded
 	
-	drop risktime_`outcome'* evnt_* rt_* *_`outcome'_stay
+	drop risktime_`outcome'* evnt_* rt_* *_`outcome'_stay out_status*
 
 	* save as single row dta dataset
 
