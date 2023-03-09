@@ -28,7 +28,7 @@ prog def inclusion_exclusion
 	
 	* Restrict to individuals with known age between 18 and 110 inclusive on the study start date 
 
-	drop if cov_num_age<18|cov_num_age>110
+	drop if cov_num_age<18|cov_num_age>=110
 	local N = _N
 	frame change consort
 	replace total = `N' if criteria=="known_age"
