@@ -146,8 +146,29 @@ actions_list <- splice(
       table1 = glue("output/table1_winter2021.csv"),
       rounded_table1 = glue("output/rounded_table1_winter2021.csv")
     )
-  )
+  ),
   
+  comment("Table 2"),
+  
+  action(
+    name = "table2_winter2019",
+    run = "stata-mp:latest analysis/table2.do winter2019",
+    needs = list("data_cleaning_winter2019"),
+    moderately_sensitive = list(
+      table1 = glue("output/table2_winter2019.csv"),
+      rounded_table1 = glue("output/rounded_table2_winter2019.csv")
+    )
+  ),
+  
+  action(
+    name = "table2_winter2021",
+    run = "stata-mp:latest analysis/table2.do winter2021",
+    needs = list("data_cleaning_winter2021"),
+    moderately_sensitive = list(
+      table1 = glue("output/table2_winter2021.csv"),
+      rounded_table1 = glue("output/rounded_table2_winter2021.csv")
+    )
+  )
 )
 
 # Combine all actions in a list ------------------------------------------------

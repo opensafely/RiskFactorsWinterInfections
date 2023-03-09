@@ -664,9 +664,9 @@ def generate_common_variables(study_start_variable,study_end_variable):
 	    # Age categories 
         sub_cat_age=patients.categorised_as(
             {
-            "18-39": "cov_num_age >= 18 AND cov_num_age < 39",
-            "40-59": "cov_num_age >= 40 AND cov_num_age < 59",
-            "60-79": "cov_num_age >= 60 AND cov_num_age < 79",
+            "18-39": "cov_num_age >= 18 AND cov_num_age < 40",
+            "40-59": "cov_num_age >= 40 AND cov_num_age < 60",
+            "60-79": "cov_num_age >= 60 AND cov_num_age < 80",
             "80-110": "cov_num_age >= 80 AND cov_num_age < 110",
             "Missing": "DEFAULT",
             },
