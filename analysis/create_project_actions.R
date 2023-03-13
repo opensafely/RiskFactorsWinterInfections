@@ -13,6 +13,16 @@ defaults_list <- list(
   expectations= list(population_size=200000L)
 )
 
+# Specify parameters -----------------------------------------------------------
+
+cohorts <- data.frame(cohort_name = character(),
+                         cohort_start = character(),
+                         cohort_end = character(),
+                         stringsAsFactors = FALSE)
+
+cohorts[nrow(cohorts)+1,] <- c("winter2019","td(1dec2019)","td(28feb2020)")
+cohorts[nrow(cohorts)+1,] <- c("winter2021","td(1dec2021)","td(28feb2022)")
+
 # Create action function -------------------------------------------------------
 
 action <- function(
@@ -69,6 +79,85 @@ convert_comment_actions <-function(yaml.txt){
   
 }
 
+# Create function to generate study population ---------------------------------
+
+common_actions <- function(cohort,cohort_start,cohort_end) {
+  
+  splice(
+    
+    comment(glue("Generate study population - {cohort}")),
+    
+    action(
+      name =  glue("generate_study_population-{cohort}"),
+      run =  glue("cohortextractor:latest generate_cohort --study-definition study_definition_{cohort} --output-format csv.gz"),
+      highly_sensitive = list(
+        cohort = glue("output/input_{cohort}.csv.gz")
+      )
+    ),
+    
+    comment(glue("Describe - input_{cohort}.csv.gz")),
+    
+    action(
+      name =  glue("describe-input_{cohort}"),
+      run =  glue("stata-mp:latest analysis/describe.do input_{cohort} csv"),
+      highly_sensitive = list(
+        cohort = glue("output/describe-input_{cohort}.log")
+      )
+    ),
+    
+    comment(glue("Data cleaning - {cohort}")),
+    
+    action(
+      name =  glue("data_cleaning-{cohort}"),
+      run =  glue("stata-mp:latest analysis/data_cleaning.do {cohort} {cohort_start} {cohort_end}"),
+      needs = glue("generate_study_population_{cohort}"),
+      moderately_sensitive = list(
+        consort = glue("output/consort_{cohort}.csv"),
+        rounded_consort = glue("output/rounded_consort_{cohort}.csv")
+      ),
+      highly_sensitive = list(
+        cohort = glue("output/clean_{cohort}.dta.gz")
+      )
+    ),
+    
+    comment(glue("Describe - clean_{cohort}.dta.gz")),
+    
+    action(
+      name =  glue("describe-input_{cohort}"),
+      run =  glue("stata-mp:latest analysis/describe.do clean_{cohort} dta"),
+      highly_sensitive = list(
+        cohort = glue("output/describe-clean_{cohort}.log")
+      )
+    ),
+    
+    comment(glue("Table 1 - {cohort}")),
+    
+    action(
+      name = glue("table1-{cohort}"),
+      run = glue("stata-mp:latest analysis/table1.do {cohort}"),
+      needs = glue("data_cleaning_{cohort}"),
+      moderately_sensitive = list(
+        table1 = glue("output/table1_{cohort}.csv"),
+        rounded_table1 = glue("output/rounded_table1_{cohort}.csv")
+      )
+    ),
+  
+    comment(glue("Table 2 - {cohort}")),
+    
+    action(
+      name = glue("table2-{cohort}"),
+      run = glue("stata-mp:latest analysis/table2.do {cohort}"),
+      needs = glue("data_cleaning_{cohort}"),
+      moderately_sensitive = list(
+        table1 = glue("output/table2_{cohort}.csv"),
+        rounded_table1 = glue("output/rounded_table2_{cohort}.csv")
+      )
+    )
+  
+    )
+  
+}
+
 # Define all actions -----------------------------------------------------------
 
 actions_list <- splice(
@@ -80,95 +169,16 @@ actions_list <- splice(
           "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
   ),
   
-  comment("Generate study definitions"),
-  
-  action(
-    name = "generate_study_population_winter2019",
-    run = "cohortextractor:latest generate_cohort --study-definition study_definition_winter2019 --output-format csv.gz",
-    highly_sensitive = list(
-      cohort = glue("output/input_winter2019.csv.gz")
-    )
-  ),
-  
-  action(
-    name = "generate_study_population_winter2021",
-    run = "cohortextractor:latest generate_cohort --study-definition study_definition_winter2021 --output-format csv.gz",
-    highly_sensitive = list(
-      cohort = glue("output/input_winter2021.csv.gz")
-    )
-  ),
-  
-  comment("Data cleaning"),
-
-  action(
-    name = "data_cleaning_winter2019",
-    run = "stata-mp:latest analysis/data_cleaning.do winter2019 td(1dec2019) td(28feb2020)",
-    needs = list("generate_study_population_winter2019"),
-    moderately_sensitive = list(
-      consort = glue("output/consort_winter2019.csv"),
-      rounded_consort = glue("output/rounded_consort_winter2019.csv")
-    ),
-    highly_sensitive = list(
-      cohort = glue("output/clean_winter2019.dta.gz")
-    )
-  ),
-
-  action(
-    name = "data_cleaning_winter2021",
-    run = "stata-mp:latest analysis/data_cleaning.do winter2021 td(1dec2021) td(28feb2022)",
-    needs = list("generate_study_population_winter2021"),
-    moderately_sensitive = list(
-      consort = glue("output/consort_winter2021.csv"),
-      rounded_consort = glue("output/rounded_consort_winter2021.csv")
-    ),
-    highly_sensitive = list(
-      cohort = glue("output/clean_winter2021.dta.gz")
-    )
-  ),
-  
-  comment("Table 1"),
-  
-  action(
-    name = "table1_winter2019",
-    run = "stata-mp:latest analysis/table1.do winter2019",
-    needs = list("data_cleaning_winter2019"),
-    moderately_sensitive = list(
-      table1 = glue("output/table1_winter2019.csv"),
-      rounded_table1 = glue("output/rounded_table1_winter2019.csv")
-    )
-  ),
-  
-  action(
-    name = "table1_winter2021",
-    run = "stata-mp:latest analysis/table1.do winter2021",
-    needs = list("data_cleaning_winter2021"),
-    moderately_sensitive = list(
-      table1 = glue("output/table1_winter2021.csv"),
-      rounded_table1 = glue("output/rounded_table1_winter2021.csv")
-    )
-  ),
-  
-  comment("Table 2"),
-  
-  action(
-    name = "table2_winter2019",
-    run = "stata-mp:latest analysis/table2.do winter2019",
-    needs = list("data_cleaning_winter2019"),
-    moderately_sensitive = list(
-      table1 = glue("output/table2_winter2019.csv"),
-      rounded_table1 = glue("output/rounded_table2_winter2019.csv")
-    )
-  ),
-  
-  action(
-    name = "table2_winter2021",
-    run = "stata-mp:latest analysis/table2.do winter2021",
-    needs = list("data_cleaning_winter2021"),
-    moderately_sensitive = list(
-      table1 = glue("output/table2_winter2021.csv"),
-      rounded_table1 = glue("output/rounded_table2_winter2021.csv")
+  splice(
+    unlist(
+      lapply(1:nrow(cohorts),
+             function(x) common_actions(cohort = cohorts[x,"cohort_name"], 
+                                        cohort_start = cohorts[x,"cohort_start"],
+                                        cohort_end = cohorts[x,"cohort_end"])), 
+      recursive = FALSE
     )
   )
+
 )
 
 # Combine all actions in a list ------------------------------------------------
