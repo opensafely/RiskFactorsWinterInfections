@@ -88,8 +88,8 @@ common_actions <- function(cohort,cohort_start,cohort_end) {
     comment(glue("Generate study population - {cohort}")),
     
     action(
-      name =  glue("generate_study_population-{cohort}"),
-      run =  glue("cohortextractor:latest generate_cohort --study-definition study_definition_{cohort} --output-format csv.gz"),
+      name = glue("generate_study_population_{cohort}"),
+      run = glue("cohortextractor:latest generate_cohort --study-definition study_definition_{cohort} --output-format csv.gz"),
       highly_sensitive = list(
         cohort = glue("output/input_{cohort}.csv.gz")
       )
@@ -98,8 +98,9 @@ common_actions <- function(cohort,cohort_start,cohort_end) {
     comment(glue("Describe - input_{cohort}.csv.gz")),
     
     action(
-      name =  glue("describe-input_{cohort}"),
+      name =  glue("describe_input_{cohort}"),
       run =  glue("stata-mp:latest analysis/describe.do input_{cohort} csv"),
+      needs = list(glue("generate_study_population_{cohort}")),
       highly_sensitive = list(
         cohort = glue("output/describe-input_{cohort}.log")
       )
@@ -108,9 +109,9 @@ common_actions <- function(cohort,cohort_start,cohort_end) {
     comment(glue("Data cleaning - {cohort}")),
     
     action(
-      name =  glue("data_cleaning-{cohort}"),
+      name =  glue("data_cleaning_{cohort}"),
       run =  glue("stata-mp:latest analysis/data_cleaning.do {cohort} {cohort_start} {cohort_end}"),
-      needs = glue("generate_study_population_{cohort}"),
+      needs = list(glue("generate_study_population_{cohort}")),
       moderately_sensitive = list(
         consort = glue("output/consort_{cohort}.csv"),
         rounded_consort = glue("output/rounded_consort_{cohort}.csv")
@@ -123,8 +124,9 @@ common_actions <- function(cohort,cohort_start,cohort_end) {
     comment(glue("Describe - clean_{cohort}.dta.gz")),
     
     action(
-      name =  glue("describe-input_{cohort}"),
-      run =  glue("stata-mp:latest analysis/describe.do clean_{cohort} dta"),
+      name = glue("describe_clean_{cohort}"),
+      run = glue("stata-mp:latest analysis/describe.do clean_{cohort} dta"),
+      needs = list(glue("data_cleaning_{cohort}")),
       highly_sensitive = list(
         cohort = glue("output/describe-clean_{cohort}.log")
       )
@@ -133,9 +135,9 @@ common_actions <- function(cohort,cohort_start,cohort_end) {
     comment(glue("Table 1 - {cohort}")),
     
     action(
-      name = glue("table1-{cohort}"),
+      name = glue("table1_{cohort}"),
       run = glue("stata-mp:latest analysis/table1.do {cohort}"),
-      needs = glue("data_cleaning_{cohort}"),
+      needs = list(glue("data_cleaning_{cohort}")),
       moderately_sensitive = list(
         table1 = glue("output/table1_{cohort}.csv"),
         rounded_table1 = glue("output/rounded_table1_{cohort}.csv")
@@ -145,9 +147,9 @@ common_actions <- function(cohort,cohort_start,cohort_end) {
     comment(glue("Table 2 - {cohort}")),
     
     action(
-      name = glue("table2-{cohort}"),
+      name = glue("table2_{cohort}"),
       run = glue("stata-mp:latest analysis/table2.do {cohort}"),
-      needs = glue("data_cleaning_{cohort}"),
+      needs = list(glue("data_cleaning_{cohort}")),
       moderately_sensitive = list(
         table1 = glue("output/table2_{cohort}.csv"),
         rounded_table1 = glue("output/rounded_table2_{cohort}.csv")

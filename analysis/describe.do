@@ -11,14 +11,14 @@ DATASETS CREATED: 		output/describe-*
 
 * Create macros for arguments --------------------------------------------------
 
-clear all
-local filename "clean_winter2019"
-local filetype "dta"
+// clear all
+// local filename "input_winter2019"
+// local filetype "csv"
 
-// local filename "`1'"
-// local filetype "`2'"
+local filename "`1'"
+local filetype "`2'"
 
-di "Arguments: (1) `file'; (2) `type'"
+di "Arguments: (1) `filename'; (2) `filetype'"
 
 adopath + "analysis/adofiles"
 
@@ -26,7 +26,7 @@ adopath + "analysis/adofiles"
 
 if ("`filetype'"=="csv") {
 	!gunzip output/`filename'.csv.gz
-	import delimited using output/`file'.csv
+	import delimited using output/`filename'.csv
 }
  
  if ("`filetype'"=="dta") {
