@@ -15,13 +15,31 @@ defaults_list <- list(
 
 # Specify parameters -----------------------------------------------------------
 
+# cohorts
+
 cohorts <- data.frame(cohort_name = character(),
-                         cohort_start = character(),
-                         cohort_end = character(),
-                         stringsAsFactors = FALSE)
+                      cohort_start = character(),
+                      cohort_end = character(),
+                      stringsAsFactors = FALSE)
 
 cohorts[nrow(cohorts)+1,] <- c("winter2019","td(1dec2019)","td(28feb2020)")
 cohorts[nrow(cohorts)+1,] <- c("winter2021","td(1dec2021)","td(28feb2022)")
+
+# outcomes x cohorts for Cox models
+
+infections <- c("flu","rsv","pneustep","pneu","covid")
+
+cox_outcomes <- data.frame(outcome = c(rep(paste0(infections ,"_adm"),
+                                           each = length(unique(cohorts$cohort_name))),
+                                       rep(paste0(infections ,"_readm"),
+                                           each = length(unique(cohorts$cohort_name))),
+                                       rep(paste0(infections ,"_death"),
+                                           each = length(unique(cohorts$cohort_name)))),
+                           cohort_name = rep(unique(cohorts$cohort_name), times = length(infections)*3),
+                           stringsAsFactors = FALSE)
+
+cox_outcomes <- cox_outcomes[!(grepl("covid",cox_outcomes$outcome) & 
+                                 cox_outcomes$cohort_name=="winter2019"),]
 
 # Create action function -------------------------------------------------------
 
@@ -79,9 +97,9 @@ convert_comment_actions <-function(yaml.txt){
   
 }
 
-# Create function to generate study population ---------------------------------
+# Create function for actions at cohort level ----------------------------------
 
-common_actions <- function(cohort,cohort_start,cohort_end) {
+cohort_actions <- function(cohort,cohort_start,cohort_end) {
   
   splice(
     
@@ -160,6 +178,27 @@ common_actions <- function(cohort,cohort_start,cohort_end) {
   
 }
 
+# Create function for actions at outcome level ---------------------------------
+
+cohort_outcome_actions <- function(cohort,outcome) {
+  
+  splice(
+    
+    comment(glue("Cox models - {outcome} - {cohort}")),
+    
+    action(
+      name = glue("cox_model_{outcome}_{cohort}"),
+      run = glue("stata-mp:latest analysis/cox_model.do {cohort} {outcome}"),
+      needs = list(glue("data_cleaning_{cohort}")),
+      moderately_sensitive = list(
+        results = glue("output/cox_model-{outcome}-{cohort}.csv"),
+        rounded_results = glue("output/cox_model-{outcome}-{cohort}_rounded.csv")
+      )
+    )
+    
+  )
+  
+}
 # Define all actions -----------------------------------------------------------
 
 actions_list <- splice(
@@ -174,30 +213,19 @@ actions_list <- splice(
   splice(
     unlist(
       lapply(1:nrow(cohorts),
-             function(x) common_actions(cohort = cohorts[x,"cohort_name"], 
+             function(x) cohort_actions(cohort = cohorts[x,"cohort_name"], 
                                         cohort_start = cohorts[x,"cohort_start"],
                                         cohort_end = cohorts[x,"cohort_end"])), 
       recursive = FALSE
     )
   ),
   
-  comment("Cox models"),
-  
-  action(
-    name = "cox_model_winter2019",
-    run = "stata-mp:latest analysis/cox_model.do winter2019",
-    needs = list("data_cleaning_winter2019"),
-    moderately_sensitive = list(
-      results = glue("output/results_winter2019.csv")
-    )
-  ),
-  
-  action(
-    name = "cox_model_winter2021",
-    run = "stata-mp:latest analysis/cox_model.do winter2021",
-    needs = list("data_cleaning_winter2021"),
-    moderately_sensitive = list(
-      results = glue("output/results_winter2021.csv")
+  splice(
+    unlist(
+      lapply(1:nrow(cox_outcomes),
+             function(x) cohort_outcome_actions(cohort = cox_outcomes[x,"cohort_name"], 
+                                        outcome = cox_outcomes[x,"outcome"])), 
+      recursive = FALSE
     )
   )
 

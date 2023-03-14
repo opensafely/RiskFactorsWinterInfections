@@ -20,12 +20,33 @@ run "analysis/functions/utility.do"
 
 * Create macros for arguments --------------------------------------------------
 
-local cohort "winter2019" //"`1'"
-local outcome "out_date_flu_adm" //"`2'"
 
-di "Arguments: (1) `cohort'; (2) `outcome'". 
+clear all
+local cohort "winter2019"
+local outcome "flu_adm"
+
+/*
+local cohort "`1'"
+local outcome "`2'"
+*/
+di "Arguments: (1) `cohort'; (2) `outcome'."
 
 adopath + "analysis/adofiles"
+
+* Specify redaction_threshold --------------------------------------------------
+
+local redaction_threshold 6
+
+* Source functions -------------------------------------------------------------
+
+run "analysis/functions/utility.do"
+run "analysis/functions/cox_model-perform_cox.do"
+
+* Create empty results file ----------------------------------------------------
+
+set obs 0
+gen model = ""
+save "output/cox_model-`outcome'-`cohort'.dta", replace
 
 * Load data --------------------------------------------------------------------
 
@@ -33,12 +54,12 @@ gzuse output/clean_`cohort'.dta.gz, clear
 
 * Keep relevant variables ------------------------------------------------------
 
-keep patient_id study_start_date study_end_date `outcome' exp_* cov_*
+keep patient_id study_start_date study_end_date out_date_`outcome' exp_* cov_*
 
 * Make binary failure variable -------------------------------------------------
 
 gen out_status = 0
-replace out_status = 1 if `outcome'!=.
+replace out_status = 1 if out_date_`outcome'!=.
 
 * Rename region ----------------------------------------------------------------
 
@@ -52,28 +73,33 @@ stset study_end_date, failure(out_status) id(patient_id) origin(study_start_date
 
 foreach exposure of varlist exp_* {
 	
-	local estname = substr("`exposure'",9,strlen("`exposure'"))
-	
-	** Minimal adjustment
-
-	stcox `outcome' `exposure' cov_num_age cov_bin_male, strata(region) vce(r)
-	estout using "output/cox_model-`cohort'-`outcome'-`estname'-minadj.txt", cells("b se t ci_l ci_u p") stats(risk N_fail N_sub N N_clust) style(tab) replace 
-
-	** Maximal adjustment
-	
-	stcox `outcome' `exposure' cov_*, strata(region) vce(r)
-	estout using "output/cox_model-`cohort'-`outcome'-`estname'-maxadj.txt", cells("b se t ci_l ci_u p") stats(risk N_fail N_sub N N_clust) style(tab) replace 
+	perform_cox "`exposure'" "`outcome'" "`cohort'"
 
 }
 
 * Perform Cox analyses for all exposures ---------------------------------------
 
-** Minimal adjustment
+perform_cox "exp_*" "`outcome'" "`cohort'"
 
-stcox `outcome' exp_* cov_num_age cov_bin_male, strata(region) vce(r)
-estout using "output/cox_model-`cohort'-`outcome'-allexp-minadj.txt", cells("b se t ci_l ci_u p") stats(risk N_fail N_sub N N_clust) style(tab) replace 
+* Tidy results -----------------------------------------------------------------
 
-** Maximal adjustment
+use "output/cox_model-`outcome'-`cohort'.dta", clear
+gen hr = exp(coef)
+gen lci = exp(ci_lower)
+gen uci = exp(ci_upper)
+keep cohort outcome model adj var hr lci uci pval N_total N_fail risktime
+order cohort outcome model adj var hr lci uci pval N_total N_fail risktime
 
-stcox `outcome' exp_* cov_*, strata(region) vce(r)
-estout using "output/cox_model-`cohort'-`outcome'-allexp-minadj.txt", cells("b se t ci_l ci_u p") stats(risk N_fail N_sub N N_clust) style(tab) replace 
+* Round results ----------------------------------------------------------------
+
+roundmid_any "N_total" 6
+roundmid_any "N_fail" 6
+
+* Save results -----------------------------------------------------------------
+
+export delimited using "output/cox_model-`outcome'-`cohort'.csv", replace
+
+* Save rounded results ---------------------------------------------------------
+
+drop N_total N_fail
+export delimited using "output/cox_model-`outcome'-`cohort'_rounded.csv", replace
