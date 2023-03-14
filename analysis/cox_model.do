@@ -20,15 +20,15 @@ run "analysis/functions/utility.do"
 
 * Create macros for arguments --------------------------------------------------
 
-
+/*
 clear all
 local cohort "winter2019"
 local outcome "flu_adm"
+*/
 
-/*
 local cohort "`1'"
 local outcome "`2'"
-*/
+
 di "Arguments: (1) `cohort'; (2) `outcome'."
 
 adopath + "analysis/adofiles"
