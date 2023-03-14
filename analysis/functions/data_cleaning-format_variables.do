@@ -45,8 +45,7 @@ prog def format_variables
 
 	* Format cov_cat_deprivation -----------------------------------------------
 
-	replace cov_cat_deprivation=6 if cov_cat_deprivation==.
-	label def deprivation_quintile 1 "1 Most deprived" 2 "2" 3 "3" 4 "4" 5 "5 Least deprived" 6 "Missing"
+	label def deprivation_quintile 1 "1 Most deprived" 2 "2" 3 "3" 4 "4" 5 "5 Least deprived"
 	lab values cov_cat_deprivation deprivation_quintile
 
 	* Format cov_cat_smoking ---------------------------------------------------
@@ -103,7 +102,7 @@ prog def format_variables
 
 	* Format sub_cat_age -------------------------------------------------------
 
-	gen sub_cat_age_tmp=4
+	gen sub_cat_age_tmp=.
 	replace sub_cat_age_tmp=0 if sub_cat_age=="18-39"
 	replace sub_cat_age_tmp=1 if sub_cat_age=="40-59"
 	replace sub_cat_age_tmp=2 if sub_cat_age=="60-79"

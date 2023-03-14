@@ -20,17 +20,10 @@ OTHER OUTPUT: 			output/consort_*.csv
 						output/rouded_consort_*.csv
 ==============================================================================*/
 
-* Specify redaction_threshold --------------------------------------------------
-
-local redaction_threshold 6
-
-* Source utility functions -----------------------------------------------------
-
-run "analysis/functions/utility.do"
-
 * Create macros for arguments --------------------------------------------------
 
 /*
+clear all
 local cohort "winter2019"
 local study_start_date "td(1dec2019)"
 local study_end_date "td(28feb2020)"
@@ -43,6 +36,14 @@ local study_end_date "`3'"
 di "Arguments: (1) `cohort', (2) `study_start_date', and (3) `study_end_date'"
 
 adopath + "analysis/adofiles"
+
+* Specify redaction_threshold --------------------------------------------------
+
+local redaction_threshold 6
+
+* Source utility functions -----------------------------------------------------
+
+run "analysis/functions/utility.do"
 
 * Specify consort frame --------------------------------------------------------
 
@@ -67,31 +68,52 @@ gen study_start_date=`study_start_date'
 gen study_end_date=`study_end_date'
 format study_start_date study_end_date %td
 
+* Define patient start and end dates -------------------------------------------
+
+gen pat_start_date=`study_start_date'
+egen pat_end_date=rowmin(death_date study_end_date deregistration_date)
+format pat_start_date pat_end_date %td
+
 * Define variables not in study definition -------------------------------------
 
 run "analysis/functions/data_cleaning-variable_definitions.do"
 variable_definitions
 
+* Define outcome variables -----------------------------------------------------
+
+foreach outcome in flu rsv pneustrep pneu covid {
+	
+	* Remove outcomes outside of study period
+
+	foreach event in adm readm death {
+		replace out_date_`outcome'_`event' = . if out_date_`outcome'_`event' > pat_end_date | out_date_`outcome'_`event'<pat_start_date
+	}
+	
+	* Remove readmission if before initial admission
+	
+	replace out_date_`outcome'_readm = . if out_date_`outcome'_readm < out_date_`outcome'_adm
+	
+	* Create length of hospital stay outcome
+
+	gen out_num_`outcome'_stay = 0 // for those with no admission
+	
+	replace out_num_`outcome'_stay = tmp_out_date_`outcome'_dis - out_date_`outcome'_adm if tmp_out_date_`outcome'_dis!=. & out_date_`outcome'_adm!=.
+	
+	replace out_num_`outcome'_stay = . if tmp_out_date_`outcome'_dis==. & out_date_`outcome'_adm!=. // for those still awaiting discharge
+	
+	* Create indicator variables for date outcomes
+	
+	foreach event in adm readm death {
+		gen out_status_`outcome'_`event' = 0
+		replace out_status_`outcome'_`event' = 1 if out_date_`outcome'_`event'!=.
+	}
+	
+}
+  
 * Summarise missingness --------------------------------------------------------
 
 misstable summarize
 
-* Create length of hospital stay outcome with 0 for no admission ---------------
-
-foreach outcome in  flu rsv pneustrep pneu covid {
-	gen out_num_`outcome'_stay = tmp_out_date_`outcome'_dis - out_date_`outcome'_adm
-	replace out_num_`outcome'_stay=0 if out_num_`outcome'_stay==.
-
-* Definie patient-specific end of follow-up time for admissions, readmissions and death
-
-	egen followupend_date_`outcome'_adm=rowmin(out_date_`outcome'_adm death_date study_end_date deregistration_date)
-	egen followupend_date_`outcome'_readm=rowmin(out_date_`outcome'_readm death_date study_end_date deregistration_date)
-	format followupend_date_`outcome'_adm followupend_date_`outcome'_readm %td
-}
-  
-egen followupend_date_death=rowmin(death_date study_end_date deregistration_date)
-format followupend_date_death %td
-  
 * Apply inclusion/exclusion criteria -------------------------------------------
 
 run "analysis/functions/data_cleaning-inclusion_exclusion.do"
