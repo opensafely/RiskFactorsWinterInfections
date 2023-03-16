@@ -27,7 +27,7 @@ cohorts[nrow(cohorts)+1,] <- c("winter2021","td(1dec2021)","td(28feb2022)")
 
 # outcomes x cohorts for Cox models
 
-infections <- c("flu","rsv","pneustep","pneu","covid")
+infections <- c("flu","rsv","pneustrep","pneu","covid")
 
 cox_outcomes <- data.frame(outcome = c(rep(paste0(infections ,"_adm"),
                                            each = length(unique(cohorts$cohort_name))),

@@ -183,27 +183,27 @@ actions:
         results: output/cox_model-rsv_adm-winter2021.csv
         rounded_results: output/cox_model-rsv_adm-winter2021_rounded.csv
 
-  ## Cox models - pneustep_adm - winter2019 
+  ## Cox models - pneustrep_adm - winter2019 
 
-  cox_model_pneustep_adm_winter2019:
-    run: stata-mp:latest analysis/cox_model.do winter2019 pneustep_adm
+  cox_model_pneustrep_adm_winter2019:
+    run: stata-mp:latest analysis/cox_model.do winter2019 pneustrep_adm
     needs:
     - data_cleaning_winter2019
     outputs:
       moderately_sensitive:
-        results: output/cox_model-pneustep_adm-winter2019.csv
-        rounded_results: output/cox_model-pneustep_adm-winter2019_rounded.csv
+        results: output/cox_model-pneustrep_adm-winter2019.csv
+        rounded_results: output/cox_model-pneustrep_adm-winter2019_rounded.csv
 
-  ## Cox models - pneustep_adm - winter2021 
+  ## Cox models - pneustrep_adm - winter2021 
 
-  cox_model_pneustep_adm_winter2021:
-    run: stata-mp:latest analysis/cox_model.do winter2021 pneustep_adm
+  cox_model_pneustrep_adm_winter2021:
+    run: stata-mp:latest analysis/cox_model.do winter2021 pneustrep_adm
     needs:
     - data_cleaning_winter2021
     outputs:
       moderately_sensitive:
-        results: output/cox_model-pneustep_adm-winter2021.csv
-        rounded_results: output/cox_model-pneustep_adm-winter2021_rounded.csv
+        results: output/cox_model-pneustrep_adm-winter2021.csv
+        rounded_results: output/cox_model-pneustrep_adm-winter2021_rounded.csv
 
   ## Cox models - pneu_adm - winter2019 
 
@@ -282,27 +282,27 @@ actions:
         results: output/cox_model-rsv_readm-winter2021.csv
         rounded_results: output/cox_model-rsv_readm-winter2021_rounded.csv
 
-  ## Cox models - pneustep_readm - winter2019 
+  ## Cox models - pneustrep_readm - winter2019 
 
-  cox_model_pneustep_readm_winter2019:
-    run: stata-mp:latest analysis/cox_model.do winter2019 pneustep_readm
+  cox_model_pneustrep_readm_winter2019:
+    run: stata-mp:latest analysis/cox_model.do winter2019 pneustrep_readm
     needs:
     - data_cleaning_winter2019
     outputs:
       moderately_sensitive:
-        results: output/cox_model-pneustep_readm-winter2019.csv
-        rounded_results: output/cox_model-pneustep_readm-winter2019_rounded.csv
+        results: output/cox_model-pneustrep_readm-winter2019.csv
+        rounded_results: output/cox_model-pneustrep_readm-winter2019_rounded.csv
 
-  ## Cox models - pneustep_readm - winter2021 
+  ## Cox models - pneustrep_readm - winter2021 
 
-  cox_model_pneustep_readm_winter2021:
-    run: stata-mp:latest analysis/cox_model.do winter2021 pneustep_readm
+  cox_model_pneustrep_readm_winter2021:
+    run: stata-mp:latest analysis/cox_model.do winter2021 pneustrep_readm
     needs:
     - data_cleaning_winter2021
     outputs:
       moderately_sensitive:
-        results: output/cox_model-pneustep_readm-winter2021.csv
-        rounded_results: output/cox_model-pneustep_readm-winter2021_rounded.csv
+        results: output/cox_model-pneustrep_readm-winter2021.csv
+        rounded_results: output/cox_model-pneustrep_readm-winter2021_rounded.csv
 
   ## Cox models - pneu_readm - winter2019 
 
@@ -381,27 +381,27 @@ actions:
         results: output/cox_model-rsv_death-winter2021.csv
         rounded_results: output/cox_model-rsv_death-winter2021_rounded.csv
 
-  ## Cox models - pneustep_death - winter2019 
+  ## Cox models - pneustrep_death - winter2019 
 
-  cox_model_pneustep_death_winter2019:
-    run: stata-mp:latest analysis/cox_model.do winter2019 pneustep_death
+  cox_model_pneustrep_death_winter2019:
+    run: stata-mp:latest analysis/cox_model.do winter2019 pneustrep_death
     needs:
     - data_cleaning_winter2019
     outputs:
       moderately_sensitive:
-        results: output/cox_model-pneustep_death-winter2019.csv
-        rounded_results: output/cox_model-pneustep_death-winter2019_rounded.csv
+        results: output/cox_model-pneustrep_death-winter2019.csv
+        rounded_results: output/cox_model-pneustrep_death-winter2019_rounded.csv
 
-  ## Cox models - pneustep_death - winter2021 
+  ## Cox models - pneustrep_death - winter2021 
 
-  cox_model_pneustep_death_winter2021:
-    run: stata-mp:latest analysis/cox_model.do winter2021 pneustep_death
+  cox_model_pneustrep_death_winter2021:
+    run: stata-mp:latest analysis/cox_model.do winter2021 pneustrep_death
     needs:
     - data_cleaning_winter2021
     outputs:
       moderately_sensitive:
-        results: output/cox_model-pneustep_death-winter2021.csv
-        rounded_results: output/cox_model-pneustep_death-winter2021_rounded.csv
+        results: output/cox_model-pneustrep_death-winter2021.csv
+        rounded_results: output/cox_model-pneustrep_death-winter2021_rounded.csv
 
   ## Cox models - pneu_death - winter2019 
 
