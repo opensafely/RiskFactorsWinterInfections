@@ -45,6 +45,7 @@ prog def format_variables
 
 	* Format cov_cat_deprivation -----------------------------------------------
 
+	replace cov_cat_deprivation=. if cov_cat_deprivation==0
 	label def deprivation_quintile 1 "1 Most deprived" 2 "2" 3 "3" 4 "4" 5 "5 Least deprived"
 	lab values cov_cat_deprivation deprivation_quintile
 

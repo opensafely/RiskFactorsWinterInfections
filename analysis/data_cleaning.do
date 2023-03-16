@@ -131,7 +131,7 @@ drop registered_previous_365days qa* hospitalised_previous_30days ///
 
 * Compress data ----------------------------------------------------------------
 
-compress
+compress exp_bin_chronicresp exp_bin_chd exp_bin_chronicliver exp_bin_otherneuro exp_bin_autoimm exp_bin_transplant exp_bin_asplenia exp_bin_hypertension cov_num_age cov_cat_deprivation cov_cat_ethnicity exp_bin_stroke_dementia exp_bin_othimm patient_id cov_bin_male cov_cat_smoking cov_cat_region cov_cat_obese exp_cat_asthma sub_cat_age sub_bin_carehome exp_cat_diabetes exp_cat_kidneyfunc exp_cat_cancer_exhaem exp_cat_cancer_haem out_num_flu_stay out_status_flu_adm out_status_flu_readm out_status_flu_death out_num_rsv_stay out_status_rsv_adm out_status_rsv_readm out_status_rsv_death out_num_pneustrep_stay out_status_pneustrep_adm out_status_pneustrep_readm out_status_pneustrep_death out_num_pneu_stay out_status_pneu_adm out_status_pneu_readm out_status_pneu_death out_num_covid_stay out_status_covid_adm out_status_covid_readm out_status_covid_death
 
 * Save clean data --------------------------------------------------------------
 

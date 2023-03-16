@@ -39,7 +39,7 @@ gzuse output/clean_`cohort'.dta.gz, clear
 
 * Restrict variables -----------------------------------------------------------
 
-keep patient_id pat_start_date *out*
+keep pat* *out*
 
 * Influenza --------------------------------------------------------------------
 
@@ -63,12 +63,21 @@ make_table2 "covid"
 
 * Combine summary stats into one table -----------------------------------------
 
-use output/table2_flu.dta, clear
+use output/table2los_flu.dta, clear
+append using output/table2los_rsv.dta
+append using output/table2los_pneustrep.dta
+append using output/table2los_pneu.dta
+append using output/table2los_covid.dta
 
+save output/table2los.dta, replace
+
+use output/table2_flu.dta, clear
 append using output/table2_rsv.dta
 append using output/table2_pneustrep.dta
 append using output/table2_pneu.dta
 append using output/table2_covid.dta
+
+merge 1:1 infection using output/table2los.dta, nogen
 
 * Save Table 2 -----------------------------------------------------------------
 
