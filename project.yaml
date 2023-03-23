@@ -436,3 +436,39 @@ actions:
         results: output/cox_model-covid_death-winter2021.csv
         rounded_results: output/cox_model-covid_death-winter2021_rounded.csv
 
+  ## Combine results 
+
+  combine_results:
+    run: stata-mp:latest analysis/combine_results.do
+    needs:
+    - cox_model_flu_adm_winter2019
+    - cox_model_flu_adm_winter2021
+    - cox_model_rsv_adm_winter2019
+    - cox_model_rsv_adm_winter2021
+    - cox_model_pneustrep_adm_winter2019
+    - cox_model_pneustrep_adm_winter2021
+    - cox_model_pneu_adm_winter2019
+    - cox_model_pneu_adm_winter2021
+    - cox_model_covid_adm_winter2021
+    - cox_model_flu_readm_winter2019
+    - cox_model_flu_readm_winter2021
+    - cox_model_rsv_readm_winter2019
+    - cox_model_rsv_readm_winter2021
+    - cox_model_pneustrep_readm_winter2019
+    - cox_model_pneustrep_readm_winter2021
+    - cox_model_pneu_readm_winter2019
+    - cox_model_pneu_readm_winter2021
+    - cox_model_covid_readm_winter2021
+    - cox_model_flu_death_winter2019
+    - cox_model_flu_death_winter2021
+    - cox_model_rsv_death_winter2019
+    - cox_model_rsv_death_winter2021
+    - cox_model_pneustrep_death_winter2019
+    - cox_model_pneustrep_death_winter2021
+    - cox_model_pneu_death_winter2019
+    - cox_model_pneu_death_winter2021
+    - cox_model_covid_death_winter2021
+    outputs:
+      moderately_sensitive:
+        rounded_results: output/cox_model_rounded.csv
+

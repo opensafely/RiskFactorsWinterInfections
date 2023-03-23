@@ -199,6 +199,7 @@ cohort_outcome_actions <- function(cohort,outcome) {
   )
   
 }
+
 # Define all actions -----------------------------------------------------------
 
 actions_list <- splice(
@@ -226,6 +227,17 @@ actions_list <- splice(
              function(x) cohort_outcome_actions(cohort = cox_outcomes[x,"cohort_name"], 
                                         outcome = cox_outcomes[x,"outcome"])), 
       recursive = FALSE
+    )
+  ),
+  
+  comment(glue("Combine results")),
+  
+  action(
+    name = glue("combine_results"),
+    run = glue("stata-mp:latest analysis/combine_results.do"),
+    needs = as.list(paste0("cox_model_",cox_outcomes$outcome,"_",cox_outcomes$cohort_name)),
+    moderately_sensitive = list(
+      rounded_results = glue("output/cox_model_rounded.csv")
     )
   )
 
