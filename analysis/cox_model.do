@@ -23,7 +23,7 @@ run "analysis/functions/utility.do"
 /*
 clear all
 local cohort "winter2019"
-local outcome "flu_adm"
+local outcome "flu_readm"
 */
 
 local cohort "`1'"
@@ -51,6 +51,13 @@ save "output/cox_model-`outcome'-`cohort'.dta", replace
 * Load data --------------------------------------------------------------------
 
 gzuse output/clean_`cohort'.dta.gz, clear
+
+* Filter data if outcome is readmission ----------------------------------------
+
+if strpos("`outcome'","readm") {
+	local outcome_adm: subinstr local outcome "readm" "adm", all
+	keep if out_date_`outcome_adm'!=.
+}
 
 * Keep relevant variables ------------------------------------------------------
 
