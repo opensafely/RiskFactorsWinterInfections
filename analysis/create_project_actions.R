@@ -242,7 +242,7 @@ actions_list <- splice(
     run = glue("stata-mp:latest analysis/combine_results.do"),
     needs = as.list(paste0(cox_outcomes$model,"_model_",cox_outcomes$outcome,"_",cox_outcomes$cohort_name)),
     moderately_sensitive = list(
-      rounded_results = glue("output/cox_model_rounded.csv")
+      rounded_results = glue("output/results_rounded.csv")
     )
   )
 
