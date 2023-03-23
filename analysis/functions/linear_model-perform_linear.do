@@ -16,12 +16,12 @@ prog def perform_linear
 
 	regress  out_num_`outcome'_stay cov_num_age cov_bin_male `exposure_model' 
 	local N_total = e(N)
-	regsave using "output/linear_model-`outcome'_stay-`cohort'.dta", pval ci addlabel(adjustment, "min", outcome, "`outcome'_stay", model, "`exposure'", cohort, `cohort', N_total, `N_total') append
+	regsave using "output/linear_model-`outcome'_stay-`cohort'.dta", pval ci addlabel(adjustment, "min", outcome, "`outcome'_stay", model, "`exposure'", modeltype, "linear", cohort, `cohort', N_total, `N_total') append
 			
 	* Maximal adjustment model -------------------------------------------------
 
 	regress out_num_`outcome'_stay i.cov_cat_* cov_bin_* cov_num_* `exposure_model' 
 	local N_total = e(N)
-	regsave using "output/linear_model-`outcome'_stay-`cohort'.dta", pval ci addlabel(adjustment, "max", outcome, "`outcome'_stay", model, "`exposure'", cohort, `cohort', N_total, `N_total') append
+	regsave using "output/linear_model-`outcome'_stay-`cohort'.dta", pval ci addlabel(adjustment, "max", outcome, "`outcome'_stay", model, "`exposure'", modeltype, "linear", cohort, `cohort', N_total, `N_total') append
 
 end

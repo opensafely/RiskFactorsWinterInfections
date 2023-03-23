@@ -20,14 +20,15 @@ run "analysis/functions/utility.do"
 
 * Create macros for arguments --------------------------------------------------
 
+/*
 clear all
 local cohort "winter2019"
 local outcome "flu"
+*/
 
-/*
 local cohort "`1'"
 local outcome "`2'"
-*/
+
 di "Arguments: (1) `cohort'; (2) `outcome'."
 
 adopath + "analysis/adofiles"
@@ -74,11 +75,13 @@ perform_linear "exp_*" "`outcome'" "`cohort'"
 * Tidy results -----------------------------------------------------------------
 
 use "output/linear_model-`outcome'_stay-`cohort'.dta", clear
-rename coef beta
+rename coef est
 rename ci_lower lci
 rename ci_upper uci
-keep cohort outcome model adj var beta lci uci pval N_total
-order cohort outcome model adj var beta lci uci pval N_total
+gen N_fail_rounded = .
+gen risktime = .
+keep cohort outcome modeltype model adj var est lci uci pval N_total N_fail_rounded risktime
+order cohort outcome modeltype model adj var est lci uci pval N_total N_fail_rounded risktime
 
 * Round results ----------------------------------------------------------------
 
@@ -91,4 +94,4 @@ export delimited using "output/linear_model-`outcome'_stay-`cohort'.csv", replac
 * Save rounded results ---------------------------------------------------------
 
 drop N_total
-export delimited using "output/linrear_model-`outcome'_stay-`cohort'_rounded.csv", replace
+export delimited using "output/linear_model-`outcome'_stay-`cohort'_rounded.csv", replace
