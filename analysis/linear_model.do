@@ -23,7 +23,7 @@ run "analysis/functions/utility.do"
 /*
 clear all
 local cohort "winter2019"
-local outcome "flu"
+local outcome "flu_stay"
 */
 
 local cohort "`1'"
@@ -46,7 +46,7 @@ run "analysis/functions/linear_model-perform_linear.do"
 
 set obs 0
 gen model = ""
-save "output/linear_model-`outcome'_stay-`cohort'.dta", replace
+save "output/linear_model-`outcome'-`cohort'.dta", replace
 
 * Load data --------------------------------------------------------------------
 
@@ -54,11 +54,12 @@ gzuse output/clean_`cohort'.dta.gz, clear
 
 * Keep patients with hospital admission ----------------------------------------
 
-keep if out_date_`outcome'_adm!=.
+local outcome_adm: subinstr local outcome "stay" "adm", all
+keep if out_date_`outcome_adm'!=.
 
 * Keep relevant variables ------------------------------------------------------
 
-keep patient_id out_num_`outcome'_stay exp_* cov_*
+keep patient_id out_num_`outcome' exp_* cov_*
 
 * Perform linear regression for single exposures -------------------------------
 
@@ -74,7 +75,7 @@ perform_linear "exp_*" "`outcome'" "`cohort'"
 
 * Tidy results -----------------------------------------------------------------
 
-use "output/linear_model-`outcome'_stay-`cohort'.dta", clear
+use "output/linear_model-`outcome'-`cohort'.dta", clear
 rename coef est
 rename ci_lower lci
 rename ci_upper uci
@@ -89,9 +90,9 @@ roundmid_any "N_total" 6
 
 * Save results -----------------------------------------------------------------
 
-export delimited using "output/linear_model-`outcome'_stay-`cohort'.csv", replace
+export delimited using "output/linear_model-`outcome'-`cohort'.csv", replace
 
 * Save rounded results ---------------------------------------------------------
 
 drop N_total
-export delimited using "output/linear_model-`outcome'_stay-`cohort'_rounded.csv", replace
+export delimited using "output/linear_model-`outcome'-`cohort'_rounded.csv", replace
