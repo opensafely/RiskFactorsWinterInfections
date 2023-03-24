@@ -7,9 +7,14 @@ prog def perform_cox
 
 	args exposure outcome cohort
 	
+	* Handle categorical exposures ---------------------------------------------
+	
+	unab exposure_model: `exposure'
+	local exposure_model: subinstr local exposure "exp_cat_" "i.exp_cat_", all
+	
 	* Minimal adjustment model -------------------------------------------------
 
-	stcox `exposure' cov_num_age cov_bin_male, strata(region) vce(r)
+	stcox `exposure_model' cov_num_age cov_bin_male, strata(region) vce(r)
 	local N_total = e(N_sub)
 	local N_fail = e(N_fail)
 	local risktime = e(risk)
@@ -17,7 +22,7 @@ prog def perform_cox
 			
 	* Maximal adjustment model -------------------------------------------------
 
-	stcox `exposure' cov_*, strata(region) vce(r)
+	stcox `exposure_model' i.cov_cat_* cov_bin_* cov_num_*, strata(region) vce(r)
 	local N_total = e(N_sub)
 	local N_fail = e(N_fail)
 	local risktime = e(risk)
