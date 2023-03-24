@@ -54,8 +54,8 @@ gzuse output/clean_`cohort'.dta.gz, clear
 
 * Keep patients with hospital admission ----------------------------------------
 
-local outcome_adm: subinstr local outcome "stay" "adm", all
-keep if out_date_`outcome_adm'!=.
+local outcome_only: subinstr local outcome "_stay" "", all
+keep if out_date_`outcome_only'_adm!=. & tmp_out_date_`outcome_only'_dis!=. & out_num_`outcome'!=.
 
 * Keep relevant variables ------------------------------------------------------
 
