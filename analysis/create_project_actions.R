@@ -34,8 +34,12 @@ cox_outcomes <- data.frame(outcome = c(rep(paste0(infections ,"_adm"),
                                        rep(paste0(infections ,"_readm"),
                                            each = length(unique(cohorts$cohort_name))),
                                        rep(paste0(infections ,"_death"),
-                                           each = length(unique(cohorts$cohort_name)))),
-                           cohort_name = rep(unique(cohorts$cohort_name), times = length(infections)*3),
+                                           each = length(unique(cohorts$cohort_name))),
+                                       rep(paste0(infections ,"_stay"),
+                                          each = length(unique(cohorts$cohort_name)))),
+                           cohort_name = rep(unique(cohorts$cohort_name), times = length(infections)*4),
+                           model = c(rep("cox",length(infections)*3*2),
+                                     rep("linear",length(infections)*2)),
                            stringsAsFactors = FALSE)
 
 cox_outcomes <- cox_outcomes[!(grepl("covid",cox_outcomes$outcome) & 
@@ -180,19 +184,19 @@ cohort_actions <- function(cohort,cohort_start,cohort_end) {
 
 # Create function for actions at outcome level ---------------------------------
 
-cohort_outcome_actions <- function(cohort,outcome) {
+model_cohort_outcome_actions <- function(model,cohort,outcome) {
   
   splice(
     
-    comment(glue("Cox models - {outcome} - {cohort}")),
+    comment(glue("{model} model - {outcome} - {cohort}")),
     
     action(
-      name = glue("cox_model_{outcome}_{cohort}"),
-      run = glue("stata-mp:latest analysis/cox_model.do {cohort} {outcome}"),
+      name = glue("{model}_model_{outcome}_{cohort}"),
+      run = glue("stata-mp:latest analysis/{model}_model.do {cohort} {outcome}"),
       needs = list(glue("data_cleaning_{cohort}")),
       moderately_sensitive = list(
-        results = glue("output/cox_model-{outcome}-{cohort}.csv"),
-        rounded_results = glue("output/cox_model-{outcome}-{cohort}_rounded.csv")
+        results = glue("output/{model}_model-{outcome}-{cohort}.csv"),
+        rounded_results = glue("output/{model}_model-{outcome}-{cohort}_rounded.csv")
       )
     )
     
@@ -224,8 +228,9 @@ actions_list <- splice(
   splice(
     unlist(
       lapply(1:nrow(cox_outcomes),
-             function(x) cohort_outcome_actions(cohort = cox_outcomes[x,"cohort_name"], 
-                                        outcome = cox_outcomes[x,"outcome"])), 
+             function(x) model_cohort_outcome_actions(model = cox_outcomes[x,"model"],
+                                                      cohort = cox_outcomes[x,"cohort_name"],
+                                                      outcome = cox_outcomes[x,"outcome"])), 
       recursive = FALSE
     )
   ),
@@ -235,9 +240,9 @@ actions_list <- splice(
   action(
     name = glue("combine_results"),
     run = glue("stata-mp:latest analysis/combine_results.do"),
-    needs = as.list(paste0("cox_model_",cox_outcomes$outcome,"_",cox_outcomes$cohort_name)),
+    needs = as.list(paste0(cox_outcomes$model,"_model_",cox_outcomes$outcome,"_",cox_outcomes$cohort_name)),
     moderately_sensitive = list(
-      rounded_results = glue("output/cox_model_rounded.csv")
+      rounded_results = glue("output/results_rounded.csv")
     )
   )
 

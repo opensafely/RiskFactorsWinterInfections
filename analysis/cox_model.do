@@ -23,7 +23,7 @@ run "analysis/functions/utility.do"
 /*
 clear all
 local cohort "winter2019"
-local outcome "flu_readm"
+local outcome "flu_death"
 */
 
 local cohort "`1'"
@@ -91,11 +91,11 @@ perform_cox "exp_*" "`outcome'" "`cohort'"
 * Tidy results -----------------------------------------------------------------
 
 use "output/cox_model-`outcome'-`cohort'.dta", clear
-gen hr = exp(coef)
+gen est = exp(coef)
 gen lci = exp(ci_lower)
 gen uci = exp(ci_upper)
-keep cohort outcome model adj var hr lci uci pval N_total N_fail risktime
-order cohort outcome model adj var hr lci uci pval N_total N_fail risktime
+keep cohort outcome modeltype model adj var est lci uci pval N_total N_fail risktime
+order cohort outcome modeltype model adj var est lci uci pval N_total N_fail risktime
 
 * Round results ----------------------------------------------------------------
 
