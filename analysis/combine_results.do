@@ -2,7 +2,7 @@
 	   DO FILE NAME:			combine_results.do
 	   PROJECT:				RiskFactorsWinterPressures
 	   DATE: 					March 2020 
-	   AUTHOR:					V Walker									
+	   AUTHOR:					V Walker, S Walter									
 	   DESCRIPTION OF FILE:	combine results datasets into single file
 	   DATASETS USED:			output/cox_model-*-*_rounded.csv
 	   STATA FUNCTIONS USED:	

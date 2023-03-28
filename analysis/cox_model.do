@@ -1,8 +1,8 @@
 /*==============================================================================
 	   DO FILE NAME:			cox_model.do
 	   PROJECT:				RiskFactorsWinterPressures
-	   DATE: 					Feb 2020 
-	   AUTHOR:					V Walker									
+	   DATE: 					Mar 2020 
+	   AUTHOR:					V Walker, S Walter									
 	   DESCRIPTION OF FILE:	set data and perform cox modelling
 	   DATASETS USED:			output/clean_winter*.dta.gz
 	   STATA FUNCTIONS USED:	

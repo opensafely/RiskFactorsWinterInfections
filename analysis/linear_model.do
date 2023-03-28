@@ -1,8 +1,8 @@
 /*==============================================================================
    DO FILE NAME:			linear_model.do
    PROJECT:					RiskFactorsWinterPressures
-   DATE: 					Feb 2020 
-   AUTHOR:					V Walker									
+   DATE: 					Mar 2020 
+   AUTHOR:					V Walker, S Walter									
    DESCRIPTION OF FILE:		perform linear modelling
    DATASETS USED:			output/clean_winter*.dta.gz
    STATA FUNCTIONS USED:	
