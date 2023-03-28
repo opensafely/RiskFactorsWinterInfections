@@ -28,15 +28,15 @@ prog def perform_cox
 	regsave using "output/cox_model-`outcome'-`subgrp'-`cohort'.dta", pval ci addlabel(adjustment, "min", outcome, "`outcome'", subgroup, "`subgrp'", model, "`exposure'",  modeltype, "cox", cohort, `cohort', N_total, `N_total', N_fail, `N_fail', risktime, `risktime') append
 			
 	* Maximal adjustment model -------------------------------------------------
-
-	if strpos("`subgrp'","sex") {
-		stcox `exposure_model' i.cov_cat_* cov_num_*, strata(region) vce(r)
-	}
 	
 	if strpos("`subgrp'","all")|strpos("`subgrp'","care")|strpos("`subgrp'","age") {
 		stcox `exposure_model' i.cov_cat_* cov_bin_* cov_num_*, strata(region) vce(r)
 	}
-	
+
+	if strpos("`subgrp'","sex") {
+		stcox `exposure_model' i.cov_cat_* cov_num_*, strata(region) vce(r)
+	}
+
 	if strpos("`subgrp'","eth") {
 		stcox `exposure_model' i.cov_cat_deprivation i.cov_cat_smoking i.cov_cat_obese cov_bin_* cov_num_*, strata(region) vce(r)
 	}

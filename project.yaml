@@ -447,6 +447,15 @@ actions:
         results: output/linear_model-flu_stay-winter2019.csv
         rounded_results: output/linear_model-flu_stay-winter2019_rounded.csv
 
+  linear_model_flu_stay_sex_m_winter2019:
+    run: stata-mp:latest analysis/linear_model.do winter2019 flu_stay sex_m
+    needs:
+    - data_cleaning_winter2019
+    outputs:
+      moderately_sensitive:
+        results: output/linear_model-flu_stay-sex_m-winter2019.csv
+        rounded_results: output/linear_model-flu_stay-sex_m-winter2019_rounded.csv
+
   ## linear model - flu_stay - winter2021 
 
   linear_model_flu_stay_winter2021:
