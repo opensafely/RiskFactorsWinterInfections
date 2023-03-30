@@ -25,17 +25,19 @@ cohorts <- data.frame(cohort_name = character(),
 cohorts[nrow(cohorts)+1,] <- c("winter2019","td(1dec2019)","td(28feb2020)")
 cohorts[nrow(cohorts)+1,] <- c("winter2021","td(1dec2021)","td(28feb2022)")
 
-# outcomes x cohorts for Cox models
+# outcomes x subgroups x cohorts for Cox models
 
 infections <- c("flu","rsv","pneustrep","pneu","covid")
 
-cox_outcomes <- data.frame(outcome = c(rep(paste0(infections ,"_adm"),
+subgrp <- c("all","age18_39","age40_59","age60_79","age80_110","sex_f","sex_m","care_y","care_n","eth_white","eth_black","eth_asian","eth_mixed","eth_other")
+
+cox_outcomes <- data.frame(outcome = c(rep(paste0(infections ,"_adm", "_", subgrp),
                                            each = length(unique(cohorts$cohort_name))),
-                                       rep(paste0(infections ,"_readm"),
+                                       rep(paste0(infections ,"_readm", "_", subgrp),
                                            each = length(unique(cohorts$cohort_name))),
-                                       rep(paste0(infections ,"_death"),
+                                       rep(paste0(infections ,"_death", "_", subgrp),
                                            each = length(unique(cohorts$cohort_name))),
-                                       rep(paste0(infections ,"_stay"),
+                                       rep(paste0(infections ,"_stay", "_", subgrp),
                                           each = length(unique(cohorts$cohort_name)))),
                            cohort_name = rep(unique(cohorts$cohort_name), times = length(infections)*4),
                            model = c(rep("cox",length(infections)*3*2),
@@ -188,15 +190,15 @@ model_cohort_outcome_actions <- function(model,cohort,outcome) {
   
   splice(
     
-    comment(glue("{model} model - {outcome} - {cohort}")),
+    comment(glue("{model} model - {outcome} - {subgrp} - {cohort}")),
     
     action(
-      name = glue("{model}_model_{outcome}_{cohort}"),
-      run = glue("stata-mp:latest analysis/{model}_model.do {cohort} {outcome}"),
+      name = glue("{model}_model_{outcome}_{subgrp}_{cohort}"),
+      run = glue("stata-mp:latest analysis/{model}_model.do {cohort} {outcome} {subgrp}"),
       needs = list(glue("data_cleaning_{cohort}")),
       moderately_sensitive = list(
-        results = glue("output/{model}_model-{outcome}-{cohort}.csv"),
-        rounded_results = glue("output/{model}_model-{outcome}-{cohort}_rounded.csv")
+        results = glue("output/{model}_model-{outcome}-{subgrp}-{cohort}.csv"),
+        rounded_results = glue("output/{model}_model-{outcome}-{subgrp}-{cohort}_rounded.csv")
       )
     )
     
