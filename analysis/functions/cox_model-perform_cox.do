@@ -30,11 +30,11 @@ prog def perform_cox
 	* Maximal adjustment model -------------------------------------------------
 	
 	if strpos("`subgrp'","all")|strpos("`subgrp'","care")|strpos("`subgrp'","age") {
-		stcox `exposure_model' i.cov_cat_* cov_bin_* cov_num_*, strata(region) vce(r)
+		stcox `exposure_model' i.cov_cat_deprivation i.cov_cat_smoking i.cov_cat_obese i.cov_cat_ethnicity cov_bin_* cov_num_*, strata(region) vce(r)
 	}
 
 	if strpos("`subgrp'","sex") {
-		stcox `exposure_model' i.cov_cat_* cov_num_*, strata(region) vce(r)
+		stcox `exposure_model' i.cov_cat_deprivation i.cov_cat_smoking i.cov_cat_obese i.cov_cat_ethnicity cov_num_*, strata(region) vce(r)
 	}
 
 	if strpos("`subgrp'","eth") {

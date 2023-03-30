@@ -28,11 +28,11 @@ prog def perform_linear
 	* Maximal adjustment model -------------------------------------------------
 
 	if strpos("`subgrp'","all")|strpos("`subgrp'","care")|strpos("`subgrp'","age") {
-		regress out_num_`outcome' i.cov_cat_* cov_bin_* cov_num_* `exposure_model' 
+		regress out_num_`outcome' i.cov_cat_deprivation i.cov_cat_smoking i.cov_cat_obese i.cov_cat_ethnicity cov_bin_* cov_num_* `exposure_model' 
 	}
 	
 	if strpos("`subgrp'","sex") {
-		regress out_num_`outcome' i.cov_cat_* cov_num_* `exposure_model'
+		regress out_num_`outcome' i.cov_cat_deprivation i.cov_cat_smoking i.cov_cat_obese i.cov_cat_ethnicity cov_num_* `exposure_model'
 	}
 	
 	if strpos("`subgrp'","eth") {
