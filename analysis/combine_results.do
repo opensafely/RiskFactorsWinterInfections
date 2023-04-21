@@ -2,7 +2,7 @@
 	   DO FILE NAME:			combine_results.do
 	   PROJECT:				RiskFactorsWinterPressures
 	   DATE: 					March 2020 
-	   AUTHOR:					V Walker									
+	   AUTHOR:					V Walker, S Walter									
 	   DESCRIPTION OF FILE:	combine results datasets into single file
 	   DATASETS USED:			output/cox_model-*-*_rounded.csv
 	   STATA FUNCTIONS USED:	
@@ -22,46 +22,57 @@ foreach cohort in winter2019 winter2021 {
 
 	foreach outcome in covid flu pneu pneustrep rsv {
 
-		* For Cox model outcomes ---------------------------------------------------
+		* For Cox model outcomes -----------------------------------------------
 
 		foreach outcometype in adm readm death {
+			
+			* Subgroups --------------------------------------------------------
 
-			** Confirm results file is present
+			foreach subgrp in age18_39 age40_59 age60_79 age80_110 sex_f sex_m care_y care_n eth_white eth_black eth_asian eth_mixed eth_other {
+				
+				** Confirm results file is present
 
-			if fileexists("output/cox_model-`outcome'_`outcometype'-`cohort'_rounded.csv")==1 {
+				if fileexists("output/cox_model-`outcome'_`outcometype'-`subgrp'-`cohort'_rounded.csv")==1 {
 
-				** Convert results from .csv to .dta
+					** Convert results from .csv to .dta
 
-				import delimited "output/cox_model-`outcome'_`outcometype'-`cohort'_rounded.csv", clear
-				save "output/cox_model-`outcome'_`outcometype'-`cohort'_rounded.dta", replace
+					import delimited "output/cox_model-`outcome'_`outcometype'-`subgrp'-`cohort'_rounded.csv", clear
+					save "output/cox_model-`outcome'_`outcometype'-`subgrp'-`cohort'_rounded.dta", replace
 
-				** Append results 
+					** Append results 
 
-				use "output/results_rounded.dta", clear
-				append using "output/cox_model-`outcome'_`outcometype'-`cohort'_rounded.dta"
-				save "output/results_rounded.dta", replace 
-
+					use "output/results_rounded.dta", clear
+					append using "output/cox_model-`outcome'_`outcometype'-`subgrp'-`cohort'_rounded.dta"
+					save "output/results_rounded.dta", replace 
+				}
+				
 			}
 
 		}
 
 		* For linear regression model outcomes ---------------------------------
+		
+		* Subgroups --------------------------------------------------------
 
-		** Confirm results file is present
+		foreach subgrp in age18_39 age40_59 age60_79 age80_110 sex_f sex_m care_y care_n eth_white eth_black eth_asian eth_mixed eth_other {
 
-		if fileexists("output/linear_model-`outcome'_stay-`cohort'_rounded.csv")==1 {
+			** Confirm results file is present
 
-			** Convert results from .csv to .dta
+			if fileexists("output/linear_model-`outcome'_stay-`subgrp'-`cohort'_rounded.csv")==1 {
 
-			import delimited "output/linear_model-`outcome'_stay-`cohort'_rounded.csv", clear
-			save "output/linear_model-`outcome'_stay-`cohort'_rounded.dta", replace
+				** Convert results from .csv to .dta
 
-			** Append results 
+				import delimited "output/linear_model-`outcome'_stay-`subgrp'-`cohort'_rounded.csv", clear
+				save "output/linear_model-`outcome'_stay-`subgrp'-`cohort'_rounded.dta", replace
 
-			use "output/results_rounded.dta", clear
-			append using "output/linear_model-`outcome'_stay-`cohort'_rounded.dta"
-			save "output/results_rounded.dta", replace 
+				** Append results 
 
+				use "output/results_rounded.dta", clear
+				append using "output/linear_model-`outcome'_stay-`subgrp'-`cohort'_rounded.dta"
+				save "output/results_rounded.dta", replace 
+
+			}
+			
 		}
 
 	}

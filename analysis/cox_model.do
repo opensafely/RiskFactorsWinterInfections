@@ -1,8 +1,8 @@
 /*==============================================================================
 	   DO FILE NAME:			cox_model.do
 	   PROJECT:				RiskFactorsWinterPressures
-	   DATE: 					Feb 2020 
-	   AUTHOR:					V Walker									
+	   DATE: 					Mar 2020 
+	   AUTHOR:					V Walker, S Walter									
 	   DESCRIPTION OF FILE:	set data and perform cox modelling
 	   DATASETS USED:			output/clean_winter*.dta.gz
 	   STATA FUNCTIONS USED:	
@@ -14,10 +14,6 @@
 
 local redaction_threshold 6
 
-* Source functions -------------------------------------------------------------
-
-run "analysis/functions/utility.do"
-
 * Create macros for arguments --------------------------------------------------
 
 /*
@@ -28,8 +24,9 @@ local outcome "flu_death"
 
 local cohort "`1'"
 local outcome "`2'"
+local subgrp "`3'"
 
-di "Arguments: (1) `cohort'; (2) `outcome'."
+di "Arguments: (1) `cohort'; (2) `outcome'; (3) `subgrp'."
 
 adopath + "analysis/adofiles"
 
@@ -46,11 +43,68 @@ run "analysis/functions/cox_model-perform_cox.do"
 
 set obs 0
 gen model = ""
-save "output/cox_model-`outcome'-`cohort'.dta", replace
+save "output/cox_model-`outcome'-`subgrp'-`cohort'.dta", replace
 
 * Load data --------------------------------------------------------------------
 
 gzuse output/clean_`cohort'.dta.gz, clear
+*use "C:\Users\dy21108\GitHub\RiskFactorsWinterInfections\lib\clean_winter2019_simdates.dta", clear
+
+* Filter data for subgroup analyses --------------------------------------------
+
+keep if patient_id!=.
+
+if "`subgrp'"=="age18_39" {
+	keep if sub_cat_age==0 & sub_cat_age!=.
+}
+
+if "`subgrp'"=="age40_59" {
+	keep if sub_cat_age==1 & sub_cat_age!=.
+}
+
+if "`subgrp'"=="age60_79" {
+	keep if sub_cat_age==2 & sub_cat_age!=.
+}
+
+if "`subgrp'"=="age80_110" {
+	keep if sub_cat_age==3 & sub_cat_age!=.
+}
+
+if "`subgrp'"=="sex_f" {
+	keep if cov_bin_male==0 & cov_bin_male!=.
+}
+
+if "`subgrp'"=="sex_m" {
+	keep if cov_bin_male==1 & cov_bin_male!=.
+}
+
+if "`subgrp'"=="care_y" {
+	keep if sub_bin_carehome==1 & sub_bin_carehome!=.
+}
+
+if "`subgrp'"=="care_n" {
+	keep if sub_bin_carehome==0 & sub_bin_carehome!=.
+}
+
+if "`subgrp'"=="eth_white" {
+	keep if cov_cat_ethnicity==1 & cov_cat_ethnicity!=.
+}
+
+if "`subgrp'"=="eth_black" {
+	keep if cov_cat_ethnicity==2 & cov_cat_ethnicity!=.
+}
+
+if "`subgrp'"=="eth_asian" {
+	keep if cov_cat_ethnicity==3 & cov_cat_ethnicity!=.
+}
+
+if "`subgrp'"=="eth_mixed" {
+	keep if cov_cat_ethnicity==4 & cov_cat_ethnicity!=.
+}
+
+if "`subgrp'"=="eth_other" {
+	keep if cov_cat_ethnicity==5 & cov_cat_ethnicity!=.
+}
 
 * Filter data if outcome is readmission ----------------------------------------
 
@@ -80,22 +134,22 @@ stset study_end_date, failure(out_status) id(patient_id) origin(study_start_date
 
 foreach exposure of varlist exp_* {
 	
-	perform_cox "`exposure'" "`outcome'" "`cohort'"
+	perform_cox "`exposure'" "`outcome'" "`cohort'" "`subgrp'"
 
 }
 
 * Perform Cox analyses for all exposures ---------------------------------------
 
-perform_cox "exp_*" "`outcome'" "`cohort'"
+perform_cox "exp_*" "`outcome'" "`cohort'" "`subgrp'"
 
 * Tidy results -----------------------------------------------------------------
 
-use "output/cox_model-`outcome'-`cohort'.dta", clear
+use "output/cox_model-`outcome'-`subgrp'-`cohort'.dta", clear
 gen est = exp(coef)
 gen lci = exp(ci_lower)
 gen uci = exp(ci_upper)
-keep cohort outcome modeltype model adj var est lci uci pval N_total N_fail risktime
-order cohort outcome modeltype model adj var est lci uci pval N_total N_fail risktime
+keep cohort subgroup outcome modeltype model adj var est lci uci pval N_total N_fail risktime
+order cohort subgroup outcome modeltype model adj var est lci uci pval N_total N_fail risktime
 
 * Round results ----------------------------------------------------------------
 
@@ -104,9 +158,9 @@ roundmid_any "N_fail" 6
 
 * Save results -----------------------------------------------------------------
 
-export delimited using "output/cox_model-`outcome'-`cohort'.csv", replace
+export delimited using "output/cox_model-`outcome'-`subgrp'-`cohort'.csv", replace
 
 * Save rounded results ---------------------------------------------------------
 
 drop N_total N_fail
-export delimited using "output/cox_model-`outcome'-`cohort'_rounded.csv", replace
+export delimited using "output/cox_model-`outcome'-`subgrp'-`cohort'_rounded.csv", replace
