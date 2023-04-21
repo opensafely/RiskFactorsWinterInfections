@@ -51,60 +51,58 @@ gzuse output/clean_`cohort'.dta.gz, clear
 
 * Filter data for subgroup analyses --------------------------------------------
 
-if "`subgrp'"=="all" {
-	keep if patient_id!=. | patient_id==.
-}
+keep if patient_id!=.
 
 if "`subgrp'"=="age18_39" {
-	keep if sub_cat_age==0
+	keep if sub_cat_age==0 & sub_cat_age!=.
 }
 
 if "`subgrp'"=="age40_59" {
-	keep if sub_cat_age==1
+	keep if sub_cat_age==1 & sub_cat_age!=.
 }
 
 if "`subgrp'"=="age60_79" {
-	keep if sub_cat_age==2
+	keep if sub_cat_age==2 & sub_cat_age!=.
 }
 
 if "`subgrp'"=="age80_110" {
-	keep if sub_cat_age==3
+	keep if sub_cat_age==3 & sub_cat_age!=.
 }
 
 if "`subgrp'"=="sex_f" {
-	keep if cov_bin_male==0
+	keep if cov_bin_male==0 & cov_bin_male!=.
 }
 
 if "`subgrp'"=="sex_m" {
-	keep if cov_bin_male==1
+	keep if cov_bin_male==1 & cov_bin_male!=.
 }
 
 if "`subgrp'"=="care_y" {
-	keep if sub_bin_carehome==1
+	keep if sub_bin_carehome==1 & sub_bin_carehome!=.
 }
 
 if "`subgrp'"=="care_n" {
-	keep if sub_bin_carehome==0
+	keep if sub_bin_carehome==0 & sub_bin_carehome!=.
 }
 
 if "`subgrp'"=="eth_white" {
-	keep if cov_cat_ethnicity==1
+	keep if cov_cat_ethnicity==1 & cov_cat_ethnicity!=.
 }
 
 if "`subgrp'"=="eth_black" {
-	keep if cov_cat_ethnicity==2
+	keep if cov_cat_ethnicity==2 & cov_cat_ethnicity!=.
 }
 
 if "`subgrp'"=="eth_asian" {
-	keep if cov_cat_ethnicity==3
+	keep if cov_cat_ethnicity==3 & cov_cat_ethnicity!=.
 }
 
 if "`subgrp'"=="eth_mixed" {
-	keep if cov_cat_ethnicity==4
+	keep if cov_cat_ethnicity==4 & cov_cat_ethnicity!=.
 }
 
 if "`subgrp'"=="eth_other" {
-	keep if cov_cat_ethnicity==5
+	keep if cov_cat_ethnicity==5 & cov_cat_ethnicity!=.
 }
 
 * Keep patients with hospital admission ----------------------------------------

@@ -29,15 +29,15 @@ cohorts[nrow(cohorts)+1,] <- c("winter2021","td(1dec2021)","td(28feb2022)")
 
 infections <- c("flu","rsv","pneustrep","pneu","covid")
 
-subgrp <- c("all","age18_39","age40_59","age60_79","age80_110","sex_f","sex_m","care_y","care_n","eth_white","eth_black","eth_asian","eth_mixed","eth_other")
+subgrp <- c("main","age18_39","age40_59","age60_79","age80_110","sex_f","sex_m","care_y","care_n","eth_white","eth_black","eth_asian","eth_mixed","eth_other")
 
-cox_outcomes <- data.frame(outcome = c(rep(paste0(infections ,"_adm", "_", subgrp),
+cox_outcomes <- data.frame(outcome = c(rep(paste0(infections ,"_adm"),
                                            each = length(unique(cohorts$cohort_name))),
-                                       rep(paste0(infections ,"_readm", "_", subgrp),
+                                       rep(paste0(infections ,"_readm"),
                                            each = length(unique(cohorts$cohort_name))),
-                                       rep(paste0(infections ,"_death", "_", subgrp),
+                                       rep(paste0(infections ,"_death"),
                                            each = length(unique(cohorts$cohort_name))),
-                                       rep(paste0(infections ,"_stay", "_", subgrp),
+                                       rep(paste0(infections ,"_stay"),
                                           each = length(unique(cohorts$cohort_name)))),
                            cohort_name = rep(unique(cohorts$cohort_name), times = length(infections)*4),
                            model = c(rep("cox",length(infections)*3*2),
@@ -46,6 +46,9 @@ cox_outcomes <- data.frame(outcome = c(rep(paste0(infections ,"_adm", "_", subgr
 
 cox_outcomes <- cox_outcomes[!(grepl("covid",cox_outcomes$outcome) & 
                                  cox_outcomes$cohort_name=="winter2019"),]
+
+cox_outcomes <- merge(cox_outcomes, subgrp)
+cox_outcomes <- dplyr::rename(cox_outcomes, "subgrp" = "y")
 
 # Create action function -------------------------------------------------------
 
@@ -186,7 +189,7 @@ cohort_actions <- function(cohort,cohort_start,cohort_end) {
 
 # Create function for actions at outcome level ---------------------------------
 
-model_cohort_outcome_actions <- function(model,cohort,outcome) {
+model_cohort_outcome_actions <- function(model,cohort,outcome,subgrp) {
   
   splice(
     
@@ -232,7 +235,8 @@ actions_list <- splice(
       lapply(1:nrow(cox_outcomes),
              function(x) model_cohort_outcome_actions(model = cox_outcomes[x,"model"],
                                                       cohort = cox_outcomes[x,"cohort_name"],
-                                                      outcome = cox_outcomes[x,"outcome"])), 
+                                                      outcome = cox_outcomes[x,"outcome"],
+                                                      subgrp = cox_outcomes[x,"subgrp"])), 
       recursive = FALSE
     )
   ),
@@ -242,7 +246,7 @@ actions_list <- splice(
   action(
     name = glue("combine_results"),
     run = glue("stata-mp:latest analysis/combine_results.do"),
-    needs = as.list(paste0(cox_outcomes$model,"_model_",cox_outcomes$outcome,"_",cox_outcomes$cohort_name)),
+    needs = as.list(paste0(cox_outcomes$model,"_model_",cox_outcomes$outcome,"_",cox_outcomes$subgrp,"_",cox_outcomes$cohort_name)),
     moderately_sensitive = list(
       rounded_results = glue("output/results_rounded.csv")
     )

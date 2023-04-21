@@ -18,7 +18,7 @@ prog def perform_cox
 		stcox `exposure_model' cov_num_age, strata(region) vce(r)
 	}
 
-	if strpos("`subgrp'","all")|strpos("`subgrp'","care")|strpos("`subgrp'","eth")|strpos("`subgrp'","age") {
+	if strpos("`subgrp'","main")|strpos("`subgrp'","care")|strpos("`subgrp'","eth")|strpos("`subgrp'","age") {
 		stcox `exposure_model' cov_num_age cov_bin_male, strata(region) vce(r)
 	}
 	
@@ -29,16 +29,16 @@ prog def perform_cox
 			
 	* Maximal adjustment model -------------------------------------------------
 	
-	if strpos("`subgrp'","all")|strpos("`subgrp'","care")|strpos("`subgrp'","age") {
-		stcox `exposure_model' i.cov_cat_deprivation i.cov_cat_smoking i.cov_cat_obese i.cov_cat_ethnicity cov_bin_* cov_num_*, strata(region) vce(r)
+	if strpos("`subgrp'","main")|strpos("`subgrp'","care")|strpos("`subgrp'","age") {
+		stcox `exposure_model' ib3.cov_cat_deprivation i.cov_cat_smoking i.cov_cat_obese i.cov_cat_ethnicity cov_bin_* cov_num_*, strata(region) vce(r)
 	}
 
 	if strpos("`subgrp'","sex") {
-		stcox `exposure_model' i.cov_cat_deprivation i.cov_cat_smoking i.cov_cat_obese i.cov_cat_ethnicity cov_num_*, strata(region) vce(r)
+		stcox `exposure_model' ib3.cov_cat_deprivation i.cov_cat_smoking i.cov_cat_obese i.cov_cat_ethnicity cov_num_*, strata(region) vce(r)
 	}
 
 	if strpos("`subgrp'","eth") {
-		stcox `exposure_model' i.cov_cat_deprivation i.cov_cat_smoking i.cov_cat_obese cov_bin_* cov_num_*, strata(region) vce(r)
+		stcox `exposure_model' ib3.cov_cat_deprivation i.cov_cat_smoking i.cov_cat_obese cov_bin_* cov_num_*, strata(region) vce(r)
 	}
 	
 	local N_total = e(N_sub)
