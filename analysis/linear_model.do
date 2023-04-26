@@ -114,6 +114,10 @@ keep if out_date_`outcome_only'_adm!=. & tmp_out_date_`outcome_only'_dis!=. & ou
 
 keep patient_id out_num_`outcome' exp_* cov_*
 
+* Rename region ----------------------------------------------------------------
+
+rename cov_cat_region region
+
 * Perform linear regression for single exposures -------------------------------
 
 foreach exposure of varlist exp_* {
