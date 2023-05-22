@@ -140,7 +140,9 @@ foreach exposure of varlist exp_* {
 
 * Perform Cox analyses for all exposures ---------------------------------------
 
-perform_cox "exp_*" "`outcome'" "`cohort'" "`subgrp'"
+vl create exposure_all = (exp_*)
+
+perform_cox "$exposure_all" "`outcome'" "`cohort'" "`subgrp'"
 
 * Tidy results -----------------------------------------------------------------
 
