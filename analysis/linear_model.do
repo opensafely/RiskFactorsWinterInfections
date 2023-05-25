@@ -128,7 +128,9 @@ foreach exposure of varlist exp_* {
 
 * Perform linear regression for all exposures ----------------------------------
 
-perform_linear "exp_*" "`outcome'" "`cohort'" "`subgrp'"
+vl create exposure_all = (exp_*)
+
+perform_linear "$exposure_all" "`outcome'" "`cohort'" "`subgrp'"
 
 * Tidy results -----------------------------------------------------------------
 

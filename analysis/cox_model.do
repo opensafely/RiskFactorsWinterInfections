@@ -48,7 +48,6 @@ save "output/cox_model-`outcome'-`subgrp'-`cohort'.dta", replace
 * Load data --------------------------------------------------------------------
 
 gzuse output/clean_`cohort'.dta.gz, clear
-*use "C:\Users\dy21108\GitHub\RiskFactorsWinterInfections\lib\clean_winter2019_simdates.dta", clear
 
 * Filter data for subgroup analyses --------------------------------------------
 
