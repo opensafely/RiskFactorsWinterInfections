@@ -15,11 +15,11 @@ prog def perform_cox
 	* Minimal adjustment model -------------------------------------------------
 
 	if strpos("`subgrp'","sex") {
-		stcox `exposure_model' cov_num_age, strata(region) vce(r)
+		stcox `exposure_model' cov_num_age, strata(region)
 	}
 
 	if strpos("`subgrp'","main")|strpos("`subgrp'","care")|strpos("`subgrp'","eth")|strpos("`subgrp'","age") {
-		stcox `exposure_model' cov_num_age cov_bin_male, strata(region) vce(r)
+		stcox `exposure_model' cov_num_age cov_bin_male, strata(region)
 	}
 
 	
@@ -30,15 +30,15 @@ regsave using "output/cox_model-`outcome'-`subgrp'-`cohort'.dta", pval ci addlab
 	* Maximal adjustment model -------------------------------------------------
 	
 	if strpos("`subgrp'","main")|strpos("`subgrp'","care")|strpos("`subgrp'","age") {
-	  	cox `exposure_model' ib3.cov_cat_deprivation i.cov_cat_smoking i.cov_cat_obese i.cov_cat_ethnicity cov_bin_* cov_num_*, strata(region) vce(r)
+	  	cox `exposure_model' ib3.cov_cat_deprivation i.cov_cat_smoking i.cov_cat_obese i.cov_cat_ethnicity cov_bin_* cov_num_*, strata(region)
 	}
 
 	if strpos("`subgrp'","sex") {
-		stcox `exposure_model' ib3.cov_cat_deprivation i.cov_cat_smoking i.cov_cat_obese i.cov_cat_ethnicity cov_num_*, strata(region) vce(r)
+		stcox `exposure_model' ib3.cov_cat_deprivation i.cov_cat_smoking i.cov_cat_obese i.cov_cat_ethnicity cov_num_*, strata(region)
 	}
 
 	if strpos("`subgrp'","eth") {
-		stcox `exposure_model' ib3.cov_cat_deprivation i.cov_cat_smoking i.cov_cat_obese cov_bin_* cov_num_*, strata(region) vce(r)
+		stcox `exposure_model' ib3.cov_cat_deprivation i.cov_cat_smoking i.cov_cat_obese cov_bin_* cov_num_*, strata(region)
 	}
 	
 
