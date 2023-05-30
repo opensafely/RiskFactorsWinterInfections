@@ -30,7 +30,7 @@ regsave using "output/cox_model-`outcome'-`subgrp'-`cohort'.dta", pval ci addlab
 	* Maximal adjustment model -------------------------------------------------
 	
 	if strpos("`subgrp'","main")|strpos("`subgrp'","care")|strpos("`subgrp'","age") {
-	  	cox `exposure_model' ib3.cov_cat_deprivation i.cov_cat_smoking i.cov_cat_obese i.cov_cat_ethnicity cov_bin_* cov_num_*, strata(region)
+	  	stcox `exposure_model' ib3.cov_cat_deprivation i.cov_cat_smoking i.cov_cat_obese i.cov_cat_ethnicity cov_bin_* cov_num_*, strata(region)
 	}
 
 	if strpos("`subgrp'","sex") {
