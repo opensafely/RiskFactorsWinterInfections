@@ -5779,7 +5779,6 @@ actions:
     - cox_model_pneu_readm_age40_59_winter2021
     - cox_model_covid_readm_age40_59_winter2021
     - cox_model_flu_death_age40_59_winter2019
-    - cox_model_flu_death_age40_59_winter2021
     - cox_model_rsv_death_age40_59_winter2019
     - cox_model_rsv_death_age40_59_winter2021
     - cox_model_pneustrep_death_age40_59_winter2019
@@ -6066,7 +6065,6 @@ actions:
     - cox_model_pneu_readm_eth_black_winter2019
     - cox_model_pneu_readm_eth_black_winter2021
     - cox_model_covid_readm_eth_black_winter2021
-    - cox_model_flu_death_eth_black_winter2019
     - cox_model_flu_death_eth_black_winter2021
     - cox_model_rsv_death_eth_black_winter2019
     - cox_model_rsv_death_eth_black_winter2021
@@ -6145,7 +6143,6 @@ actions:
     - cox_model_pneustrep_death_eth_mixed_winter2019
     - cox_model_pneustrep_death_eth_mixed_winter2021
     - cox_model_pneu_death_eth_mixed_winter2019
-    - cox_model_pneu_death_eth_mixed_winter2021
     - cox_model_covid_death_eth_mixed_winter2021
     - linear_model_flu_stay_eth_mixed_winter2019
     - linear_model_flu_stay_eth_mixed_winter2021

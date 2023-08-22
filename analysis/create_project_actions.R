@@ -38,7 +38,7 @@ cox_outcomes <- data.frame(outcome = c(rep(paste0(infections ,"_adm"),
                                        rep(paste0(infections ,"_death"),
                                            each = length(unique(cohorts$cohort_name))),
                                        rep(paste0(infections ,"_stay"),
-                                          each = length(unique(cohorts$cohort_name)))),
+                                           each = length(unique(cohorts$cohort_name)))),
                            cohort_name = rep(unique(cohorts$cohort_name), times = length(infections)*4),
                            model = c(rep("cox",length(infections)*3*2),
                                      rep("linear",length(infections)*2)),
@@ -170,7 +170,7 @@ cohort_actions <- function(cohort,cohort_start,cohort_end) {
         rounded_table1 = glue("output/rounded_table1_{cohort}.csv")
       )
     ),
-  
+    
     comment(glue("Table 2 - {cohort}")),
     
     action(
@@ -182,8 +182,8 @@ cohort_actions <- function(cohort,cohort_start,cohort_end) {
         rounded_table1 = glue("output/rounded_table2_{cohort}.csv")
       )
     )
-  
-    )
+    
+  )
   
 }
 
@@ -246,12 +246,15 @@ actions_list <- splice(
   action(
     name = glue("combine_results"),
     run = glue("stata-mp:latest analysis/combine_results.do"),
-    needs = as.list(paste0(cox_outcomes$model,"_model_",cox_outcomes$outcome,"_",cox_outcomes$subgrp,"_",cox_outcomes$cohort_name)),
+    needs = as.list(setdiff(paste0(cox_outcomes$model,"_model_",cox_outcomes$outcome,"_",cox_outcomes$subgrp,"_",cox_outcomes$cohort_name),
+                            c("cox_model_flu_death_age40_59_winter2021",
+                              "cox_model_flu_death_eth_black_winter2019",
+                              "cox_model_pneu_death_eth_mixed_winter2021"))),
     moderately_sensitive = list(
       rounded_results = glue("output/results_rounded.csv")
     )
   )
-
+  
 )
 
 # Combine all actions in a list ------------------------------------------------
