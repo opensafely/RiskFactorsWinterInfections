@@ -50,6 +50,23 @@ cox_outcomes <- cox_outcomes[!(grepl("covid",cox_outcomes$outcome) &
 cox_outcomes <- merge(cox_outcomes, subgrp)
 cox_outcomes <- dplyr::rename(cox_outcomes, "subgrp" = "y")
 
+
+# Cox successful ---------------------------------------------------------------
+
+cox_success <- cox_outcomes
+
+cox_success$name <- paste0(cox_success$model,"_model_",
+                           cox_success$outcome,"_",
+                           cox_success$subgrp,"_",
+                           cox_success$cohort_name)
+
+cox_success <- cox_success[!(grepl("_readm",cox_success$outcome) & 
+                               cox_success$subgrp!="main"),]
+
+cox_success <- cox_success[!(cox_success$name %in% c("cox_model_flu_death_age40_59_winter2021",
+                                                     "cox_model_flu_death_eth_black_winter2019",
+                                                     "cox_model_pneu_death_eth_mixed_winter2021")),]
+
 # Create action function -------------------------------------------------------
 
 action <- function(
@@ -246,10 +263,7 @@ actions_list <- splice(
   action(
     name = glue("combine_results"),
     run = glue("stata-mp:latest analysis/combine_results.do"),
-    needs = as.list(setdiff(paste0(cox_outcomes$model,"_model_",cox_outcomes$outcome,"_",cox_outcomes$subgrp,"_",cox_outcomes$cohort_name),
-                            c("cox_model_flu_death_age40_59_winter2021",
-                              "cox_model_flu_death_eth_black_winter2019",
-                              "cox_model_pneu_death_eth_mixed_winter2021"))),
+    needs = as.list(cox_success$name),
     moderately_sensitive = list(
       rounded_results = glue("output/results_rounded.csv")
     )
