@@ -28,7 +28,7 @@ foreach cohort in winter2019 winter2021 {
 			
 			* Subgroups --------------------------------------------------------
 
-			foreach subgrp in age18_39 age40_59 age60_79 age80_110 sex_f sex_m care_y care_n eth_white eth_black eth_asian eth_mixed eth_other {
+			foreach subgrp in main age18_39 age40_59 age60_79 age80_110 sex_f sex_m care_y care_n eth_white eth_black eth_asian eth_mixed eth_other {
 				
 				** Confirm results file is present
 
@@ -54,7 +54,7 @@ foreach cohort in winter2019 winter2021 {
 		
 		* Subgroups --------------------------------------------------------
 
-		foreach subgrp in age18_39 age40_59 age60_79 age80_110 sex_f sex_m care_y care_n eth_white eth_black eth_asian eth_mixed eth_other {
+		foreach subgrp in main age18_39 age40_59 age60_79 age80_110 sex_f sex_m care_y care_n eth_white eth_black eth_asian eth_mixed eth_other {
 
 			** Confirm results file is present
 
