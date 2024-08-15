@@ -2,49 +2,38 @@
 
 source("analysis/post_release/specify_paths.R")
 source("analysis/post_release/utility.R")
-source("analysis/post_release/fn-make_table1.R")
 
-# Save characteristics ordering ----
-
-tmp <- data.table::fread(path_table1_winter2019)
-characteristics <- unique(tmp$characteristic)
-rm(tmp)
-
-# Read in Table 1s ----
-
-winter2019 <- data.table::fread(path_table1_winter2019, data.table = FALSE)
-winter2021 <- data.table::fread(path_table1_winter2021, data.table = FALSE)
-
-# Convert to factor ----
-
-winter2019$characteristic <- factor(winter2019$characteristic, levels = characteristics)
-winter2021$characteristic <- factor(winter2021$characteristic, levels = characteristics)
-
-# Make each table 1 ----
-
-for (i in c("all","covid","flu","pneu","pneustrep","rsv")) {
+for (cohort in c("winter2019","winter2021")) {
   
-  table1 <- make_table1(winter2019, winter2021, i = "all")
+  # Read in Table 1 ----
   
-  if (i!="all") {
+  path_table1 <- get(paste0("path_table1_",cohort))
+  tmp <- data.table::fread(path_table1, data.table = FALSE)
+  characteristics <- unique(tmp$characteristic)
+  tmp <- tmp[,c("characteristic","category",colnames(tmp)[grepl("count_",colnames(tmp))])]
+  tmp$count_pneustrep_rounded <- NULL
+  
+  # Add percentages to counts ----
+  
+  for (i in c("all","covid","flu","pneu","rsv")) {
     
-    table1 <- dplyr::rename(table1, 
-                            "winter2019_all" = "winter2019",
-                            "winter2021_all" = "winter2021")
+    if ((i=="covid" & cohort=="winter2019")==FALSE) {
+      
+      tmp$new <- ifelse(tmp$characteristic=="N=",
+                        tmp[,paste0("count_",i,"_rounded")],
+                        paste0(tmp[,paste0("count_",i,"_rounded")], " (",display(100*(tmp[,paste0("count_",i,"_rounded")]/tmp[1,paste0("count_",i,"_rounded")])),")"))
+      
+      tmp$new <- ifelse(tmp$new=="NA (NA)","0 (0.00)",tmp$new)
+      names(tmp)[names(tmp) == "new"] <- i
+      
+    }
     
-    table1_i <- make_table1(winter2019, winter2021, i = i)
-    
-    table1 <- merge(table1, table1_i, by = c("characteristic","category"))
+    tmp[,paste0("count_",i,"_rounded")] <- NULL
     
   }
   
-  table1 <- table1[order(table1$characteristic),
-                   c("characteristic","category",
-                     colnames(table1)[grepl("winter2019",colnames(table1))],
-                     colnames(table1)[grepl("winter2021",colnames(table1))])]
+  # Save table1 ----
   
-  data.table::fwrite(table1, 
-                     paste0("output/post_release/table1_",i,".csv"),
-                     row.names = FALSE)
+  data.table::fwrite(tmp, paste0("output/post_release/table1_",cohort,".csv"))
   
 }
