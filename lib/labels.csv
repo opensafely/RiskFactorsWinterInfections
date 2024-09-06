@@ -1,0 +1,57 @@
+var,order,label,category,table1
+,1,All,All,N=
+cov_num_age,2,"Age, per 10 years","Age, per 10 years",
+,3,Age 18-39,Age,Age 18-39
+,4,Age 40-59,Age,Age 40-59
+,5,Age 60-79,Age,Age 60-79
+,6,Age 80-110,Age,Age 80-110
+cov_bin_female,7,Female (ref),Sex,Male No
+cov_bin_male,8,Male,Sex,Male Yes
+0b.cov_cat_obese,9,Not obese (ref),Obesity,Obesity Not obese
+1.cov_cat_obese,10,Obese class I,Obesity,Obesity Obese class I
+2.cov_cat_obese,11,Obese class II,Obesity,Obesity Obese class II
+3.cov_cat_obese,12,Obese class III,Obesity,Obesity Obese class III
+1b.cov_cat_smoking,13,Never (ref),Smoking status,Smoking Never smoker
+2.cov_cat_smoking,14,Former,Smoking status,Smoking Former smoker
+3.cov_cat_smoking,15,Current,Smoking status,Smoking Current smoker
+4.cov_cat_smoking,16,Missing,Smoking status,Smoking Missing
+1b.cov_cat_ethnicity,17,White (ref),Ethnicity,Ethnicity White
+2.cov_cat_ethnicity,18,Mixed,Ethnicity,Ethnicity Mixed
+3.cov_cat_ethnicity,19,Asian or Asian British,Ethnicity,Ethnicity Asian or Asian British
+4.cov_cat_ethnicity,20,Black or Black British,Ethnicity,Ethnicity Black
+5.cov_cat_ethnicity,21,Other,Ethnicity,Ethnicity Other
+6.cov_cat_ethnicity,22,Missing,Ethnicity,Ethnicity Missing
+1.cov_cat_deprivation,23,1 (most deprived),Deprivation (IMD) quintile,IMD quintile 1 Most deprived
+2.cov_cat_deprivation,24,2,Deprivation (IMD) quintile,IMD quintile 2
+3b.cov_cat_deprivation,25,3 (ref),Deprivation (IMD) quintile,IMD quintile 3
+4.cov_cat_deprivation,26,4,Deprivation (IMD) quintile,IMD quintile 4
+5.cov_cat_deprivation,27,5 (least deprived),Deprivation (IMD) quintile,IMD quintile 5 Least deprived
+0b.exp_cat_diabetes,28,No diabetes (ref),Diabetes,Diabetes No diabetes
+1.exp_cat_diabetes,29,Controlled (HbA1c < 58 mmol mol-1),Diabetes,Diabetes Controlled diabetes
+2.exp_cat_diabetes,30,Uncontrolled (HbA1c >= 58 mmol mol-1),Diabetes,Diabetes Uncontrolled diabetes
+3.exp_cat_diabetes,31,Unknown HbA1c,Diabetes,Diabetes Unknown diabetes
+0b.exp_cat_cancer_exhaem,32,Never (ref),Cancer (non-haematological),Cancer (non-haematological) Never diagnosed
+1.exp_cat_cancer_exhaem,33,Diagnosed <1 year ago,Cancer (non-haematological),Cancer (non-haematological) Diagnosed <1 yr ago
+2.exp_cat_cancer_exhaem,34,Diagnosed 1-5 years ago,Cancer (non-haematological),Cancer (non-haematological) Diagnosed 1-5 yrs ago
+3.exp_cat_cancer_exhaem,35,Diagnosed >=5 years ago,Cancer (non-haematological),Cancer (non-haematological) Diagnosed 5+ yrs ago
+0b.exp_cat_cancer_haem,36,Never (ref),Haematological malignancy,Haematological malignancy Never diagnosed
+1.exp_cat_cancer_haem,37,Diagnosed <1 year ago,Haematological malignancy,Haematological malignancy Diagnosed <1 yr ago
+2.exp_cat_cancer_haem,38,Diagnosed 1-5 years ago,Haematological malignancy,Haematological malignancy Diagnosed 1-5 yrs ago
+3.exp_cat_cancer_haem,39,Diagnosed >=5 years ago,Haematological malignancy,Haematological malignancy Diagnosed 5+ yrs ago
+1b.exp_cat_kidneyfunc,40,None (ref),Reduced kidney function,Reduced kidney function None
+2.exp_cat_kidneyfunc,41,eGFR 30-60 ml min-1 per 1.73 m2,Reduced kidney function,Reduced kidney function Stage 3a/3b egfr 30-60
+3.exp_cat_kidneyfunc,42,eGFR <30 ml min-1 per 1.73 m2,Reduced kidney function,Reduced kidney function Stage 4/5 egfr<30
+0b.exp_cat_asthma,43,No asthma (ref),Asthma,Asthma NoEvidence
+1.exp_cat_asthma,44,With no recent OCS use,Asthma,Asthma Asthma_NoRecentOCS
+2.exp_cat_asthma,45,With recent OCS use,Asthma,Asthma Asthma_RecentOCS
+exp_bin_chronicresp,46,Chronic respiratory disease,Chronic respiratory disease,"Chronic respiratory disease, excluding asthma"
+exp_bin_chd,47,Chronic cardiac disease,Chronic cardiac disease,Chronic heart disease
+exp_bin_hypertension,48,Hypertension or high blood pressure,Hypertension or high blood pressure,Hypertension
+exp_bin_chronicliver,49,Chronic liver disease,Chronic liver disease,Chronic liver disease
+exp_bin_stroke_dementia,50,Stroke or dementia,Stroke or dementia,Stroke or dementia
+exp_bin_otherneuro,51,Other neurological disease,Other neurological disease,Other neurological disease
+exp_bin_transplant,52,Organ transplant,Organ transplant,Solid organ transplant
+exp_bin_asplenia,53,Asplenia,Asplenia,Asplenia
+exp_bin_autoimm,54,"Rheumatoid arthritis, lupus or psoriasis","Rheumatoid arthritis, lupus or psoriasis",Common autoimmune disease 
+exp_bin_othimm,55,Other immunosuppressive condition,Other immunosuppressive condition,Other immunosuppressive condition
+,56,Care home resident ,Care home resident ,Carehome resident
