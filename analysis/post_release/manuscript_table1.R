@@ -27,8 +27,8 @@ winter2021 <- dplyr::rename(winter2021,
 table1 <- merge(winter2019, winter2021, by = c("category","characteristic","order"))
 
 table1 <- table1[order(table1$order),c("category","characteristic",
-                                       "all_winter2019","flu_winter2019","pneu_winter2019","rsv_winter2019",
-                                       "all_winter2021","covid_winter2021","pneu_winter2021")]
+                                       "all_winter2019","rsv_winter2019","flu_winter2019","pneu_winter2019",
+                                       "all_winter2021","pneu_winter2021","covid_winter2021")]
 
 # Remove order from cohort table 1s ----
 

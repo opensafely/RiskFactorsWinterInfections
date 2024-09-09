@@ -28,8 +28,8 @@ make_figure <- function(name, hr, cohort, subgroup, infection, outcome, model, a
   # Convert age coefficients to be per 10 years ----
   
   tmp$est <- ifelse(tmp$var=="cov_num_age", tmp$est^10, tmp$est)
-  tmp$lci <- ifelse(tmp$var=="cov_num_age", tmp$est^10, tmp$lci)
-  tmp$uci <- ifelse(tmp$var=="cov_num_age", tmp$est^10, tmp$uci)
+  tmp$lci <- ifelse(tmp$var=="cov_num_age", tmp$lci^10, tmp$lci)
+  tmp$uci <- ifelse(tmp$var=="cov_num_age", tmp$uci^10, tmp$uci)
   
   # Add female ----
   
@@ -126,7 +126,7 @@ make_figure <- function(name, hr, cohort, subgroup, infection, outcome, model, a
   # Save plot ----
   
   ggplot2::ggsave(filename = paste0("output/post_release/figure",name,".jpeg"),
-                  dpi = 300, height = 210, width = 297, unit = "mm", scale = 1)
+                  dpi = 300, height = 210, width = (297/5)*(2+length(infection)), unit = "mm", scale = 1)
   
   # Make table3s ----
   
